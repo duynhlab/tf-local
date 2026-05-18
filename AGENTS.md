@@ -6,128 +6,178 @@ Guidance for AI coding agents (Claude Code, Cursor) working in this repository.
 
 ## Purpose
 
-Terraform lab for **enterprise-style AWS networking** using **MiniStack** — a free, open-source AWS emulator.
+Terraform lab for **enterprise-style AWS networking + identity** using a **hybrid** local emulator stack:
 
-| Environment | Emulator | Endpoint |
-|-------------|----------|----------|
-| `environments/dev` | MiniStack | `http://localhost:4566` |
-| `environments/prod` | MiniStack | `http://localhost:4566` |
+| Emulator | Host port | Role |
+|---|---|---|
+| **floci** | `:4566` | Compute / identity / data plane — IAM, STS, S3, SNS, SQS, KMS, EKS (real k3s), Lambda, ECS, ECR, RDS, ElastiCache, MSK, OpenSearch, Athena |
+| **ministack** | `:4567` | Enterprise networking + edge — advanced EC2/VPC (NAT GW, VPC Endpoints, NACL, Flow Logs, Peering, Egress-only IGW), ELBv2, WAF v2 |
 
-Both environments use the same MiniStack instance. `prod` is the multi-pattern scenario: VPC peering, PrivateLink, Transit Gateway hub–spoke, 3-tier **main / ingress** VPC (`module.main_vpc`, IGW → public / app / data).
+Both run side-by-side via `docker-compose.yml` and Podman.
+
+| Environment | Endpoint mapping |
+|-------------|-----------------|
+| `environments/dev`  | `ec2/elbv2/wafv2 → :4567`, `iam/sts/s3/kms → :4566` |
+| `environments/prod` | same hybrid split, three regional provider aliases |
+| `iam/*`             | all services on ministack `:4567` (needs `aws_iam_openid_connect_provider`, `aws_ebs_snapshot`, full ELBv2 attrs — floci does not implement these) |
+
+`prod` is the multi-pattern scenario: VPC peering, PrivateLink, Transit Gateway hub–spoke, plus a 3-tier **main / ingress** VPC (`module.main_vpc`, IGW → public / app / data).
 
 ---
 
-## Lab scope (production-oriented focus)
+## Lab scope
 
 Use **`docs/subnet.csv`** for CIDRs. Intended learning areas:
 
-- **Identity**: IAM (roles, policies, instance profiles), STS (implicit via provider / `GetCallerIdentity` patterns).
-- **Data & edge**: S3 (bucket, separate bucket policy, versioning, encryption, public access block).
-- **Edge protection**: WAF v2 (Web ACL, IP set, association) — see `modules/waf-v2`.
-- **EC2 networking**: VPC, subnets, Internet Gateway, NAT gateway, egress-only IGW, route tables & routes, VPC endpoints (when used), VPC peering / TGW / PrivateLink (via `prod` modules).
-- **EC2 attachments**: Security Groups (explicit rules), Elastic IPs, ENIs, key pairs, instances (lab patterns; no real VMs on emulators).
-- **Core hardening (always in scope for this lab)**: **Network ACLs**, **VPC Flow Logs**, **EBS** (volumes/snapshots as used by patterns).
+- **Identity** (floci): IAM, STS, IRSA / Pod Identity patterns, optional **IAM policy enforcement** (`FLOCI_SERVICES_IAM_ENFORCEMENT_ENABLED=true`).
+- **Data & edge** (mixed): S3 + bucket policies / versioning / encryption / public access block (floci); WAF v2 (ministack).
+- **EC2 networking** (ministack): VPC, subnets, IGW, NAT, egress-only IGW, route tables, VPC endpoints, peering (TGW / PrivateLink gated — see support matrix).
+- **EC2 attachments** (ministack): SGs, EIPs, ENIs, key pairs.
+- **Core hardening** (ministack): NACLs, Flow Logs, EBS.
+- **Compute** (floci): EKS clusters via real k3s (mock mode available via `FLOCI_SERVICES_EKS_MOCK=true`), Lambda real runtimes, ECS, real EC2 containers.
 
-API-level details: **[docs/support.md](docs/support.md)** (authoritative matrix).
+API-level details: **[docs/support.md](docs/support.md)** (authoritative matrix, per emulator).
 
 ---
 
 ## Repository layout
 
 ```text
+docker-compose.yml             # floci :4566 + ministack :4567 + ./volume/{floci,ministack}
 docs/
   report.md
-  subnet.csv              # CIDR source of truth
-  support.md               # MiniStack API coverage
+  subnet.csv                   # CIDR source of truth
+  support.md                   # Combined floci + ministack support matrix
 environments/
-  dev/                     # MiniStack, ap-southeast-1, :4566
-  prod/                    # MiniStack, multi-region, :4566
+  dev/                         # ap-southeast-1, hybrid endpoints
+  prod/                        # multi-region, hybrid endpoints
 iam/
-  stg/                     # Cross-account SNS→SQS + IRSA (staging)
-  prod/                    # Cross-account SNS→SQS fan-out + IRSA (prod)
+  alb-controller/              # IRSA + Pod Identity for AWS Load Balancer Controller
+  cluster-access/              # EKS access entries (optional toggle)
+  cross-account/               # Cross-account S3 access
+  cross-account-secrets/       # Cross-account Secrets Manager
+  cross-region-pipeline/       # CodePipeline cross-region SNS/SQS
+  cross-region-s3/             # Cross-region S3 replication
+  external-dns-cross-account/  # ExternalDNS cross-account Route53
+  prod/                        # Prod cross-account SNS→SQS fan-out
+  s3-eks/                      # S3 access from EKS workloads
+  s3-events/                   # S3 → SNS → SQS fan-out
+  s3-go-compute-matrix/        # Go BE compute matrix IAM cases
+  stg/                         # Staging cross-account SNS→SQS
+  storage-drivers/             # EBS / EFS CSI driver IAM
 modules/
   vpc-base/
   vpc-peering/
   privatelink/
   transit-gateway/
   waf-v2/
+scripts/
+  setup.sh                     # podman/docker compose up floci + ministack
+  teardown.sh                  # down -v (+ optional terraform destroy)
+  test-all.sh                  # dev + prod full apply/destroy cycle
+  validate-ministack-apis.sh   # API probe against ministack (:4567)
 ```
 
-- Each `environments/*` directory is a **standalone** Terraform root module.
-- `prod/` composes `vpc-peering`, `privatelink`, `transit-gateway`, plus **`main_vpc`** (ingress 3-tier) and optional WAF.
+Each `environments/*` and `iam/*` directory is a **standalone** Terraform root module.
 
 ---
 
-## Runbook (after Terraform / module / script changes)
+## Runbook
 
-1. **Start MiniStack**
+1. **Start both emulators**
 
-```bash
-./scripts/setup.sh
-```
+   ```bash
+   ./scripts/setup.sh
+   ```
 
-Uses `podman compose` (preferred) or `docker compose` as fallback.
+   Auto-detects `podman-compose` → `podman compose` → `docker compose`. Podman is preferred.
 
-2. **Health**
+2. **Health checks**
 
-```bash
-curl -sf http://localhost:4566/_ministack/health
-```
+   ```bash
+   curl -sf http://localhost:4566/_localstack/health  # floci
+   curl -sf http://localhost:4567/_ministack/health   # ministack
+   ```
 
 3. **Validate dev and prod**
 
-```bash
-terraform -chdir=environments/dev fmt -check
-terraform -chdir=environments/dev init -input=false
-terraform -chdir=environments/dev validate
-terraform -chdir=environments/dev apply -auto-approve
-terraform -chdir=environments/dev output
-terraform -chdir=environments/dev destroy -auto-approve
+   ```bash
+   terraform -chdir=environments/dev fmt -check
+   terraform -chdir=environments/dev init -input=false
+   terraform -chdir=environments/dev validate
+   terraform -chdir=environments/dev apply -auto-approve
+   terraform -chdir=environments/dev output
+   terraform -chdir=environments/dev destroy -auto-approve
 
-terraform -chdir=environments/prod fmt -check
-terraform -chdir=environments/prod init -input=false
-terraform -chdir=environments/prod validate
-terraform -chdir=environments/prod apply -auto-approve
-terraform -chdir=environments/prod output
-terraform -chdir=environments/prod destroy -auto-approve
-```
+   terraform -chdir=environments/prod fmt -check
+   terraform -chdir=environments/prod init -input=false
+   terraform -chdir=environments/prod validate
+   terraform -chdir=environments/prod apply -auto-approve
+   terraform -chdir=environments/prod output
+   terraform -chdir=environments/prod destroy -auto-approve
+   ```
 
-4. **Stop**
+4. **Validate iam/\***
 
-```bash
-./scripts/teardown.sh
-```
+   ```bash
+   for d in iam/*/; do
+     terraform -chdir="$d" init -input=false && \
+     terraform -chdir="$d" validate && \
+     terraform -chdir="$d" apply -auto-approve && \
+     terraform -chdir="$d" destroy -auto-approve
+   done
+   ```
+
+5. **Stop**
+
+   ```bash
+   ./scripts/teardown.sh                # just stop containers
+   CONFIRM_DESTROY=1 ./scripts/teardown.sh   # also destroy each root first
+   ```
 
 ---
 
-## Provider rules (all environments)
+## Provider rules
 
-- Keep **`endpoints { ... }`** overrides pointing at `http://localhost:4566`.
+- Keep the **hybrid `endpoints { … }`** block:
+
+  | Endpoint | URL |
+  |---|---|
+  | `ec2`, `elbv2`, `wafv2` | `http://localhost:4567` (ministack) |
+  | `iam`, `sts`, `s3`, `kms` | `http://localhost:4566` (floci) |
+
 - Keep:
   - `skip_credentials_validation = true`
-  - `skip_metadata_api_check = true`
-  - `skip_requesting_account_id = true`
-  - `access_key = "test"` / `secret_key = "test"`
+  - `skip_metadata_api_check     = true`
+  - `skip_requesting_account_id  = true`
+  - `access_key = "test"` / `secret_key = "test"` (or the lab account number)
+  - `s3_use_path_style = true`
+
 - Never use real AWS credentials, real account IDs, or real ARNs in lab code.
+- For `environments/prod`, the regional provider aliases (`default`, `ap_southeast_1`, `us_east_1`) all share the same `local.endpoints` map.
 
-### `hashicorp/aws` version and MiniStack
+### `hashicorp/aws` version
 
-- Use **`>= 6.0`** — MiniStack latest supports all required APIs including `DescribeVpcClassicLink`, `DescribeAddressesAttribute`, `DescribeVpcAttribute`, and `DescribeSecurityGroupRules`.
-- MiniStack is explicitly compatible with **Terraform AWS Provider v5 and v6**.
-- **Commit** `environments/dev/.terraform.lock.hcl` and `environments/prod/.terraform.lock.hcl` so CI resolves the same build.
+- Use **`>= 6.0`**.
+- MiniStack is explicitly compatible with provider v5 and v6.
+- Floci is LocalStack-Community wire-compatible (port `4566`, parity layer); provider v6 works.
+- **Commit** every `environments/*/.terraform.lock.hcl` and `iam/*/.terraform.lock.hcl` so CI resolves the same build.
 
 ---
 
-## Known emulation limitations (short)
+## Known emulation limitations
 
-| Resource | Issue | Workaround |
+| Resource | Where | Workaround |
 |----------|-------|------------|
-| `aws_ec2_transit_gateway` | `CreateTransitGateway` not implemented | Set `enable_transit_gateway = false` (default) |
-| `aws_vpc_endpoint_service` | `CreateVpcEndpointServiceConfiguration` not implemented | Set `enable_privatelink = false` (default) |
-| `aws_ec2_transit_gateway_peering_attachment_accepter` | TGW peering waiter may not complete | Set `enable_tgw_cross_region_peering = false` (default) |
-| IAM policy enforcement | MiniStack does not enforce IAM policies | Rules stored, not enforced — lab-only |
+| `aws_ec2_transit_gateway` | ministack — `CreateTransitGateway` not implemented | `enable_transit_gateway = false` (default) |
+| `aws_vpc_endpoint_service` | ministack — `CreateVpcEndpointServiceConfiguration` not implemented | `enable_privatelink = false` (default) |
+| `aws_ec2_transit_gateway_peering_attachment_accepter` | ministack — waiter may not complete | `enable_tgw_cross_region_peering = false` (default) |
+| IAM policy enforcement | floci — disabled unless `FLOCI_SERVICES_IAM_ENFORCEMENT_ENABLED=true` | Opt-in; bypass rules described in floci IAM docs |
+| `aws_eks_access_entry` | floci — `CreateAccessEntry` not in floci's EKS surface | `enable_eks_access_entries = false` (default in `iam/cluster-access`) |
+| `aws_kms_key` on aliased providers | ministack — `UnrecognizedClientException` | Use default provider or AWS-managed alias |
+| `aws_s3_bucket_public_access_block` destroy | ministack — `found resource` after DELETE | Restart the ministack container (`podman compose restart ministack`) to reset state, or skip destroy in CI |
 
-Full tables: **[docs/support.md](docs/support.md)**. MiniStack upstream: [releases](https://github.com/ministackorg/ministack/releases).
+Full tables: **[docs/support.md](docs/support.md)**.
 
 ---
 
@@ -143,7 +193,7 @@ Use `apply` / `destroy` only for **local emulator** validation and document inte
 
 ## Module selection
 
-1. `modules/vpc-base/` for VPC / subnet / route / IGW / NAT patterns.
+1. `modules/vpc-base/` for VPC / subnet / route / IGW / NAT / VPC endpoint patterns.
 2. Other `modules/*` when they fit.
 3. Plain `resource` blocks only if no module fits.
 4. External registry modules only when explicitly requested.
@@ -154,43 +204,52 @@ Do not add new providers or external modules without a clear request.
 
 ## Service-specific guidance
 
-- **S3**: `aws_s3_bucket` + separate `aws_s3_bucket_policy`; add versioning, encryption, public access block unless the exercise needs public access.
-- **EC2**: Explicit security groups; prefer separate ingress/egress rules; no hardcoded real AMIs (placeholders OK for emulators).
-- **IAM**: `aws_iam_role` + `aws_iam_role_policy_attachment`; policies via `data "aws_iam_policy_document"`.
-- **VPC**: Always align CIDRs with `docs/subnet.csv`.
+- **S3** (floci): `aws_s3_bucket` + separate `aws_s3_bucket_policy`; add versioning, encryption, public access block unless the exercise needs public access.
+- **EC2** (ministack): explicit SGs; prefer separate ingress/egress rules; no hardcoded real AMIs.
+- **IAM** (floci): `aws_iam_role` + `aws_iam_role_policy_attachment`; policies via `data "aws_iam_policy_document"`.
+- **EKS** (floci): real k3s containers; toggle to mock via `FLOCI_SERVICES_EKS_MOCK=true` if Docker socket access is restricted.
+- **VPC** (ministack): always align CIDRs with `docs/subnet.csv`.
 
 ### VPC naming and AWS VPC endpoints (`vpc-base`)
 
-- **Prod VPC names in tfvars**: Peering and PrivateLink VPC **Name** tags come from **`peering_*_vpc_name`** and **`pl_*_vpc_name`** in `environments/prod` (defaults align with `docs/subnet.csv`). TGW hub **Name** tags use **`tgw_name_tag_region_*`**; spoke VPC names remain **map keys** in `tgw_spokes_region_*`. Inventory table: [docs/README.md](docs/README.md) **§1.3**.
-- **Naming and diagrams**: Use [docs/README.md](docs/README.md) — **§1.2 *Network conventions*** for landing zone vs spoke, VPC naming table, and Gateway vs Interface endpoint diagrams. Renaming existing VPCs in Terraform can force replacement; use the conventions for **new** resources or planned migrations.
-- **Endpoints in code**: `modules/vpc-base` exposes optional flags: **S3 Gateway** (app + data route tables), **KMS** and **STS Interface** (app subnets, dedicated SG for TCP 443 from the VPC CIDR, `private_dns_enabled = true`). **Gateway** = route-table–based; **Interface** = ENI in subnets.
-- **Tagging**: New endpoint and SG resources must use `merge(local.default_tags, { Name = ... })` like other `vpc-base` resources (see **Resource tagging (AWS)** below).
-- **Conventions drift**: When you introduce new lab-wide naming or endpoint rules, update **this file** and the long-form **README §1.2** together so agents and humans have one checklist and one narrative.
+- **Prod VPC names in tfvars**: peering and PrivateLink VPC **Name** tags come from `peering_*_vpc_name` and `pl_*_vpc_name` in `environments/prod`. TGW hub **Name** tags use `tgw_name_tag_region_*`; spoke VPC names remain **map keys** in `tgw_spokes_region_*`. Inventory table: [docs/README.md](docs/README.md) **§1.3**.
+- **Naming and diagrams**: use [docs/README.md](docs/README.md) **§1.2 *Network conventions*** for landing zone vs spoke, VPC naming table, and Gateway vs Interface endpoint diagrams.
+- **Endpoints in code**: `modules/vpc-base` exposes optional flags: **S3 Gateway** (app + data route tables), **KMS / STS Interface** (app subnets, dedicated SG for TCP 443 from the VPC CIDR, `private_dns_enabled = true`). Endpoints live in ministack `:4567` like the rest of VPC primitives.
+- **Tagging**: new endpoint and SG resources must use `merge(local.default_tags, { Name = ... })` like other `vpc-base` resources.
+- **Conventions drift**: when you introduce new lab-wide naming rules, update **this file** and the long-form README §1.2 together.
 
 ---
 
 ## Emulation compatibility (summary)
 
-| Capability | MiniStack |
-|------------|-----------|
-| EC2 / VPC core | ✅ Full (136 actions) |
-| VPC peering | ✅ |
-| Transit Gateway | ❌ `CreateTransitGateway` not implemented |
-| PrivateLink (VPC Endpoint Service) | ❌ `CreateVpcEndpointServiceConfiguration` not implemented |
-| ELBv2 / ALB / NLB | ✅ (control + data plane) |
-| WAF v2 | ✅ |
-| IAM enforcement | ⚠️ Not enforced (stored only) |
-| Terraform provider >= 6.0 | ✅ Compatible |
+| Capability | Backed by | Notes |
+|---|---|---|
+| EC2 / VPC core | ministack `:4567` | Full (136 actions) |
+| VPC peering | ministack | ✅ |
+| Transit Gateway | ministack | ❌ — not implemented |
+| PrivateLink (VPC Endpoint Service) | ministack | ❌ — not implemented |
+| VPC Endpoints (Gateway + Interface) | ministack | ✅ |
+| NACL / Flow Logs / Egress-only IGW | ministack | ✅ |
+| ELBv2 / ALB / NLB | ministack | ✅ |
+| WAF v2 | ministack | ✅ |
+| IAM | floci `:4566` | Optional policy enforcement |
+| STS | floci | All 7 ops |
+| S3 | floci | Full + Object Lock |
+| SNS / SQS / KMS | floci | Cross-account topic/queue policies stored, not enforced |
+| EKS | floci | Real k3s clusters (default) or mock |
+| Lambda / ECS / ECR / RDS / ElastiCache / MSK | floci | Real Docker containers |
+| Terraform provider >= 6.0 | both | ✅ |
 
 **Module toggles in `environments/prod/terraform.tfvars`:**
-- `enable_transit_gateway = false` — skips `modules/transit-gateway` (TGW API missing)
-- `enable_privatelink = false` — skips `modules/privatelink` (VPC Endpoint Service API missing)
-- `enable_tgw_cross_region_peering = false` — only relevant when TGW is enabled
+- `enable_transit_gateway = false`
+- `enable_privatelink = false`
+- `enable_tgw_cross_region_peering = false`
+- `enable_waf = false`
 
 When behavior differs from AWS:
 
 ```hcl
-# NOTE: Emulator limitation - what differs and why this resource is still useful in the lab
+# NOTE: Emulator limitation — what differs and why this resource is still useful
 ```
 
 ---
@@ -214,22 +273,20 @@ All commands must pass with 0 findings.
 
 ### Commit messages
 
-- AI Agents must not add `Signed-off-by` or `Co-authored-by` tags to the commit message.
-- Do not add `Assisted-by` or any other attribution trailers.
-- Limit the subject to 50 characters, start with a capital letter and do not end with a period.
-- Explain what and why in the body, if more than a trivial change; wrap it at 72 characters.
-- Use the imperative mood in the subject line (e.g., "Add support for X" instead of "Added support for X" or "Adds support for X").
-- Do not include GitHub mentions to issues in the commit message, use the PR description instead (e.g., "Fixes #123" or "Closes #123").
-- Do not include GitHub mentions to accounts (e.g., @username or @team) within the commit message.
+- AI agents must not add `Signed-off-by`, `Co-authored-by`, `Assisted-by`, or any other attribution trailers.
+- Limit the subject to 50 characters, start with a capital letter, do not end with a period.
+- Explain what and why in the body, if more than a trivial change; wrap at 72 characters.
+- Use the imperative mood ("Add support for X", not "Added"/"Adds").
+- Do not include GitHub mentions to issues or accounts in the commit message — use the PR description.
 
 ### Resource tagging (AWS) — always apply
 
-When adding or editing Terraform under `modules/`, follow the same pattern as existing modules (see [docs/README.md](docs/README.md), section *Resource tagging (AWS)*):
+When adding or editing Terraform under `modules/`, follow the same pattern as existing modules:
 
 - In each module, define `local.module_label = basename(abspath(path.module))` and `local.default_tags = merge(var.tags, { TerraformModule = local.module_label })`.
-- Use `merge(local.default_tags, { Name = ... })` (and any other per-resource tags) on resources that support `tags`. **Do not** hardcode the module name in `TerraformModule`; always derive it with `basename(abspath(path.module))`.
-- New modules must include this `locals` block and pass `var.tags` from the root module as today.
-- Root environments continue to set `default_tags` on the `aws` provider for `Project`, `Environment`, `ManagedBy`; do not duplicate those keys unnecessarily on every resource unless your change requires an override.
+- Use `merge(local.default_tags, { Name = ... })` on resources that support `tags`. **Do not** hardcode the module name in `TerraformModule`; always derive it with `basename(abspath(path.module))`.
+- New modules must include this `locals` block and pass `var.tags` from the root.
+- Root environments continue to set `default_tags` on the `aws` provider for `Project`, `Environment`, `ManagedBy`; do not duplicate those keys per resource unless your change requires an override.
 
 ---
 
@@ -237,13 +294,17 @@ When adding or editing Terraform under `modules/`, follow the same pattern as ex
 
 This lab uses **Podman** (preferred) or Docker as fallback. Scripts auto-detect `podman-compose` → `podman compose` → `docker compose`.
 
-Docker Hub image: **`ministackorg/ministack:latest`**
+Images:
+- `floci/floci:latest` (port 4566)
+- `ministackorg/ministack:latest` (published on host 4567)
+
+Both bind-mount `/var/run/docker.sock` because floci's EKS/Lambda/EC2/ECS services launch real Docker containers, and ministack uses the socket for its own runtime as well.
 
 ---
 
 ## Linting (tflint)
 
-Run **after any Terraform change** (modules or `environments/*`) and before pushing; CI uses the same rules via `.tflint.hcl`. Fix all issues (warnings are errors for merge hygiene).
+Run **after any Terraform change** (modules or `environments/*` / `iam/*`) and before pushing; CI uses the same rules via `.tflint.hcl`.
 
 ```bash
 which tflint || echo "tflint not installed"
@@ -255,7 +316,7 @@ tflint --recursive
 
 ## Clarification-first
 
-If the target (`dev` vs `prod`) is unclear, ask one short question before coding.
+If the target (`dev` vs `prod` vs which `iam/*` root) is unclear, ask one short question before coding.
 
 ## Strictly avoid
 
@@ -263,11 +324,11 @@ If the target (`dev` vs `prod`) is unclear, ask one short question before coding
 - Inventing CIDRs without `docs/subnet.csv`.
 - Manual state file edits.
 - Unrelated large diffs.
+- Pointing networking endpoints at floci or compute/identity endpoints at ministack — keep the split documented above.
 
 ---
 
 ## Docs
 
 - [docs/README.md](docs/README.md) — includes **§1.1** (tagging), **§1.2** (landing zone vs spoke, endpoints), **§1.3** (prod VPC inventory / tfvars map)
-- [docs/support.md](docs/support.md) — API coverage matrix and workarounds
-- [docs/README.md](docs/README.md) — Architecture analysis
+- [docs/support.md](docs/support.md) — combined API coverage matrix (floci + ministack) and workarounds

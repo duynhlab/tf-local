@@ -2,7 +2,7 @@
 # Providers — AWS Load Balancer Controller on EKS
 # Account 121212121212, ap-southeast-1
 #
-# MiniStack emulates IAM, STS, EC2, and ELBv2 on localhost:4566
+# Floci emulates IAM, STS, EC2, and ELBv2 on localhost:4567
 # ---------------------------------------------------------------------------
 
 terraform {
@@ -25,9 +25,9 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    ec2   = "http://localhost:4566"
-    elbv2 = "http://localhost:4566"
-    iam   = "http://localhost:4566"
-    sts   = "http://localhost:4566"
+    ec2   = "http://localhost:4567"
+    elbv2 = "http://localhost:4567"
+    iam   = "http://localhost:4567"
+    sts   = "http://localhost:4567"
   }
 }

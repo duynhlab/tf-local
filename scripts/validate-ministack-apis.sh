@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 # scripts/validate-ministack-apis.sh
-# Probes every API in docs/support.md against MiniStack :4566
+# Probes every API in docs/support.md against MiniStack.
+# In the hybrid stack MiniStack is published on :4567 (floci owns :4566).
+# Override with MINISTACK_ENDPOINT if needed.
 # Usage: ./scripts/setup.sh && ./scripts/validate-ministack-apis.sh
 set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-ENDPOINT="http://localhost:4566"
+ENDPOINT="${MINISTACK_ENDPOINT:-http://localhost:4567}"
 REGION="ap-southeast-1"
 REPORT_FILE="$PROJECT_DIR/docs/report-ministack-api.md"
 TS=$(date -u +"%Y-%m-%dT%H:%M:%SZ")

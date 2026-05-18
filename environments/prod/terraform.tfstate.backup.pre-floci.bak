@@ -1,0 +1,4914 @@
+{
+  "version": 4,
+  "terraform_version": "1.14.8",
+  "serial": 561,
+  "lineage": "3286ec5e-86bb-4e4d-c5f1-0618d4473bc4",
+  "outputs": {
+    "main_app_route_table_ids": {
+      "value": [
+        "rtb-34abe9aab5aaaad7f",
+        "rtb-a02b64fd119937d91"
+      ],
+      "type": [
+        "tuple",
+        [
+          "string",
+          "string"
+        ]
+      ]
+    },
+    "main_app_subnet_ids": {
+      "value": [
+        "subnet-979aeda4c729b1939",
+        "subnet-16c7f50f971f53d2e"
+      ],
+      "type": [
+        "tuple",
+        [
+          "string",
+          "string"
+        ]
+      ]
+    },
+    "main_data_route_table_ids": {
+      "value": [
+        "rtb-7a99f2dfb7107fbe4",
+        "rtb-c184409331ab0dbb8"
+      ],
+      "type": [
+        "tuple",
+        [
+          "string",
+          "string"
+        ]
+      ]
+    },
+    "main_data_subnet_ids": {
+      "value": [
+        "subnet-ee314305c1b0835b1",
+        "subnet-5a40c287707a51d89"
+      ],
+      "type": [
+        "tuple",
+        [
+          "string",
+          "string"
+        ]
+      ]
+    },
+    "main_igw_id": {
+      "value": "igw-b57cbbdcacfc92e4c",
+      "type": "string"
+    },
+    "main_nat_gateway_ids": {
+      "value": [
+        "nat-1d16de23542ff1b49",
+        "nat-5ed3595ff3d6b4c7a"
+      ],
+      "type": [
+        "tuple",
+        [
+          "string",
+          "string"
+        ]
+      ]
+    },
+    "main_public_route_table_id": {
+      "value": "rtb-709398027846fe890",
+      "type": "string"
+    },
+    "main_public_subnet_ids": {
+      "value": [
+        "subnet-227dfbe8fffafcf4e",
+        "subnet-d026621e967f2182d"
+      ],
+      "type": [
+        "tuple",
+        [
+          "string",
+          "string"
+        ]
+      ]
+    },
+    "main_vpc_cidr": {
+      "value": "10.7.0.0/16",
+      "type": "string"
+    },
+    "main_vpc_id": {
+      "value": "vpc-df20e749483c90fcb",
+      "type": "string"
+    },
+    "peering_accepter_vpc_id": {
+      "value": "vpc-2f29716b20194debb",
+      "type": "string"
+    },
+    "peering_connection_id": {
+      "value": "pcx-f5320fa55aeabec5f",
+      "type": "string"
+    },
+    "peering_requester_vpc_id": {
+      "value": "vpc-508c6fca99e5b23ff",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "module": "module.main_vpc",
+      "mode": "data",
+      "type": "aws_availability_zones",
+      "name": "available",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "all_availability_zones": null,
+            "exclude_names": null,
+            "exclude_zone_ids": null,
+            "filter": null,
+            "group_names": [
+              ""
+            ],
+            "id": "ap-southeast-1",
+            "names": [
+              "us-east-1a",
+              "us-east-1b",
+              "us-east-1c"
+            ],
+            "region": "ap-southeast-1",
+            "state": "available",
+            "timeouts": null,
+            "zone_ids": [
+              "us-east-1a",
+              "us-east-1b",
+              "us-east-1c"
+            ]
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "data",
+      "type": "aws_region",
+      "name": "current",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "description": "Asia Pacific (Singapore)",
+            "endpoint": "ec2.ap-southeast-1.amazonaws.com",
+            "id": "ap-southeast-1",
+            "name": "ap-southeast-1",
+            "region": "ap-southeast-1"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_eip",
+      "name": "nat",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "address": null,
+            "allocation_id": "eipalloc-9988493058534728a",
+            "arn": "arn:aws:ec2:ap-southeast-1::elastic-ip/eipalloc-9988493058534728a",
+            "associate_with_private_ip": null,
+            "association_id": "",
+            "carrier_ip": "",
+            "customer_owned_ip": "",
+            "customer_owned_ipv4_pool": "",
+            "domain": "vpc",
+            "id": "eipalloc-9988493058534728a",
+            "instance": "",
+            "ipam_pool_id": null,
+            "network_border_group": "",
+            "network_interface": "",
+            "private_dns": null,
+            "private_ip": "",
+            "ptr_record": "",
+            "public_dns": "ec2-52-10-120.ap-southeast-1.compute.amazonaws.com",
+            "public_ip": "52.10.120",
+            "public_ipv4_pool": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Project": "vpc-connectivity-lab"
+            },
+            "tags_all": {},
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxODAwMDAwMDAwMDAsInJlYWQiOjkwMDAwMDAwMDAwMCwidXBkYXRlIjozMDAwMDAwMDAwMDB9fQ=="
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "address": null,
+            "allocation_id": "eipalloc-2864ebccb5254ddd8",
+            "arn": "arn:aws:ec2:ap-southeast-1::elastic-ip/eipalloc-2864ebccb5254ddd8",
+            "associate_with_private_ip": null,
+            "association_id": "",
+            "carrier_ip": "",
+            "customer_owned_ip": "",
+            "customer_owned_ipv4_pool": "",
+            "domain": "vpc",
+            "id": "eipalloc-2864ebccb5254ddd8",
+            "instance": "",
+            "ipam_pool_id": null,
+            "network_border_group": "",
+            "network_interface": "",
+            "private_dns": null,
+            "private_ip": "",
+            "ptr_record": "",
+            "public_dns": "ec2-52-238-140.ap-southeast-1.compute.amazonaws.com",
+            "public_ip": "52.238.140",
+            "public_ipv4_pool": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Project": "vpc-connectivity-lab"
+            },
+            "tags_all": {},
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxODAwMDAwMDAwMDAsInJlYWQiOjkwMDAwMDAwMDAwMCwidXBkYXRlIjozMDAwMDAwMDAwMDB9fQ=="
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_internet_gateway",
+      "name": "this",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:internet-gateway/igw-b57cbbdcacfc92e4c",
+            "id": "igw-b57cbbdcacfc92e4c",
+            "owner_id": "000000000000",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-igw",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-igw",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_nat_gateway",
+      "name": "this",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "allocation_id": "eipalloc-9988493058534728a",
+            "association_id": null,
+            "auto_provision_zones": null,
+            "auto_scaling_ips": null,
+            "availability_mode": "",
+            "availability_zone_address": [],
+            "connectivity_type": "public",
+            "id": "nat-1d16de23542ff1b49",
+            "network_interface_id": null,
+            "private_ip": null,
+            "public_ip": null,
+            "region": "ap-southeast-1",
+            "regional_nat_gateway_address": [],
+            "regional_nat_gateway_auto_mode": null,
+            "route_table_id": null,
+            "secondary_allocation_ids": [],
+            "secondary_private_ip_address_count": null,
+            "secondary_private_ip_addresses": [],
+            "subnet_id": "subnet-227dfbe8fffafcf4e",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-nat-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-nat-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "nat-1d16de23542ff1b49",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTgwMDAwMDAwMDAwMCwidXBkYXRlIjo2MDAwMDAwMDAwMDB9fQ==",
+          "dependencies": [
+            "module.main_vpc.aws_eip.nat",
+            "module.main_vpc.aws_internet_gateway.this",
+            "module.main_vpc.aws_subnet.public",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "allocation_id": "eipalloc-2864ebccb5254ddd8",
+            "association_id": null,
+            "auto_provision_zones": null,
+            "auto_scaling_ips": null,
+            "availability_mode": "",
+            "availability_zone_address": [],
+            "connectivity_type": "public",
+            "id": "nat-5ed3595ff3d6b4c7a",
+            "network_interface_id": null,
+            "private_ip": null,
+            "public_ip": null,
+            "region": "ap-southeast-1",
+            "regional_nat_gateway_address": [],
+            "regional_nat_gateway_auto_mode": null,
+            "route_table_id": null,
+            "secondary_allocation_ids": [],
+            "secondary_private_ip_address_count": null,
+            "secondary_private_ip_addresses": [],
+            "subnet_id": "subnet-d026621e967f2182d",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-nat-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-nat-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "nat-5ed3595ff3d6b4c7a",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTgwMDAwMDAwMDAwMCwidXBkYXRlIjo2MDAwMDAwMDAwMDB9fQ==",
+          "dependencies": [
+            "module.main_vpc.aws_eip.nat",
+            "module.main_vpc.aws_internet_gateway.this",
+            "module.main_vpc.aws_subnet.public",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "app_nat",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-34abe9aab5aaaad7f1080289494",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "nat-1d16de23542ff1b49",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-34abe9aab5aaaad7f",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-34abe9aab5aaaad7f"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_eip.nat",
+            "module.main_vpc.aws_internet_gateway.this",
+            "module.main_vpc.aws_nat_gateway.this",
+            "module.main_vpc.aws_route_table.app",
+            "module.main_vpc.aws_subnet.public",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-a02b64fd119937d911080289494",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "nat-5ed3595ff3d6b4c7a",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-a02b64fd119937d91",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-a02b64fd119937d91"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_eip.nat",
+            "module.main_vpc.aws_internet_gateway.this",
+            "module.main_vpc.aws_nat_gateway.this",
+            "module.main_vpc.aws_route_table.app",
+            "module.main_vpc.aws_subnet.public",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "public_internet",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "igw-b57cbbdcacfc92e4c",
+            "id": "r-rtb-709398027846fe8901080289494",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-709398027846fe890",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-709398027846fe890"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_internet_gateway.this",
+            "module.main_vpc.aws_route_table.public",
+            "module.main_vpc.aws_vpc.this"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:route-table/rtb-34abe9aab5aaaad7f",
+            "id": "rtb-34abe9aab5aaaad7f",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "ap-southeast-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-app-rt-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-app-rt-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-34abe9aab5aaaad7f",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:route-table/rtb-a02b64fd119937d91",
+            "id": "rtb-a02b64fd119937d91",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "ap-southeast-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-app-rt-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-app-rt-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-a02b64fd119937d91",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:route-table/rtb-7a99f2dfb7107fbe4",
+            "id": "rtb-7a99f2dfb7107fbe4",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "ap-southeast-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-data-rt-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-data-rt-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-7a99f2dfb7107fbe4",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:route-table/rtb-c184409331ab0dbb8",
+            "id": "rtb-c184409331ab0dbb8",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "ap-southeast-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-data-rt-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-data-rt-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-c184409331ab0dbb8",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:route-table/rtb-709398027846fe890",
+            "id": "rtb-709398027846fe890",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "ap-southeast-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-public-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-public-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-709398027846fe890",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-fe6d737f16185f4d8",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-34abe9aab5aaaad7f",
+            "subnet_id": "subnet-979aeda4c729b1939",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-fe6d737f16185f4d8",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_route_table.app",
+            "module.main_vpc.aws_subnet.app",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-af6c7395d71a68e8e",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-a02b64fd119937d91",
+            "subnet_id": "subnet-16c7f50f971f53d2e",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-af6c7395d71a68e8e",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_route_table.app",
+            "module.main_vpc.aws_subnet.app",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-ab5db9e8f886e5a5f",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-7a99f2dfb7107fbe4",
+            "subnet_id": "subnet-ee314305c1b0835b1",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-ab5db9e8f886e5a5f",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_route_table.data",
+            "module.main_vpc.aws_subnet.data",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-50b4728e5b5624d77",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-c184409331ab0dbb8",
+            "subnet_id": "subnet-5a40c287707a51d89",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-50b4728e5b5624d77",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_route_table.data",
+            "module.main_vpc.aws_subnet.data",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-78525b40257467826",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-709398027846fe890",
+            "subnet_id": "subnet-227dfbe8fffafcf4e",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-78525b40257467826",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_route_table.public",
+            "module.main_vpc.aws_subnet.public",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-0a78c8e7b96ecf016",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-709398027846fe890",
+            "subnet_id": "subnet-d026621e967f2182d",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-0a78c8e7b96ecf016",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_route_table.public",
+            "module.main_vpc.aws_subnet.public",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "default",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:security-group/sg-775b837d1a20d9f31",
+            "description": "prod-main-vpc-default-sg",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "Allow all outbound traffic",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-775b837d1a20d9f31",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "10.7.0.0/16"
+                ],
+                "description": "Allow all traffic within VPC",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "name": "prod-main-vpc-default-sg",
+            "name_prefix": "",
+            "owner_id": "000000000000",
+            "region": "ap-southeast-1",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-default-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-default-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "sg-775b837d1a20d9f31",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "vpc_endpoints",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:security-group/sg-d279aa260e8d0077a",
+            "description": "prod-main-vpc-vpce-sg",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "Allow endpoint to reach AWS APIs",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-d279aa260e8d0077a",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "10.7.0.0/16"
+                ],
+                "description": "HTTPS from VPC",
+                "from_port": 443,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 443
+              }
+            ],
+            "name": "prod-main-vpc-vpce-sg",
+            "name_prefix": "",
+            "owner_id": "000000000000",
+            "region": "ap-southeast-1",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-vpce-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-vpce-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "sg-d279aa260e8d0077a",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-979aeda4c729b1939",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1a",
+            "availability_zone_id": "",
+            "cidr_block": "10.7.11.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-979aeda4c729b1939",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-app-us-east-1a",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Private-App"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-app-us-east-1a",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Private-App"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-979aeda4c729b1939",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-16c7f50f971f53d2e",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1b",
+            "availability_zone_id": "",
+            "cidr_block": "10.7.12.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-16c7f50f971f53d2e",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-app-us-east-1b",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Private-App"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-app-us-east-1b",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Private-App"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-16c7f50f971f53d2e",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-ee314305c1b0835b1",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1a",
+            "availability_zone_id": "",
+            "cidr_block": "10.7.21.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-ee314305c1b0835b1",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-data-us-east-1a",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Private-Data"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-data-us-east-1a",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Private-Data"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-ee314305c1b0835b1",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-5a40c287707a51d89",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1b",
+            "availability_zone_id": "",
+            "cidr_block": "10.7.22.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-5a40c287707a51d89",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-data-us-east-1b",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Private-Data"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-data-us-east-1b",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Private-Data"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-5a40c287707a51d89",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-227dfbe8fffafcf4e",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1a",
+            "availability_zone_id": "",
+            "cidr_block": "10.7.1.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-227dfbe8fffafcf4e",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": true,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-public-us-east-1a",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Public"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-public-us-east-1a",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Public"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-227dfbe8fffafcf4e",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-d026621e967f2182d",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1b",
+            "availability_zone_id": "",
+            "cidr_block": "10.7.2.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-d026621e967f2182d",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": true,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc-public-us-east-1b",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Public"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc-public-us-east-1b",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base",
+              "Tier": "Public"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-d026621e967f2182d",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_vpc",
+      "name": "this",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:vpc/vpc-df20e749483c90fcb",
+            "assign_generated_ipv6_cidr_block": false,
+            "cidr_block": "10.7.0.0/16",
+            "default_network_acl_id": "acl-e67deee47bfd3777c",
+            "default_route_table_id": "rtb-a3f230598ea8142cd",
+            "default_security_group_id": "sg-e9c8a10481cefebd3",
+            "dhcp_options_id": "dopt-00000001",
+            "enable_dns_hostnames": true,
+            "enable_dns_support": true,
+            "enable_network_address_usage_metrics": false,
+            "id": "vpc-df20e749483c90fcb",
+            "instance_tenancy": "default",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_association_id": "",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_network_border_group": "",
+            "ipv6_ipam_pool_id": "",
+            "ipv6_netmask_length": 0,
+            "main_route_table_id": "rtb-a3f230598ea8142cd",
+            "owner_id": "000000000000",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-main-vpc",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-main-vpc",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-base"
+            }
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "vpc-df20e749483c90fcb",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_vpc_endpoint",
+      "name": "kms",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:vpc-endpoint/vpce-fd2465d52c1fe7db9",
+            "auto_accept": null,
+            "cidr_blocks": [],
+            "dns_entry": [],
+            "dns_options": [],
+            "id": "vpce-fd2465d52c1fe7db9",
+            "ip_address_type": "",
+            "network_interface_ids": [],
+            "owner_id": "000000000000",
+            "policy": "",
+            "prefix_list_id": null,
+            "private_dns_enabled": false,
+            "region": "ap-southeast-1",
+            "requester_managed": false,
+            "resource_configuration_arn": "",
+            "route_table_ids": [],
+            "security_group_ids": [
+              "sg-d279aa260e8d0077a"
+            ],
+            "service_name": "com.amazonaws.ap-southeast-1.kms",
+            "service_network_arn": "",
+            "service_region": "",
+            "state": "available",
+            "subnet_configuration": [],
+            "subnet_ids": [
+              "subnet-16c7f50f971f53d2e",
+              "subnet-979aeda4c729b1939"
+            ],
+            "tags": {
+              "Project": "vpc-connectivity-lab"
+            },
+            "tags_all": {},
+            "timeouts": null,
+            "vpc_endpoint_type": "Interface",
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "vpce-fd2465d52c1fe7db9",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_security_group.vpc_endpoints",
+            "module.main_vpc.aws_subnet.app",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available",
+            "module.main_vpc.data.aws_region.current"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_vpc_endpoint",
+      "name": "s3",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:vpc-endpoint/vpce-7bcc1c98a9bba6145",
+            "auto_accept": null,
+            "cidr_blocks": [],
+            "dns_entry": [],
+            "dns_options": [],
+            "id": "vpce-7bcc1c98a9bba6145",
+            "ip_address_type": "",
+            "network_interface_ids": [],
+            "owner_id": "000000000000",
+            "policy": "",
+            "prefix_list_id": null,
+            "private_dns_enabled": false,
+            "region": "ap-southeast-1",
+            "requester_managed": false,
+            "resource_configuration_arn": "",
+            "route_table_ids": [
+              "rtb-34abe9aab5aaaad7f",
+              "rtb-7a99f2dfb7107fbe4",
+              "rtb-a02b64fd119937d91",
+              "rtb-c184409331ab0dbb8"
+            ],
+            "security_group_ids": [],
+            "service_name": "com.amazonaws.ap-southeast-1.s3",
+            "service_network_arn": "",
+            "service_region": "",
+            "state": "available",
+            "subnet_configuration": [],
+            "subnet_ids": [],
+            "tags": {
+              "Project": "vpc-connectivity-lab"
+            },
+            "tags_all": {},
+            "timeouts": null,
+            "vpc_endpoint_type": "Gateway",
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "vpce-7bcc1c98a9bba6145",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_route_table.app",
+            "module.main_vpc.aws_route_table.data",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_region.current"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.main_vpc",
+      "mode": "managed",
+      "type": "aws_vpc_endpoint",
+      "name": "sts",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:vpc-endpoint/vpce-5fff3b7c93bc79458",
+            "auto_accept": null,
+            "cidr_blocks": [],
+            "dns_entry": [],
+            "dns_options": [],
+            "id": "vpce-5fff3b7c93bc79458",
+            "ip_address_type": "",
+            "network_interface_ids": [],
+            "owner_id": "000000000000",
+            "policy": "",
+            "prefix_list_id": null,
+            "private_dns_enabled": false,
+            "region": "ap-southeast-1",
+            "requester_managed": false,
+            "resource_configuration_arn": "",
+            "route_table_ids": [],
+            "security_group_ids": [
+              "sg-d279aa260e8d0077a"
+            ],
+            "service_name": "com.amazonaws.ap-southeast-1.sts",
+            "service_network_arn": "",
+            "service_region": "",
+            "state": "available",
+            "subnet_configuration": [],
+            "subnet_ids": [
+              "subnet-16c7f50f971f53d2e",
+              "subnet-979aeda4c729b1939"
+            ],
+            "tags": {
+              "Project": "vpc-connectivity-lab"
+            },
+            "tags_all": {},
+            "timeouts": null,
+            "vpc_endpoint_type": "Interface",
+            "vpc_id": "vpc-df20e749483c90fcb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "vpce-5fff3b7c93bc79458",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.main_vpc.aws_security_group.vpc_endpoints",
+            "module.main_vpc.aws_subnet.app",
+            "module.main_vpc.aws_vpc.this",
+            "module.main_vpc.data.aws_availability_zones.available",
+            "module.main_vpc.data.aws_region.current"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "data",
+      "type": "aws_region",
+      "name": "accepter",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "description": "US East (N. Virginia)",
+            "endpoint": "ec2.us-east-1.amazonaws.com",
+            "id": "us-east-1",
+            "name": "us-east-1",
+            "region": "us-east-1"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "data",
+      "type": "aws_region",
+      "name": "requester",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "description": "Asia Pacific (Singapore)",
+            "endpoint": "ec2.ap-southeast-1.amazonaws.com",
+            "id": "ap-southeast-1",
+            "name": "ap-southeast-1",
+            "region": "ap-southeast-1"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_eip",
+      "name": "accepter_nat",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "address": null,
+            "allocation_id": "eipalloc-76da105777ac44aba",
+            "arn": "arn:aws:ec2:us-east-1::elastic-ip/eipalloc-76da105777ac44aba",
+            "associate_with_private_ip": null,
+            "association_id": "",
+            "carrier_ip": "",
+            "customer_owned_ip": "",
+            "customer_owned_ipv4_pool": "",
+            "domain": "vpc",
+            "id": "eipalloc-76da105777ac44aba",
+            "instance": "",
+            "ipam_pool_id": null,
+            "network_border_group": "",
+            "network_interface": "",
+            "private_dns": null,
+            "private_ip": "",
+            "ptr_record": "",
+            "public_dns": "ec2-52-205-215.compute-1.amazonaws.com",
+            "public_ip": "52.205.215",
+            "public_ipv4_pool": "",
+            "region": "us-east-1",
+            "tags": {
+              "Project": "vpc-connectivity-lab"
+            },
+            "tags_all": {},
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxODAwMDAwMDAwMDAsInJlYWQiOjkwMDAwMDAwMDAwMCwidXBkYXRlIjozMDAwMDAwMDAwMDB9fQ==",
+          "dependencies": [
+            "module.vpc_peering.aws_internet_gateway.accepter",
+            "module.vpc_peering.aws_vpc.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_eip",
+      "name": "requester_nat",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "address": null,
+            "allocation_id": "eipalloc-270936c50c5f42979",
+            "arn": "arn:aws:ec2:ap-southeast-1::elastic-ip/eipalloc-270936c50c5f42979",
+            "associate_with_private_ip": null,
+            "association_id": "",
+            "carrier_ip": "",
+            "customer_owned_ip": "",
+            "customer_owned_ipv4_pool": "",
+            "domain": "vpc",
+            "id": "eipalloc-270936c50c5f42979",
+            "instance": "",
+            "ipam_pool_id": null,
+            "network_border_group": "",
+            "network_interface": "",
+            "private_dns": null,
+            "private_ip": "",
+            "ptr_record": "",
+            "public_dns": "ec2-52-169-127.ap-southeast-1.compute.amazonaws.com",
+            "public_ip": "52.169.127",
+            "public_ipv4_pool": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Project": "vpc-connectivity-lab"
+            },
+            "tags_all": {},
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxODAwMDAwMDAwMDAsInJlYWQiOjkwMDAwMDAwMDAwMCwidXBkYXRlIjozMDAwMDAwMDAwMDB9fQ==",
+          "dependencies": [
+            "module.vpc_peering.aws_internet_gateway.requester",
+            "module.vpc_peering.aws_vpc.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_internet_gateway",
+      "name": "accepter",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:internet-gateway/igw-3253937ab96a2e70c",
+            "id": "igw-3253937ab96a2e70c",
+            "owner_id": "000000000000",
+            "region": "us-east-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-igw",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-igw",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_internet_gateway",
+      "name": "requester",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:internet-gateway/igw-b9ace3f8419aa123d",
+            "id": "igw-b9ace3f8419aa123d",
+            "owner_id": "000000000000",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-igw",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-igw",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_nat_gateway",
+      "name": "accepter",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "allocation_id": "eipalloc-76da105777ac44aba",
+            "association_id": null,
+            "auto_provision_zones": null,
+            "auto_scaling_ips": null,
+            "availability_mode": "",
+            "availability_zone_address": [],
+            "connectivity_type": "public",
+            "id": "nat-3fb686397713ab0c9",
+            "network_interface_id": null,
+            "private_ip": null,
+            "public_ip": null,
+            "region": "us-east-1",
+            "regional_nat_gateway_address": [],
+            "regional_nat_gateway_auto_mode": null,
+            "route_table_id": null,
+            "secondary_allocation_ids": [],
+            "secondary_private_ip_address_count": null,
+            "secondary_private_ip_addresses": [],
+            "subnet_id": "subnet-4ed9cf19e99266242",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-nat",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-nat",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "nat-3fb686397713ab0c9",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTgwMDAwMDAwMDAwMCwidXBkYXRlIjo2MDAwMDAwMDAwMDB9fQ==",
+          "dependencies": [
+            "module.vpc_peering.aws_eip.accepter_nat",
+            "module.vpc_peering.aws_internet_gateway.accepter",
+            "module.vpc_peering.aws_subnet.accepter_public",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_nat_gateway",
+      "name": "requester",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "allocation_id": "eipalloc-270936c50c5f42979",
+            "association_id": null,
+            "auto_provision_zones": null,
+            "auto_scaling_ips": null,
+            "availability_mode": "",
+            "availability_zone_address": [],
+            "connectivity_type": "public",
+            "id": "nat-dac9f91fb1dfb61d3",
+            "network_interface_id": null,
+            "private_ip": null,
+            "public_ip": null,
+            "region": "ap-southeast-1",
+            "regional_nat_gateway_address": [],
+            "regional_nat_gateway_auto_mode": null,
+            "route_table_id": null,
+            "secondary_allocation_ids": [],
+            "secondary_private_ip_address_count": null,
+            "secondary_private_ip_addresses": [],
+            "subnet_id": "subnet-ee5f41191753b367b",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-nat",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-nat",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "nat-dac9f91fb1dfb61d3",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTgwMDAwMDAwMDAwMCwidXBkYXRlIjo2MDAwMDAwMDAwMDB9fQ==",
+          "dependencies": [
+            "module.vpc_peering.aws_eip.requester_nat",
+            "module.vpc_peering.aws_internet_gateway.requester",
+            "module.vpc_peering.aws_subnet.requester_public",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "accepter_app_nat",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-c9427e1ab23f0d78f1080289494",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "nat-3fb686397713ab0c9",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "us-east-1",
+            "route_table_id": "rtb-c9427e1ab23f0d78f",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "us-east-1",
+            "route_table_id": "rtb-c9427e1ab23f0d78f"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_eip.accepter_nat",
+            "module.vpc_peering.aws_internet_gateway.accepter",
+            "module.vpc_peering.aws_nat_gateway.accepter",
+            "module.vpc_peering.aws_route_table.accepter_app",
+            "module.vpc_peering.aws_subnet.accepter_public",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "accepter_app_to_requester",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "10.0.0.0/16",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-c9427e1ab23f0d78f179966490",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "us-east-1",
+            "route_table_id": "rtb-c9427e1ab23f0d78f",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": "pcx-f5320fa55aeabec5f"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "10.0.0.0/16",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "us-east-1",
+            "route_table_id": "rtb-c9427e1ab23f0d78f"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.accepter_app",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.aws_vpc_peering_connection.this",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "accepter_data_nat",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-bfaf0e637fd695f6e1080289494",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "nat-3fb686397713ab0c9",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "us-east-1",
+            "route_table_id": "rtb-bfaf0e637fd695f6e",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "us-east-1",
+            "route_table_id": "rtb-bfaf0e637fd695f6e"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_eip.accepter_nat",
+            "module.vpc_peering.aws_internet_gateway.accepter",
+            "module.vpc_peering.aws_nat_gateway.accepter",
+            "module.vpc_peering.aws_route_table.accepter_data",
+            "module.vpc_peering.aws_subnet.accepter_public",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "accepter_data_to_requester",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "10.0.0.0/16",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-bfaf0e637fd695f6e179966490",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "us-east-1",
+            "route_table_id": "rtb-bfaf0e637fd695f6e",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": "pcx-f5320fa55aeabec5f"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "10.0.0.0/16",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "us-east-1",
+            "route_table_id": "rtb-bfaf0e637fd695f6e"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.accepter_data",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.aws_vpc_peering_connection.this",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "accepter_public_igw",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "igw-3253937ab96a2e70c",
+            "id": "r-rtb-c769c64ac89b7852e1080289494",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "us-east-1",
+            "route_table_id": "rtb-c769c64ac89b7852e",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "us-east-1",
+            "route_table_id": "rtb-c769c64ac89b7852e"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_internet_gateway.accepter",
+            "module.vpc_peering.aws_route_table.accepter_public",
+            "module.vpc_peering.aws_vpc.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "accepter_public_to_requester",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "10.0.0.0/16",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-c769c64ac89b7852e179966490",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "us-east-1",
+            "route_table_id": "rtb-c769c64ac89b7852e",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": "pcx-f5320fa55aeabec5f"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "10.0.0.0/16",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "us-east-1",
+            "route_table_id": "rtb-c769c64ac89b7852e"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.accepter_public",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.aws_vpc_peering_connection.this",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "requester_app_nat",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-ea375a9f59a8fa5ed1080289494",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "nat-dac9f91fb1dfb61d3",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ea375a9f59a8fa5ed",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ea375a9f59a8fa5ed"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_eip.requester_nat",
+            "module.vpc_peering.aws_internet_gateway.requester",
+            "module.vpc_peering.aws_nat_gateway.requester",
+            "module.vpc_peering.aws_route_table.requester_app",
+            "module.vpc_peering.aws_subnet.requester_public",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "requester_app_to_accepter",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "10.1.0.0/16",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-ea375a9f59a8fa5ed3322942084",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ea375a9f59a8fa5ed",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": "pcx-f5320fa55aeabec5f"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "10.1.0.0/16",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ea375a9f59a8fa5ed"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.requester_app",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.aws_vpc_peering_connection.this",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "requester_data_nat",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-ae9313f120ef74e981080289494",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "nat-dac9f91fb1dfb61d3",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ae9313f120ef74e98",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ae9313f120ef74e98"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_eip.requester_nat",
+            "module.vpc_peering.aws_internet_gateway.requester",
+            "module.vpc_peering.aws_nat_gateway.requester",
+            "module.vpc_peering.aws_route_table.requester_data",
+            "module.vpc_peering.aws_subnet.requester_public",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "requester_data_to_accepter",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "10.1.0.0/16",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-ae9313f120ef74e983322942084",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ae9313f120ef74e98",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": "pcx-f5320fa55aeabec5f"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "10.1.0.0/16",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ae9313f120ef74e98"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.requester_data",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.aws_vpc_peering_connection.this",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "requester_public_igw",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "igw-b9ace3f8419aa123d",
+            "id": "r-rtb-32fc5e237f118f6471080289494",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-32fc5e237f118f647",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "0.0.0.0/0",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-32fc5e237f118f647"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_internet_gateway.requester",
+            "module.vpc_peering.aws_route_table.requester_public",
+            "module.vpc_peering.aws_vpc.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route",
+      "name": "requester_public_to_accepter",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "carrier_gateway_id": "",
+            "core_network_arn": "",
+            "destination_cidr_block": "10.1.0.0/16",
+            "destination_ipv6_cidr_block": "",
+            "destination_prefix_list_id": "",
+            "egress_only_gateway_id": "",
+            "gateway_id": "",
+            "id": "r-rtb-32fc5e237f118f6473322942084",
+            "instance_id": "",
+            "instance_owner_id": "",
+            "local_gateway_id": "",
+            "nat_gateway_id": "",
+            "network_interface_id": "",
+            "origin": "CreateRoute",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-32fc5e237f118f647",
+            "state": "active",
+            "timeouts": null,
+            "transit_gateway_id": "",
+            "vpc_endpoint_id": "",
+            "vpc_peering_connection_id": "pcx-f5320fa55aeabec5f"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "destination_cidr_block": "10.1.0.0/16",
+            "destination_ipv6_cidr_block": null,
+            "destination_prefix_list_id": null,
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-32fc5e237f118f647"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.requester_public",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.aws_vpc_peering_connection.this",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "accepter_app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:route-table/rtb-c9427e1ab23f0d78f",
+            "id": "rtb-c9427e1ab23f0d78f",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "us-east-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-app-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-app-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-c9427e1ab23f0d78f",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "accepter_data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:route-table/rtb-bfaf0e637fd695f6e",
+            "id": "rtb-bfaf0e637fd695f6e",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "us-east-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-data-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-data-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-bfaf0e637fd695f6e",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "accepter_public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:route-table/rtb-c769c64ac89b7852e",
+            "id": "rtb-c769c64ac89b7852e",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "us-east-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-public-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-public-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-c769c64ac89b7852e",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "requester_app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:route-table/rtb-ea375a9f59a8fa5ed",
+            "id": "rtb-ea375a9f59a8fa5ed",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "ap-southeast-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-app-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-app-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-ea375a9f59a8fa5ed",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "requester_data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:route-table/rtb-ae9313f120ef74e98",
+            "id": "rtb-ae9313f120ef74e98",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "ap-southeast-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-data-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-data-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-ae9313f120ef74e98",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "requester_public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:route-table/rtb-32fc5e237f118f647",
+            "id": "rtb-32fc5e237f118f647",
+            "owner_id": "000000000000",
+            "propagating_vgws": [],
+            "region": "ap-southeast-1",
+            "route": [],
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-public-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-public-rt",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtb-32fc5e237f118f647",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "accepter_app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-9fa6332f87ccbf8f2",
+            "region": "us-east-1",
+            "route_table_id": "rtb-c9427e1ab23f0d78f",
+            "subnet_id": "subnet-5e451dbd1760c3398",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-9fa6332f87ccbf8f2",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.accepter_app",
+            "module.vpc_peering.aws_subnet.accepter_app",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-aa56abfa6f4fc2e6b",
+            "region": "us-east-1",
+            "route_table_id": "rtb-c9427e1ab23f0d78f",
+            "subnet_id": "subnet-fd6d56caefbbeb718",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-aa56abfa6f4fc2e6b",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.accepter_app",
+            "module.vpc_peering.aws_subnet.accepter_app",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "accepter_data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-a92ee69f978bbb20d",
+            "region": "us-east-1",
+            "route_table_id": "rtb-bfaf0e637fd695f6e",
+            "subnet_id": "subnet-d3544632ea5b129d5",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-a92ee69f978bbb20d",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.accepter_data",
+            "module.vpc_peering.aws_subnet.accepter_data",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-afe6cd75650a878c6",
+            "region": "us-east-1",
+            "route_table_id": "rtb-bfaf0e637fd695f6e",
+            "subnet_id": "subnet-03b164838f5245090",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-afe6cd75650a878c6",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.accepter_data",
+            "module.vpc_peering.aws_subnet.accepter_data",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "accepter_public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-1c02105e4528120a4",
+            "region": "us-east-1",
+            "route_table_id": "rtb-c769c64ac89b7852e",
+            "subnet_id": "subnet-4ed9cf19e99266242",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-1c02105e4528120a4",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.accepter_public",
+            "module.vpc_peering.aws_subnet.accepter_public",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-42132728d492b5382",
+            "region": "us-east-1",
+            "route_table_id": "rtb-c769c64ac89b7852e",
+            "subnet_id": "subnet-94a0b85bdfe250b1e",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-42132728d492b5382",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.accepter_public",
+            "module.vpc_peering.aws_subnet.accepter_public",
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "requester_app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-edbfdea46494f21b6",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ea375a9f59a8fa5ed",
+            "subnet_id": "subnet-240dd44dc7b2e3876",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-edbfdea46494f21b6",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.requester_app",
+            "module.vpc_peering.aws_subnet.requester_app",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-72e5357b902b4be11",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ea375a9f59a8fa5ed",
+            "subnet_id": "subnet-ee8860d825da8e08b",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-72e5357b902b4be11",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.requester_app",
+            "module.vpc_peering.aws_subnet.requester_app",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "requester_data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-3aae8e3558a167822",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ae9313f120ef74e98",
+            "subnet_id": "subnet-9a3a7d9f0b03cc64e",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-3aae8e3558a167822",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.requester_data",
+            "module.vpc_peering.aws_subnet.requester_data",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-1a716cd132f1330e2",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-ae9313f120ef74e98",
+            "subnet_id": "subnet-40273f453a7922b13",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-1a716cd132f1330e2",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.requester_data",
+            "module.vpc_peering.aws_subnet.requester_data",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "requester_public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-fb05a764ba5a74a72",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-32fc5e237f118f647",
+            "subnet_id": "subnet-ee5f41191753b367b",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-fb05a764ba5a74a72",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.requester_public",
+            "module.vpc_peering.aws_subnet.requester_public",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 0,
+          "attributes": {
+            "gateway_id": "",
+            "id": "rtbassoc-5a4fd5344b2868dd8",
+            "region": "ap-southeast-1",
+            "route_table_id": "rtb-32fc5e237f118f647",
+            "subnet_id": "subnet-41b21afb82bbcf528",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "rtbassoc-5a4fd5344b2868dd8",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_route_table.requester_public",
+            "module.vpc_peering.aws_subnet.requester_public",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "accepter_app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:security-group/sg-7d813340c7f7c78ad",
+            "description": "peering-accepter-app-sg",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-7d813340c7f7c78ad",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "10.0.0.0/16"
+                ],
+                "description": "All traffic from requester VPC",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              },
+              {
+                "cidr_blocks": [],
+                "description": "All traffic from public tier",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [
+                  "sg-f656895574cd1c68b"
+                ],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "name": "peering-accepter-app-sg",
+            "name_prefix": "",
+            "owner_id": "000000000000",
+            "region": "us-east-1",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-app-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-app-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "sg-7d813340c7f7c78ad",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "module.vpc_peering.aws_security_group.accepter_public",
+            "module.vpc_peering.aws_vpc.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "accepter_data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:security-group/sg-b72cabd48c52a5af4",
+            "description": "peering-accepter-data-sg",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-b72cabd48c52a5af4",
+            "ingress": [
+              {
+                "cidr_blocks": [],
+                "description": "MySQL from app tier",
+                "from_port": 3306,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [
+                  "sg-7d813340c7f7c78ad"
+                ],
+                "self": false,
+                "to_port": 3306
+              },
+              {
+                "cidr_blocks": [],
+                "description": "PostgreSQL from app tier",
+                "from_port": 5432,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [
+                  "sg-7d813340c7f7c78ad"
+                ],
+                "self": false,
+                "to_port": 5432
+              },
+              {
+                "cidr_blocks": [],
+                "description": "Redis from app tier",
+                "from_port": 6379,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [
+                  "sg-7d813340c7f7c78ad"
+                ],
+                "self": false,
+                "to_port": 6379
+              }
+            ],
+            "name": "peering-accepter-data-sg",
+            "name_prefix": "",
+            "owner_id": "000000000000",
+            "region": "us-east-1",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-data-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-data-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "sg-b72cabd48c52a5af4",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "module.vpc_peering.aws_security_group.accepter_app",
+            "module.vpc_peering.aws_security_group.accepter_public",
+            "module.vpc_peering.aws_vpc.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "accepter_public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:security-group/sg-f656895574cd1c68b",
+            "description": "peering-accepter-public-sg",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-f656895574cd1c68b",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "HTTP from anywhere",
+                "from_port": 80,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 80
+              },
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "HTTPS from anywhere",
+                "from_port": 443,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 443
+              }
+            ],
+            "name": "peering-accepter-public-sg",
+            "name_prefix": "",
+            "owner_id": "000000000000",
+            "region": "us-east-1",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-public-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-public-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "sg-f656895574cd1c68b",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "requester_app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:security-group/sg-73a466488566ccffa",
+            "description": "peering-requester-app-sg",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-73a466488566ccffa",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "10.1.0.0/16"
+                ],
+                "description": "All traffic from accepter VPC",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              },
+              {
+                "cidr_blocks": [],
+                "description": "All traffic from public tier",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [
+                  "sg-a1c49fce7534768e8"
+                ],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "name": "peering-requester-app-sg",
+            "name_prefix": "",
+            "owner_id": "000000000000",
+            "region": "ap-southeast-1",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-app-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-app-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "sg-73a466488566ccffa",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "module.vpc_peering.aws_security_group.requester_public",
+            "module.vpc_peering.aws_vpc.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "requester_data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:security-group/sg-b6307f28398028578",
+            "description": "peering-requester-data-sg",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-b6307f28398028578",
+            "ingress": [
+              {
+                "cidr_blocks": [],
+                "description": "MySQL from app tier",
+                "from_port": 3306,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [
+                  "sg-73a466488566ccffa"
+                ],
+                "self": false,
+                "to_port": 3306
+              },
+              {
+                "cidr_blocks": [],
+                "description": "PostgreSQL from app tier",
+                "from_port": 5432,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [
+                  "sg-73a466488566ccffa"
+                ],
+                "self": false,
+                "to_port": 5432
+              },
+              {
+                "cidr_blocks": [],
+                "description": "Redis from app tier",
+                "from_port": 6379,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [
+                  "sg-73a466488566ccffa"
+                ],
+                "self": false,
+                "to_port": 6379
+              }
+            ],
+            "name": "peering-requester-data-sg",
+            "name_prefix": "",
+            "owner_id": "000000000000",
+            "region": "ap-southeast-1",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-data-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-data-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "sg-b6307f28398028578",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "module.vpc_peering.aws_security_group.requester_app",
+            "module.vpc_peering.aws_security_group.requester_public",
+            "module.vpc_peering.aws_vpc.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "requester_public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:security-group/sg-a1c49fce7534768e8",
+            "description": "peering-requester-public-sg",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-a1c49fce7534768e8",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "HTTP from anywhere",
+                "from_port": 80,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 80
+              },
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "HTTPS from anywhere",
+                "from_port": 443,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 443
+              }
+            ],
+            "name": "peering-requester-public-sg",
+            "name_prefix": "",
+            "owner_id": "000000000000",
+            "region": "ap-southeast-1",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-public-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-public-sg",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "sg-a1c49fce7534768e8",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "accepter_app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-5e451dbd1760c3398",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1a",
+            "availability_zone_id": "",
+            "cidr_block": "10.1.11.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-5e451dbd1760c3398",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "us-east-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-app-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-App"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-app-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-App"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-5e451dbd1760c3398",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-fd6d56caefbbeb718",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1b",
+            "availability_zone_id": "",
+            "cidr_block": "10.1.12.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-fd6d56caefbbeb718",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "us-east-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-app-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-App"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-app-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-App"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-fd6d56caefbbeb718",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "accepter_data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-d3544632ea5b129d5",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1a",
+            "availability_zone_id": "",
+            "cidr_block": "10.1.21.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-d3544632ea5b129d5",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "us-east-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-data-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-Data"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-data-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-Data"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-d3544632ea5b129d5",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-03b164838f5245090",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1b",
+            "availability_zone_id": "",
+            "cidr_block": "10.1.22.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-03b164838f5245090",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "us-east-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-data-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-Data"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-data-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-Data"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-03b164838f5245090",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "accepter_public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-4ed9cf19e99266242",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1a",
+            "availability_zone_id": "",
+            "cidr_block": "10.1.1.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-4ed9cf19e99266242",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": true,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "us-east-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-public-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Public"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-public-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Public"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-4ed9cf19e99266242",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-94a0b85bdfe250b1e",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "us-east-1b",
+            "availability_zone_id": "",
+            "cidr_block": "10.1.2.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-94a0b85bdfe250b1e",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": true,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "us-east-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter-public-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Public"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter-public-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Public"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-2f29716b20194debb"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-94a0b85bdfe250b1e",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "requester_app",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-240dd44dc7b2e3876",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "ap-southeast-1a",
+            "availability_zone_id": "",
+            "cidr_block": "10.0.11.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-240dd44dc7b2e3876",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-app-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-App"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-app-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-App"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-240dd44dc7b2e3876",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-ee8860d825da8e08b",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "ap-southeast-1b",
+            "availability_zone_id": "",
+            "cidr_block": "10.0.12.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-ee8860d825da8e08b",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-app-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-App"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-app-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-App"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-ee8860d825da8e08b",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "requester_data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-9a3a7d9f0b03cc64e",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "ap-southeast-1a",
+            "availability_zone_id": "",
+            "cidr_block": "10.0.21.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-9a3a7d9f0b03cc64e",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-data-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-Data"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-data-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-Data"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-9a3a7d9f0b03cc64e",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-40273f453a7922b13",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "ap-southeast-1b",
+            "availability_zone_id": "",
+            "cidr_block": "10.0.22.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-40273f453a7922b13",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": false,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-data-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-Data"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-data-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Private-Data"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-40273f453a7922b13",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "requester_public",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "index_key": 0,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-ee5f41191753b367b",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "ap-southeast-1a",
+            "availability_zone_id": "",
+            "cidr_block": "10.0.1.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-ee5f41191753b367b",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": true,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-public-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Public"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-public-0",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Public"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-ee5f41191753b367b",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        },
+        {
+          "index_key": 1,
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:subnet/subnet-41b21afb82bbcf528",
+            "assign_ipv6_address_on_creation": false,
+            "availability_zone": "ap-southeast-1b",
+            "availability_zone_id": "",
+            "cidr_block": "10.0.2.0/24",
+            "customer_owned_ipv4_pool": "",
+            "enable_dns64": false,
+            "enable_lni_at_device_index": 0,
+            "enable_resource_name_dns_a_record_on_launch": false,
+            "enable_resource_name_dns_aaaa_record_on_launch": false,
+            "id": "subnet-41b21afb82bbcf528",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_association_id": "",
+            "ipv6_ipam_pool_id": null,
+            "ipv6_native": false,
+            "ipv6_netmask_length": null,
+            "map_customer_owned_ip_on_launch": false,
+            "map_public_ip_on_launch": true,
+            "outpost_arn": "",
+            "owner_id": "000000000000",
+            "private_dns_hostname_type_on_launch": "",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester-public-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Public"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester-public-1",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering",
+              "Tier": "Public"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "subnet-41b21afb82bbcf528",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.requester"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_vpc",
+      "name": "accepter",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:000000000000:vpc/vpc-2f29716b20194debb",
+            "assign_generated_ipv6_cidr_block": false,
+            "cidr_block": "10.1.0.0/16",
+            "default_network_acl_id": "acl-3ce4af70d795110a8",
+            "default_route_table_id": "rtb-08d00c81de0cc7f9a",
+            "default_security_group_id": "sg-8ad1f69a5ec2cabdd",
+            "dhcp_options_id": "dopt-00000001",
+            "enable_dns_hostnames": true,
+            "enable_dns_support": true,
+            "enable_network_address_usage_metrics": false,
+            "id": "vpc-2f29716b20194debb",
+            "instance_tenancy": "default",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_association_id": "",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_network_border_group": "",
+            "ipv6_ipam_pool_id": "",
+            "ipv6_netmask_length": 0,
+            "main_route_table_id": "rtb-08d00c81de0cc7f9a",
+            "owner_id": "000000000000",
+            "region": "us-east-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-accepter",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-accepter",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            }
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "vpc-2f29716b20194debb",
+            "region": "us-east-1"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_vpc",
+      "name": "requester",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-1:000000000000:vpc/vpc-508c6fca99e5b23ff",
+            "assign_generated_ipv6_cidr_block": false,
+            "cidr_block": "10.0.0.0/16",
+            "default_network_acl_id": "acl-e675504b1d6ced97a",
+            "default_route_table_id": "rtb-98e22ea8f80d1410e",
+            "default_security_group_id": "sg-4e22e953f36441897",
+            "dhcp_options_id": "dopt-00000001",
+            "enable_dns_hostnames": true,
+            "enable_dns_support": true,
+            "enable_network_address_usage_metrics": false,
+            "id": "vpc-508c6fca99e5b23ff",
+            "instance_tenancy": "default",
+            "ipv4_ipam_pool_id": null,
+            "ipv4_netmask_length": null,
+            "ipv6_association_id": "",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_network_border_group": "",
+            "ipv6_ipam_pool_id": "",
+            "ipv6_netmask_length": 0,
+            "main_route_table_id": "rtb-98e22ea8f80d1410e",
+            "owner_id": "000000000000",
+            "region": "ap-southeast-1",
+            "tags": {
+              "Environment": "prod",
+              "Name": "prod-peering-requester",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            },
+            "tags_all": {
+              "Environment": "prod",
+              "ManagedBy": "terraform",
+              "Name": "prod-peering-requester",
+              "Project": "vpc-connectivity-lab",
+              "TerraformModule": "vpc-peering"
+            }
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "",
+            "id": "vpc-508c6fca99e5b23ff",
+            "region": "ap-southeast-1"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_vpc_peering_connection",
+      "name": "this",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].ap_southeast_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "accept_status": "pending-acceptance",
+            "accepter": [],
+            "auto_accept": false,
+            "id": "pcx-f5320fa55aeabec5f",
+            "peer_owner_id": "000000000000",
+            "peer_region": "us-east-1",
+            "peer_vpc_id": "vpc-2f29716b20194debb",
+            "region": "ap-southeast-1",
+            "requester": [],
+            "tags": {
+              "Project": "vpc-connectivity-lab"
+            },
+            "tags_all": {},
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMCwiZGVsZXRlIjo2MDAwMDAwMDAwMCwidXBkYXRlIjo2MDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.vpc_peering",
+      "mode": "managed",
+      "type": "aws_vpc_peering_connection_accepter",
+      "name": "this",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"].us_east_1",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "accept_status": "active",
+            "accepter": [],
+            "auto_accept": true,
+            "id": "pcx-f5320fa55aeabec5f",
+            "peer_owner_id": "000000000000",
+            "peer_region": "us-east-1",
+            "peer_vpc_id": "vpc-2f29716b20194debb",
+            "region": "us-east-1",
+            "requester": [],
+            "tags": {
+              "Project": "vpc-connectivity-lab"
+            },
+            "tags_all": {},
+            "timeouts": null,
+            "vpc_id": "vpc-508c6fca99e5b23ff",
+            "vpc_peering_connection_id": "pcx-f5320fa55aeabec5f"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMCwidXBkYXRlIjo2MDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.vpc_peering.aws_vpc.accepter",
+            "module.vpc_peering.aws_vpc.requester",
+            "module.vpc_peering.aws_vpc_peering_connection.this",
+            "module.vpc_peering.data.aws_region.accepter"
+          ]
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
