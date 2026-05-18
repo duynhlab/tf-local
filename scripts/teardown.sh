@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+# Tear down the hybrid emulator stack.
+# Set CONFIRM_DESTROY=1 to also run `terraform destroy` against every root first.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-ENV_DIR="$PROJECT_DIR/environments"
 
-# Detect compose command (podman-compose > podman compose > docker compose)
+# Detect compose command
 if command -v podman-compose > /dev/null 2>&1; then
   DC="podman-compose"
 elif podman compose version > /dev/null 2>&1; then
@@ -16,14 +17,13 @@ else
   DC="podman compose"
 fi
 
-echo "=== VPC Connectivity Lab – Teardown ==="
+echo "=== Local AWS Lab – Teardown ==="
 
 if [ "${CONFIRM_DESTROY:-0}" = "1" ]; then
-  for env in dev prod; do
-    if [ -d "$ENV_DIR/$env/.terraform" ]; then
-      echo "[*] Destroying $env..."
-      cd "$ENV_DIR/$env"
-      terraform destroy -auto-approve || true
+  for root in environments/dev environments/prod iam/*/; do
+    if [ -d "$PROJECT_DIR/$root/.terraform" ]; then
+      echo "[*] Destroying $root ..."
+      (cd "$PROJECT_DIR/$root" && terraform destroy -auto-approve) || true
     fi
   done
 else

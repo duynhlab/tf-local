@@ -3,7 +3,7 @@
 # Team A (Account 222222222) SNS in us-west-2
 # Team B (Account 444444444) SQS in us-west-2 (produs) + eu-north-1 (prodeu)
 #
-# MiniStack emulates all accounts/regions on localhost:4566
+# Floci emulates all accounts/regions on localhost:4567
 # ---------------------------------------------------------------------------
 
 terraform {
@@ -27,10 +27,10 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4566"
-    sns = "http://localhost:4566"
-    sqs = "http://localhost:4566"
-    sts = "http://localhost:4566"
+    iam = "http://localhost:4567"
+    sns = "http://localhost:4567"
+    sqs = "http://localhost:4567"
+    sts = "http://localhost:4567"
   }
 }
 
@@ -45,10 +45,10 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4566"
-    sns = "http://localhost:4566"
-    sqs = "http://localhost:4566"
-    sts = "http://localhost:4566"
+    iam = "http://localhost:4567"
+    sns = "http://localhost:4567"
+    sqs = "http://localhost:4567"
+    sts = "http://localhost:4567"
   }
 }
 
@@ -63,9 +63,9 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4566"
-    sns = "http://localhost:4566"
-    sqs = "http://localhost:4566"
-    sts = "http://localhost:4566"
+    iam = "http://localhost:4567"
+    sns = "http://localhost:4567"
+    sqs = "http://localhost:4567"
+    sts = "http://localhost:4567"
   }
 }

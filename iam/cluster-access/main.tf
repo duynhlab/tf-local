@@ -158,11 +158,11 @@ resource "aws_iam_role_policy_attachment" "break_glass" {
 resource "aws_eks_access_entry" "developer" {
   count = var.enable_eks_access_entries ? 1 : 0
 
-  cluster_name        = var.cluster_name
-  principal_arn       = aws_iam_role.developer.arn
-  kubernetes_groups   = ["developers:view"]
-  type                = "STANDARD"
-  user_name           = aws_iam_role.developer.arn
+  cluster_name      = var.cluster_name
+  principal_arn     = aws_iam_role.developer.arn
+  kubernetes_groups = ["developers:view"]
+  type              = "STANDARD"
+  user_name         = aws_iam_role.developer.arn
 
   tags = merge(local.tags, {
     Name = "developer-access-entry-${var.environment}"
@@ -185,11 +185,11 @@ resource "aws_eks_access_policy_association" "developer_view" {
 resource "aws_eks_access_entry" "platform_ops" {
   count = var.enable_eks_access_entries ? 1 : 0
 
-  cluster_name        = var.cluster_name
-  principal_arn       = aws_iam_role.platform_ops.arn
-  kubernetes_groups   = ["platform:ops"]
-  type                = "STANDARD"
-  user_name           = aws_iam_role.platform_ops.arn
+  cluster_name      = var.cluster_name
+  principal_arn     = aws_iam_role.platform_ops.arn
+  kubernetes_groups = ["platform:ops"]
+  type              = "STANDARD"
+  user_name         = aws_iam_role.platform_ops.arn
 
   tags = merge(local.tags, {
     Name = "platform-ops-access-entry-${var.environment}"

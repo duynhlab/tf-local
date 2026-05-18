@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Bring up the hybrid emulator stack:
+#   floci      → :4566 (compute / IAM / data plane)
+#   ministack  → :4567 (advanced networking + WAF)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -12,34 +15,38 @@ elif podman compose version > /dev/null 2>&1; then
 elif docker compose version > /dev/null 2>&1; then
   DC="docker compose"
 else
-  echo "ERROR: No compose command found (podman-compose, podman compose, docker compose)."
+  echo "ERROR: No compose command found (podman-compose, podman compose, docker compose)." >&2
   exit 1
 fi
 
-echo "=== VPC Connectivity Lab – Setup ==="
+echo "=== Local AWS Lab – Setup ==="
 echo "Using compose command: $DC"
 
-echo "[1/2] Starting MiniStack..."
 cd "$PROJECT_DIR"
-$DC up -d ministack
 
-# Wait for MiniStack readiness
-echo "[2/2] Waiting for MiniStack readiness (:4566)..."
-MAX_RETRIES=30
-for i in $(seq 1 $MAX_RETRIES); do
-  if curl -sf http://localhost:4566/_ministack/health > /dev/null 2>&1; then
-    echo "MiniStack is ready!"
-    break
-  fi
-  echo "  Waiting MiniStack... ($i/$MAX_RETRIES)"
-  sleep 3
-done
+echo "[1/3] Starting emulators (floci + ministack)..."
+$DC up -d floci ministack
 
-if ! curl -sf http://localhost:4566/_ministack/health > /dev/null 2>&1; then
-  echo "ERROR: MiniStack did not become ready in time."
-  exit 1
-fi
+wait_ready() {
+  local name=$1 url=$2 max=${3:-40}
+  echo "[*] Waiting for $name ($url) ..."
+  for i in $(seq 1 "$max"); do
+    if curl -sf "$url" > /dev/null 2>&1; then
+      echo "    $name is ready"
+      return 0
+    fi
+    sleep 3
+  done
+  echo "ERROR: $name did not become ready after $((max*3))s" >&2
+  return 1
+}
 
-echo ""
-echo "Health check:"
-curl -s http://localhost:4566/_ministack/health | python3 -m json.tool 2>/dev/null || true
+echo "[2/3] Waiting for readiness..."
+wait_ready "floci"      "http://localhost:4566/_localstack/health"
+wait_ready "ministack"  "http://localhost:4567/_ministack/health"
+
+echo "[3/3] Health snapshot:"
+echo "--- floci (:4566) ---"
+curl -s http://localhost:4566/_localstack/health | python3 -m json.tool 2>/dev/null || true
+echo "--- ministack (:4567) ---"
+curl -s http://localhost:4567/_ministack/health | python3 -m json.tool 2>/dev/null || true

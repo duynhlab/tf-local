@@ -2,7 +2,7 @@
 # Providers — EKS Storage Drivers
 # Account 151515151515, ap-southeast-1
 #
-# MiniStack emulates IAM, STS, and EC2 EBS APIs on localhost:4566
+# Floci emulates IAM, STS, and EC2 EBS APIs on localhost:4567
 # ---------------------------------------------------------------------------
 
 terraform {
@@ -25,8 +25,8 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    ec2 = "http://localhost:4566"
-    iam = "http://localhost:4566"
-    sts = "http://localhost:4566"
+    ec2 = "http://localhost:4567"
+    iam = "http://localhost:4567"
+    sts = "http://localhost:4567"
   }
 }

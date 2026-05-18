@@ -32,9 +32,9 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4566"
-    s3  = "http://localhost:4566"
-    sts = "http://localhost:4566"
+    iam = "http://localhost:4567"
+    s3  = "http://localhost:4567"
+    sts = "http://localhost:4567"
   }
 }
 
@@ -50,9 +50,9 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4566"
-    s3  = "http://localhost:4566"
-    sts = "http://localhost:4566"
+    iam = "http://localhost:4567"
+    s3  = "http://localhost:4567"
+    sts = "http://localhost:4567"
   }
 }
 
@@ -68,8 +68,8 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4566"
-    s3  = "http://localhost:4566"
-    sts = "http://localhost:4566"
+    iam = "http://localhost:4567"
+    s3  = "http://localhost:4567"
+    sts = "http://localhost:4567"
   }
 }

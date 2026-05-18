@@ -1,25 +1,27 @@
 # Terraform AWS Networking Lab
 
-Terraform networking lab demonstrating enterprise-like AWS patterns using **MiniStack** — a free, open-source AWS emulator.
+Terraform lab demonstrating enterprise-style AWS patterns against two complementary local emulators:
 
-| Environment | Emulator | Description |
+| Emulator | Host port | Role |
 |---|---|---|
-| **dev** | MiniStack | Basic VPC networking validation |
-| **prod** | MiniStack | Enterprise topology with VPC Peering, PrivateLink, Transit Gateway |
+| **[floci](https://floci.io)** | `:4566` | Compute / identity / data plane — IAM, STS, S3, SNS, SQS, KMS, **EKS (real k3s)**, Lambda, ECS, ECR, RDS, ElastiCache, MSK, OpenSearch, Athena |
+| **[MiniStack](https://github.com/ministackorg/ministack)** | `:4567` | Enterprise networking + edge — advanced EC2/VPC (NAT GW, VPC Endpoints, NACL, Flow Logs, Peering, Egress-only IGW), ELBv2, **WAF v2** |
+
+The Terraform providers split their `endpoints {}` block across the two emulators per service — see [`environments/dev/providers.tf`](environments/dev/providers.tf) and [`environments/prod/providers.tf`](environments/prod/providers.tf). The full per-service matrix is in [`docs/support.md`](docs/support.md).
 
 ## Prerequisites
 
-- [Podman](https://podman.io/getting-started/installation) (or Docker) & Compose
+- [Podman](https://podman.io/getting-started/installation) (preferred) or Docker, with Compose
 - [Terraform](https://developer.hashicorp.com/terraform/install) >= 1.3
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) v2
 
 ## Quick Start
 
 ```bash
-# 1. Start MiniStack
+# 1. Start floci + ministack
 ./scripts/setup.sh
 
-# 2. Run full validation workflow
+# 2. Run full validation workflow (dev + prod)
 ./scripts/test-all.sh
 
 # 3. Teardown when done
@@ -28,126 +30,74 @@ Terraform networking lab demonstrating enterprise-like AWS patterns using **Mini
 
 ## Environment Overview
 
-### dev Environment
-- **Purpose**: Quick validation and basic networking
-- **Emulator**: MiniStack on `http://localhost:4566`
-- **Topology**: Single VPC with 3-tier networking (Public/App/Data, 3 AZs)
-- **Provider**: AWS provider >= 6.0
+### dev environment
+- **Purpose:** quick single-VPC validation
+- **Topology:** one VPC, 3-tier subnets (Public/App/Data), 3 AZs
+- **Endpoints:** `ec2 / elbv2 / wafv2 → :4567`, `iam / sts / s3 / kms → :4566`
 
-### prod Environment
-- **Purpose**: Enterprise networking patterns learning
-- **Emulator**: MiniStack on `http://localhost:4566`
-- **Topology**: Multi-region 3-tier VPC with advanced connectivity:
-  - VPC Peering for cross-region connectivity
-  - PrivateLink for service-level exposure (disabled by default — MiniStack limitation)
-  - Transit Gateway hub-spoke architecture (disabled by default — MiniStack limitation)
-  - WAF v2 (optional)
-- **Provider**: AWS provider >= 6.0
+### prod environment
+- **Purpose:** enterprise networking patterns + edge security
+- **Topology:** multi-region 3-tier with peering, PrivateLink, TGW, WAF v2 (toggles in `environments/prod/terraform.tfvars`)
+- **Endpoints:** same hybrid split, three regional provider aliases (`default`, `ap_southeast_1`, `us_east_1`)
 
-## Run Environments
-
-### dev Environment
-
-```bash
-./scripts/setup.sh
-
-cd environments/dev
-terraform init
-terraform validate
-terraform apply -auto-approve
-terraform output
-terraform destroy -auto-approve
-```
-
-### prod Environment
-
-```bash
-./scripts/setup.sh
-
-cd environments/prod
-terraform init
-terraform validate
-terraform apply -auto-approve
-terraform output
-terraform destroy -auto-approve
-```
+### iam/* case studies
+Each subdirectory under `iam/` is a standalone Terraform root demonstrating a real-world IAM scenario (cross-account SNS→SQS, IRSA + Pod Identity for the AWS Load Balancer Controller, S3 events fan-out, etc.). They target **ministack `:4567`** because the patterns require `aws_iam_openid_connect_provider`, `aws_ebs_snapshot`, and full ELBv2 attributes that floci does not implement.
 
 ## Project Structure
 
 ```
 .
-├── docker-compose.yml              # MiniStack container
+├── docker-compose.yml              # Hybrid stack: floci + ministack
 ├── modules/
-│   ├── vpc-base/                   # Basic VPC, subnets, route tables, IGW, NAT
-│   ├── vpc-peering/                # Cross-region VPC peering connections
+│   ├── vpc-base/                   # VPC, subnets, route tables, IGW, NAT, optional VPC endpoints
+│   ├── vpc-peering/                # Cross-region VPC peering
 │   ├── privatelink/                # NLB + VPC Endpoint Service + Endpoint
 │   ├── transit-gateway/            # Multi-region TGW hub-and-spoke
-│   └── waf-v2/                     # WAF v2 resources (WebACL, IP Sets, Rule Groups)
+│   └── waf-v2/                     # WebACL, IPSet, association
 ├── environments/
-│   ├── dev/                        # MiniStack dev (Singapore, 3 AZs)
-│   └── prod/                       # MiniStack prod (Multi-region: SG, US-East)
-├── iam/                            # IAM case study: cross-account SNS → SQS + IRSA
-│   ├── stg/                        # Staging (1 SNS → 1 SQS, cross-region)
-│   └── prod/                       # Production (1 SNS → 2 SQS fan-out, multi-region)
+│   ├── dev/                        # Singapore, 3 AZs
+│   └── prod/                       # Multi-region (SG, US-East)
+├── iam/                            # IAM-focused case studies (13 roots)
 ├── scripts/
-│   ├── setup.sh                    # Start MiniStack (podman/docker)
-│   ├── teardown.sh                 # Stop MiniStack and cleanup
-│   └── test-all.sh                 # Full validation workflow
+│   ├── setup.sh                    # Bring up floci + ministack (podman compose)
+│   ├── teardown.sh                 # Down + optional terraform destroy
+│   ├── test-all.sh                 # Full dev + prod validation
+│   └── validate-ministack-apis.sh  # Probes ministack APIs (now on :4567)
 ├── docs/
-│   ├── README.md                   # Architecture documentation
-│   ├── subnet.csv                  # IP allocation table (source of truth for CIDRs)
-│   ├── support.md                  # MiniStack API coverage matrix
-│   └── report.md                   # Architecture analysis and recommendations
-└── AGENTS.md                       # AI coding agent guidance and workflow rules
+│   ├── README.md                   # Architecture analysis
+│   ├── support.md                  # Per-service support matrix (floci + ministack)
+│   ├── subnet.csv                  # CIDR source of truth
+│   └── report.md                   # Findings
+└── AGENTS.md                       # AI agent rules
 ```
 
 ## Networking Modules
 
-| Module | Purpose | Key Resources |
+| Module | Purpose | Backed by |
 |---|---|---|
-| **vpc-base** | Foundation networking | VPC, Subnets, Route Tables, IGW, NAT Gateway, Security Groups |
-| **vpc-peering** | Cross-region connectivity | VPC Peering Connections, Route Table updates |
-| **privatelink** | Service exposure | NLB, VPC Endpoint Service, VPC Endpoints |
-| **transit-gateway** | Hub-and-spoke scaling | Transit Gateway, Attachments, Route Tables, Cross-region peering |
-| **waf-v2** | Web application firewall | WebACL, IP Sets, Rule Groups |
+| **vpc-base** | Foundation networking + optional S3/KMS/STS VPC endpoints | ministack `:4567` |
+| **vpc-peering** | Cross-region peering | ministack `:4567` |
+| **privatelink** | NLB + VPC Endpoint Service (gated, see support matrix) | ministack `:4567` |
+| **transit-gateway** | TGW hub-and-spoke (gated, see support matrix) | ministack `:4567` |
+| **waf-v2** | WebACL, IP sets | ministack `:4567` |
 
-## Validation Workflow
+## Health checks
 
-The `./scripts/test-all.sh` script performs:
-
-1. **Setup**: Start MiniStack and verify health
-2. **dev Environment**: fmt → init → validate → apply → output → destroy
-3. **prod Environment**: Same + deep checks (main-vpc, peering)
-4. **Teardown**: Stop MiniStack
-
-## Documentation
-
-- **[AGENTS.md](AGENTS.md)**: AI coding agent guidance and repository rules
-- **[docs/support.md](docs/support.md)**: MiniStack API coverage matrix
-- **[docs/subnet.csv](docs/subnet.csv)**: IP allocation table
-- **[docs/README.md](docs/README.md)**: Architecture analysis and recommendations
+```bash
+curl -s http://localhost:4566/_localstack/health  | python3 -m json.tool   # floci
+curl -s http://localhost:4567/_ministack/health   | python3 -m json.tool   # ministack
+```
 
 ## Troubleshooting
 
-**Container not starting:**
-```bash
-# Check container logs
-podman compose logs
-# or: docker compose logs
+- **Compose engine:** scripts auto-detect `podman-compose` → `podman compose` → `docker compose`.
+- **Containers not starting:** `podman compose logs floci ministack`.
+- **Docker socket:** floci EKS/Lambda/EC2/ECS require `/var/run/docker.sock`. The compose file already mounts it.
+- **CIDR drift:** always consult `docs/subnet.csv` before adding new CIDR blocks.
 
-# Check MiniStack health
-curl http://localhost:4566/_ministack/health
-```
+## Documentation
 
-**CIDR allocation:**
-Always consult `docs/subnet.csv` before assigning new CIDR blocks.
-
-**Cross-region TGW peering:**
-Set `enable_tgw_cross_region_peering = false` in `environments/prod/terraform.tfvars` if experiencing issues.
-
-## Contributing
-
-Follow the workflow in `AGENTS.md`:
-1. Make changes to modules or environments
-2. Run full validation (`./scripts/test-all.sh`)
-3. Update documentation as needed
+- [`AGENTS.md`](AGENTS.md) — AI agent rules and runbook
+- [`docs/support.md`](docs/support.md) — per-service emulator support matrix
+- [`docs/README.md`](docs/README.md) — architecture analysis
+- [`docs/subnet.csv`](docs/subnet.csv) — CIDR allocation

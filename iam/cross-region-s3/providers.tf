@@ -2,7 +2,7 @@
 # Providers — Cross-Region S3 Replication + EKS Multi-Region Access
 # Account 999999999999, ap-southeast-1 (primary) + us-west-2 (replica)
 #
-# MiniStack emulates all regions on localhost:4566
+# Floci emulates all regions on localhost:4567
 # ---------------------------------------------------------------------------
 
 terraform {
@@ -24,11 +24,12 @@ provider "aws" {
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
+  s3_use_path_style           = true
 
   endpoints {
-    iam = "http://localhost:4566"
-    s3  = "http://localhost:4566"
-    sts = "http://localhost:4566"
+    iam = "http://localhost:4567"
+    s3  = "http://localhost:4567"
+    sts = "http://localhost:4567"
   }
 }
 
@@ -41,10 +42,11 @@ provider "aws" {
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
+  s3_use_path_style           = true
 
   endpoints {
-    iam = "http://localhost:4566"
-    s3  = "http://localhost:4566"
-    sts = "http://localhost:4566"
+    iam = "http://localhost:4567"
+    s3  = "http://localhost:4567"
+    sts = "http://localhost:4567"
   }
 }
