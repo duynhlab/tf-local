@@ -1,10 +1,4 @@
-# ---------------------------------------------------------------------------
-# Providers — Cross-Account Secrets Access from EKS
-# Account A (161616161616): application account, source role
-# Account B (171717171717): security account, target role
-#
-# MiniStack is used here to validate cross-account IAM shape and STS chaining.
-# ---------------------------------------------------------------------------
+# Cross-account secrets/parameters — ministack :4567 (iam, sts).
 
 terraform {
   required_version = ">= 1.3"
@@ -19,29 +13,29 @@ terraform {
 
 provider "aws" {
   region                      = "ap-southeast-1"
-  access_key                  = "161616161616"
-  secret_key                  = "test"
+  access_key                  = var.app_account_id
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4567"
-    sts = "http://localhost:4567"
+    iam = local.lab_ministack_endpoints_iam_sts.iam
+    sts = local.lab_ministack_endpoints_iam_sts.sts
   }
 }
 
 provider "aws" {
   alias                       = "security_account"
   region                      = "ap-southeast-1"
-  access_key                  = "171717171717"
-  secret_key                  = "test"
+  access_key                  = var.security_account_id
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4567"
-    sts = "http://localhost:4567"
+    iam = local.lab_ministack_endpoints_iam_sts.iam
+    sts = local.lab_ministack_endpoints_iam_sts.sts
   }
 }

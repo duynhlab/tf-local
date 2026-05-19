@@ -20,7 +20,7 @@ fi
 echo "=== Local AWS Lab – Teardown ==="
 
 if [ "${CONFIRM_DESTROY:-0}" = "1" ]; then
-  for root in environments/dev environments/prod iam/*/; do
+  for root in live/lab/dev/networking live/lab/prod/networking environments/dev environments/prod iam/*/; do
     if [ -d "$PROJECT_DIR/$root/.terraform" ]; then
       echo "[*] Destroying $root ..."
       (cd "$PROJECT_DIR/$root" && terraform destroy -auto-approve) || true

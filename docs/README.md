@@ -2,7 +2,7 @@
 
 ## 1. Introduction
 
-This report analyzes three primary AWS VPC connectivity solutions for enterprise use, focusing on cross-region and multi-account scenarios. All implementations are tested on MiniStack to validate Terraform code without incurring AWS costs.
+This report analyzes three primary AWS VPC connectivity solutions for enterprise use, focusing on cross-region and multi-account scenarios. Lab Terraform is validated on a **hybrid local emulator stack**: **floci** (`:4566`, identity/data/compute) and **ministack** (`:4567`, advanced VPC/ELB/WAF). See [AGENTS.md](../AGENTS.md) and [support.md](./support.md).
 
 **Current context**: Single AWS Account, multi-region deployment. Planning for future multi-account migration.
 

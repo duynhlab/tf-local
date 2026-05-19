@@ -17,11 +17,11 @@ echo ""
 
 run_env_test() {
   local env_name="$1"
-  local env_dir="$PROJECT_DIR/environments/$env_name"
+  local env_dir="$PROJECT_DIR/live/lab/$env_name/networking"
   local ok=0
 
   echo "----------------------------------------------"
-  echo "Testing environments/$env_name"
+  echo "Testing live/lab/$env_name/networking"
   echo "----------------------------------------------"
 
   if terraform -chdir="$env_dir" fmt -check; then

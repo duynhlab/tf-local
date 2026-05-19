@@ -1,11 +1,4 @@
-# ---------------------------------------------------------------------------
-# Providers — EKS Cluster Access Entries and Break-Glass Role
-# Account 181818181818, us-west-2
-#
-# MiniStack is used here to validate IAM roles and optional EKS access-entry
-# resources. Access-entry resources are disabled by default because EKS
-# control-plane feature parity in the emulator is partial.
-# ---------------------------------------------------------------------------
+# EKS cluster access entries — ministack :4567 (eks, iam, sts).
 
 terraform {
   required_version = ">= 1.3"
@@ -19,16 +12,16 @@ terraform {
 }
 
 provider "aws" {
-  region                      = "us-west-2"
-  access_key                  = "181818181818"
-  secret_key                  = "test"
+  region                      = "ap-southeast-1"
+  access_key                  = var.account_id
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
   endpoints {
-    eks = "http://localhost:4567"
-    iam = "http://localhost:4567"
-    sts = "http://localhost:4567"
+    eks = local.lab_ministack_endpoints_eks.eks
+    iam = local.lab_ministack_endpoints_eks.iam
+    sts = local.lab_ministack_endpoints_eks.sts
   }
 }

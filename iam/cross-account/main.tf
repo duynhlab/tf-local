@@ -18,6 +18,8 @@ locals {
     Project     = var.project
     Environment = var.environment
     ManagedBy   = "terraform"
+    AccountBId  = var.account_b_id
+    EksCluster  = var.eks_cluster_name
   })
 }
 

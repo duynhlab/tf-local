@@ -22,9 +22,12 @@
 
 locals {
   tags = merge(var.tags, {
-    Project     = var.project
-    Environment = var.environment
-    ManagedBy   = "terraform"
+    Project           = var.project
+    Environment       = var.environment
+    ManagedBy         = "terraform"
+    LabAccountId      = var.account_id
+    EksClusterPrimary = var.eks_cluster_name_primary
+    EksClusterReplica = var.eks_cluster_name_replica
   })
 }
 

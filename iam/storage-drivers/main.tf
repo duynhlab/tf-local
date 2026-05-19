@@ -11,9 +11,10 @@
 
 locals {
   tags = merge(var.tags, {
-    Project     = var.project
-    Environment = var.environment
-    ManagedBy   = "terraform"
+    Project      = var.project
+    Environment  = var.environment
+    ManagedBy    = "terraform"
+    LabAccountId = var.account_id
   })
 }
 
@@ -100,6 +101,7 @@ resource "aws_iam_policy" "ebs_csi" {
   })
 }
 
+# trivy:ignore:AVD-AWS-0057 EBS CSI driver permissions require account-scoped wildcards per AWS guidance.
 data "aws_iam_policy_document" "ebs_permissions" {
   statement {
     sid    = "EbsLifecycle"
@@ -169,6 +171,7 @@ resource "aws_iam_policy" "efs_csi" {
   })
 }
 
+# trivy:ignore:AVD-AWS-0057 EFS CSI driver permissions require Describe* on file systems in the account.
 data "aws_iam_policy_document" "efs_permissions" {
   statement {
     sid    = "EfsLifecycle"

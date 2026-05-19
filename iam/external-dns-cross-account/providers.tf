@@ -1,8 +1,4 @@
-# ---------------------------------------------------------------------------
-# Providers — ExternalDNS Cross-Account Route53
-# Account A (131313131313): app platform, source role
-# Account B (141414141414): shared services, hosted zone + target role
-# ---------------------------------------------------------------------------
+# ExternalDNS cross-account Route53 — ministack :4567.
 
 terraform {
   required_version = ">= 1.3"
@@ -17,31 +13,31 @@ terraform {
 
 provider "aws" {
   region                      = "ap-southeast-1"
-  access_key                  = "131313131313"
-  secret_key                  = "test"
+  access_key                  = var.shared_services_account_id
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
   endpoints {
-    iam     = "http://localhost:4567"
-    route53 = "http://localhost:4567"
-    sts     = "http://localhost:4567"
+    iam     = local.lab_ministack_endpoints_route53.iam
+    route53 = local.lab_ministack_endpoints_route53.route53
+    sts     = local.lab_ministack_endpoints_route53.sts
   }
 }
 
 provider "aws" {
   alias                       = "shared_services"
   region                      = "us-east-1"
-  access_key                  = "141414141414"
-  secret_key                  = "test"
+  access_key                  = var.shared_services_account_id
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
   endpoints {
-    iam     = "http://localhost:4567"
-    route53 = "http://localhost:4567"
-    sts     = "http://localhost:4567"
+    iam     = local.lab_ministack_endpoints_route53.iam
+    route53 = local.lab_ministack_endpoints_route53.route53
+    sts     = local.lab_ministack_endpoints_route53.sts
   }
 }
