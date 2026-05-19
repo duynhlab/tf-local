@@ -145,7 +145,7 @@ jobs:
 
       - name: Upload plan artifact
         if: vars.AWS_DEV_ROLE_ARN != '' && success()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: tfplan-aws-dev-networking
           path: live/aws/dev/ap-southeast-1/networking/tfplan
@@ -197,7 +197,7 @@ jobs:
 
       - name: Upload plan artifact
         if: vars.AWS_PROD_NETWORK_ROLE_ARN != '' && success()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: tfplan-aws-prod-networking
           path: live/aws/prod/ap-southeast-1/networking/tfplan
