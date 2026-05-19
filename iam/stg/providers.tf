@@ -1,10 +1,4 @@
-# ---------------------------------------------------------------------------
-# Providers — Staging
-# Team A (Account 111111111) SNS in us-west-2
-# Team B (Account 333333333) SQS in ap-southeast-1
-#
-# Floci emulates all accounts/regions on localhost:4567
-# ---------------------------------------------------------------------------
+# Staging cross-account SNS→SQS — ministack :4567 for all declared services.
 
 terraform {
   required_version = ">= 1.3"
@@ -17,37 +11,35 @@ terraform {
   }
 }
 
-# Team B — ap-southeast-1 (default provider, our account)
 provider "aws" {
   region                      = "ap-southeast-1"
-  access_key                  = "test"
-  secret_key                  = "test"
+  access_key                  = local.lab_access_key_test
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4567"
-    sns = "http://localhost:4567"
-    sqs = "http://localhost:4567"
-    sts = "http://localhost:4567"
+    iam = local.lab_ministack_endpoints_messaging.iam
+    sns = local.lab_ministack_endpoints_messaging.sns
+    sqs = local.lab_ministack_endpoints_messaging.sqs
+    sts = local.lab_ministack_endpoints_messaging.sts
   }
 }
 
-# Team A — us-west-2 (SNS owner)
 provider "aws" {
   alias                       = "team_a"
   region                      = "us-west-2"
-  access_key                  = "test"
-  secret_key                  = "test"
+  access_key                  = local.lab_access_key_test
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4567"
-    sns = "http://localhost:4567"
-    sqs = "http://localhost:4567"
-    sts = "http://localhost:4567"
+    iam = local.lab_ministack_endpoints_messaging.iam
+    sns = local.lab_ministack_endpoints_messaging.sns
+    sqs = local.lab_ministack_endpoints_messaging.sqs
+    sts = local.lab_ministack_endpoints_messaging.sts
   }
 }

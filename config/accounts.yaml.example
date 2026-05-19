@@ -1,0 +1,20 @@
+# Copy to accounts.yaml and fill real account IDs (gitignored).
+# Used by live/aws multi-account stacks (Track B).
+
+organization:
+  management_account_id: "000000000000"
+
+ous:
+  security:
+    log_archive_account_id: "111111111111"
+    audit_account_id: "222222222222"
+  infrastructure:
+    network_prod_account_id: "333333333333"
+    network_dev_account_id: "444444444444"
+  workloads:
+    app_prod_account_id: "555555555555"
+    app_dev_account_id: "666666666666"
+
+regions:
+  primary: ap-southeast-1
+  dr: us-east-1

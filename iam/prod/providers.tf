@@ -1,10 +1,4 @@
-# ---------------------------------------------------------------------------
-# Providers — Production
-# Team A (Account 222222222) SNS in us-west-2
-# Team B (Account 444444444) SQS in us-west-2 (produs) + eu-north-1 (prodeu)
-#
-# Floci emulates all accounts/regions on localhost:4567
-# ---------------------------------------------------------------------------
+# Production cross-account SNS→SQS — ministack :4567 for all declared services.
 
 terraform {
   required_version = ">= 1.3"
@@ -17,55 +11,52 @@ terraform {
   }
 }
 
-# Team B — us-west-2 (produs, default provider)
 provider "aws" {
   region                      = "us-west-2"
-  access_key                  = "test"
-  secret_key                  = "test"
+  access_key                  = local.lab_access_key_test
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4567"
-    sns = "http://localhost:4567"
-    sqs = "http://localhost:4567"
-    sts = "http://localhost:4567"
+    iam = local.lab_ministack_endpoints_messaging.iam
+    sns = local.lab_ministack_endpoints_messaging.sns
+    sqs = local.lab_ministack_endpoints_messaging.sqs
+    sts = local.lab_ministack_endpoints_messaging.sts
   }
 }
 
-# Team B — eu-north-1 (prodeu)
 provider "aws" {
   alias                       = "eu"
   region                      = "eu-north-1"
-  access_key                  = "test"
-  secret_key                  = "test"
+  access_key                  = local.lab_access_key_test
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4567"
-    sns = "http://localhost:4567"
-    sqs = "http://localhost:4567"
-    sts = "http://localhost:4567"
+    iam = local.lab_ministack_endpoints_messaging.iam
+    sns = local.lab_ministack_endpoints_messaging.sns
+    sqs = local.lab_ministack_endpoints_messaging.sqs
+    sts = local.lab_ministack_endpoints_messaging.sts
   }
 }
 
-# Team A — us-west-2 (SNS owner)
 provider "aws" {
   alias                       = "team_a"
   region                      = "us-west-2"
-  access_key                  = "test"
-  secret_key                  = "test"
+  access_key                  = local.lab_access_key_test
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
 
   endpoints {
-    iam = "http://localhost:4567"
-    sns = "http://localhost:4567"
-    sqs = "http://localhost:4567"
-    sts = "http://localhost:4567"
+    iam = local.lab_ministack_endpoints_messaging.iam
+    sns = local.lab_ministack_endpoints_messaging.sns
+    sqs = local.lab_ministack_endpoints_messaging.sqs
+    sts = local.lab_ministack_endpoints_messaging.sts
   }
 }

@@ -1,6 +1,10 @@
 ###############################################################################
 # VPC Peering Module – Cross-Region, 3-Tier Architecture
 #
+# NOTE: Requester/accepter VPC subnets are inline until modules/networking/vpc
+# supports provider aliases (aws.requester / aws.accepter). Then replace with
+# two networking/vpc module calls.
+#
 # Creates two VPCs (requester in region A, accepter in region B) with:
 # - 3-tier subnets (public/app/data) per VPC
 # - Internet Gateway + NAT Gateway for egress

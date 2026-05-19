@@ -78,7 +78,7 @@ data "aws_iam_policy_document" "bucket_policy" {
 
     principals {
       type        = "AWS"
-      identifiers = [aws_iam_role.s3_reader_irsa.arn]
+      identifiers = [module.s3_reader_irsa.role_arn]
     }
 
     actions = [
@@ -100,7 +100,7 @@ data "aws_iam_policy_document" "bucket_policy" {
 
     principals {
       type        = "AWS"
-      identifiers = [aws_iam_role.s3_reader_pod_identity.arn]
+      identifiers = [module.s3_reader_pod_identity.role_arn]
     }
 
     actions = [
@@ -131,18 +131,6 @@ resource "aws_iam_openid_connect_provider" "eks" {
   })
 }
 
-# --- 2b. IAM Role — Trust policy (IRSA) ---
-# "Ai vào được nhà?" → Chỉ đúng ServiceAccount trong đúng namespace
-resource "aws_iam_role" "s3_reader_irsa" {
-  name               = "s3-reader-irsa-${var.environment}-role"
-  assume_role_policy = data.aws_iam_policy_document.irsa_trust.json
-
-  tags = merge(local.tags, {
-    Name    = "s3-reader-irsa-${var.environment}-role"
-    Pattern = "IRSA"
-  })
-}
-
 data "aws_iam_policy_document" "irsa_trust" {
   statement {
     effect = "Allow"
@@ -166,18 +154,6 @@ data "aws_iam_policy_document" "irsa_trust" {
       values   = ["sts.amazonaws.com"]
     }
   }
-}
-
-# --- 2c. Permission policy (IRSA) ---
-# "Vào nhà rồi được làm gì?" → Read/Write S3, scoped to bucket + prefix
-resource "aws_iam_policy" "s3_access_irsa" {
-  name   = "s3-access-irsa-${var.environment}-policy"
-  policy = data.aws_iam_policy_document.s3_permissions.json
-
-  tags = merge(local.tags, {
-    Name    = "s3-access-irsa-${var.environment}-policy"
-    Pattern = "IRSA"
-  })
 }
 
 data "aws_iam_policy_document" "s3_permissions" {
@@ -206,26 +182,19 @@ data "aws_iam_policy_document" "s3_permissions" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "s3_reader_irsa" {
-  role       = aws_iam_role.s3_reader_irsa.name
-  policy_arn = aws_iam_policy.s3_access_irsa.arn
+module "s3_reader_irsa" {
+  source = "../../modules/iam/irsa_role"
+
+  role_name          = "s3-reader-irsa-${var.environment}-role"
+  assume_role_policy = data.aws_iam_policy_document.irsa_trust.json
+  policy_json        = data.aws_iam_policy_document.s3_permissions.json
+  role_tags          = { Pattern = "IRSA" }
+  tags               = local.tags
 }
 
 # ===========================================================================
 # 3. PATTERN B — Pod Identity (EKS ≥ 1.24)
 # ===========================================================================
-
-# --- 3a. IAM Role — Trust policy (Pod Identity) ---
-# "Ai vào được nhà?" → pods.eks.amazonaws.com (fixed service principal)
-resource "aws_iam_role" "s3_reader_pod_identity" {
-  name               = "s3-reader-podid-${var.environment}-role"
-  assume_role_policy = data.aws_iam_policy_document.pod_identity_trust.json
-
-  tags = merge(local.tags, {
-    Name    = "s3-reader-podid-${var.environment}-role"
-    Pattern = "PodIdentity"
-  })
-}
 
 data "aws_iam_policy_document" "pod_identity_trust" {
   statement {
@@ -238,18 +207,6 @@ data "aws_iam_policy_document" "pod_identity_trust" {
 
     actions = ["sts:AssumeRole", "sts:TagSession"]
   }
-}
-
-# --- 3b. Permission policy (Pod Identity) — uses ABAC with session tags ---
-# "Vào nhà rồi được làm gì?" → Same S3 access, but scoped by namespace tag
-resource "aws_iam_policy" "s3_access_pod_identity" {
-  name   = "s3-access-podid-${var.environment}-policy"
-  policy = data.aws_iam_policy_document.s3_permissions_abac.json
-
-  tags = merge(local.tags, {
-    Name    = "s3-access-podid-${var.environment}-policy"
-    Pattern = "PodIdentity"
-  })
 }
 
 data "aws_iam_policy_document" "s3_permissions_abac" {
@@ -279,7 +236,12 @@ data "aws_iam_policy_document" "s3_permissions_abac" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "s3_reader_pod_identity" {
-  role       = aws_iam_role.s3_reader_pod_identity.name
-  policy_arn = aws_iam_policy.s3_access_pod_identity.arn
+module "s3_reader_pod_identity" {
+  source = "../../modules/iam/irsa_role"
+
+  role_name          = "s3-reader-podid-${var.environment}-role"
+  assume_role_policy = data.aws_iam_policy_document.pod_identity_trust.json
+  policy_json        = data.aws_iam_policy_document.s3_permissions_abac.json
+  role_tags          = { Pattern = "PodIdentity" }
+  tags               = local.tags
 }

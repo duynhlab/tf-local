@@ -10,7 +10,7 @@ moved {
 }
 
 module "main_vpc" {
-  source = "../../modules/vpc-base"
+  source = "../../modules/networking/vpc"
 
   providers = {
     aws = aws.ap_southeast_1

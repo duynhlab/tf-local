@@ -27,12 +27,24 @@ jobs:
     name: Terraform Validate
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        environment:
-          - environments/dev
-          - environments/prod
-          - iam/stg
+        root:
+          - live/lab/dev/networking
+          - live/lab/prod/networking
+          - iam/alb-controller
+          - iam/cluster-access
+          - iam/cross-account
+          - iam/cross-account-secrets
+          - iam/cross-region-pipeline
+          - iam/cross-region-s3
+          - iam/external-dns-cross-account
           - iam/prod
+          - iam/s3-eks
+          - iam/s3-events
+          - iam/s3-go-compute-matrix
+          - iam/stg
+          - iam/storage-drivers
     steps:
       - uses: actions/checkout@v6
 
@@ -41,28 +53,43 @@ jobs:
           terraform_version: "~1.9"
 
       - name: Init
-        working-directory: ${{ matrix.environment }}
+        working-directory: ${{ matrix.root }}
         run: terraform init -backend=false -input=false
 
       - name: Validate
-        working-directory: ${{ matrix.environment }}
+        working-directory: ${{ matrix.root }}
         run: terraform validate
 
   tflint:
     name: TFLint
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         directory:
-          - modules/vpc-base
+          - modules/networking/vpc
+          - modules/lab-provider
+          - modules/iam/irsa_role
+          - modules/iam/sqs_with_dlq
           - modules/vpc-peering
           - modules/privatelink
           - modules/transit-gateway
           - modules/waf-v2
-          - environments/dev
-          - environments/prod
-          - iam/stg
+          - live/lab/dev/networking
+          - live/lab/prod/networking
+          - iam/alb-controller
+          - iam/cluster-access
+          - iam/cross-account
+          - iam/cross-account-secrets
+          - iam/cross-region-pipeline
+          - iam/cross-region-s3
+          - iam/external-dns-cross-account
           - iam/prod
+          - iam/s3-eks
+          - iam/s3-events
+          - iam/s3-go-compute-matrix
+          - iam/stg
+          - iam/storage-drivers
     steps:
       - uses: actions/checkout@v6
 
@@ -108,12 +135,12 @@ jobs:
           soft_fail: true
 
   # --------------------------------------------------------------------------
-  # MiniStack Integration Test
-  # - Runs on port 4566
-  # - Tests both dev and prod environments
+  # Hybrid emulator integration (floci :4566 + ministack :4567)
+  # - environments/* use hybrid endpoints
+  # - iam/* use ministack :4567 for all declared services
   # --------------------------------------------------------------------------
-  ministack-integration:
-    name: MiniStack Integration Test
+  hybrid-integration:
+    name: Hybrid Emulator Integration
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     needs: [terraform-fmt, terraform-validate, tflint]
@@ -124,22 +151,31 @@ jobs:
         with:
           terraform_version: "~1.9"
 
-      - name: Start MiniStack
+      - name: Start floci and ministack
         run: |
           docker compose up -d
-          echo "Waiting for MiniStack readiness..."
+          echo "Waiting for floci (:4566) and ministack (:4567)..."
           for i in $(seq 1 30); do
-            curl -sf http://localhost:4566/_ministack/health > /dev/null 2>&1 && break
-            echo "  Attempt $i/30..."
+            floci_ok=0
+            mini_ok=0
+            curl -sf http://localhost:4566/_localstack/health > /dev/null 2>&1 && floci_ok=1
+            curl -sf http://localhost:4567/_ministack/health > /dev/null 2>&1 && mini_ok=1
+            if [ "$floci_ok" = "1" ] && [ "$mini_ok" = "1" ]; then
+              echo "Both emulators ready."
+              break
+            fi
+            echo "  Attempt $i/30 (floci=$floci_ok ministack=$mini_ok)..."
             sleep 3
           done
-          echo "MiniStack health check:"
-          curl -s http://localhost:4566/_ministack/health | python3 -m json.tool || true
+          echo "Floci health:"
+          curl -s http://localhost:4566/_localstack/health | python3 -m json.tool || true
+          echo "Ministack health:"
+          curl -s http://localhost:4567/_ministack/health | python3 -m json.tool || true
 
       - name: Test Dev Environment
         run: |
-          cd environments/dev
-          echo "=== MiniStack: Dev Environment ==="
+          cd live/lab/dev/networking
+          echo "=== Hybrid: Dev Environment ==="
           terraform fmt -check
           terraform init -input=false
           terraform validate
@@ -150,7 +186,7 @@ jobs:
       - name: Test IAM Staging
         run: |
           cd iam/stg
-          echo "=== MiniStack: IAM Staging ==="
+          echo "=== Ministack: IAM Staging ==="
           terraform fmt -check
           terraform init -input=false
           terraform validate
@@ -161,7 +197,7 @@ jobs:
       - name: Test IAM Production
         run: |
           cd iam/prod
-          echo "=== MiniStack: IAM Production ==="
+          echo "=== Ministack: IAM Production ==="
           terraform fmt -check
           terraform init -input=false
           terraform validate
@@ -171,17 +207,15 @@ jobs:
 
       - name: Test Prod Environment
         run: |
-          cd environments/prod
-          echo "=== MiniStack: Prod Environment ==="
+          cd live/lab/prod/networking
+          echo "=== Hybrid: Prod Environment ==="
           terraform fmt -check
           terraform init -input=false
           terraform validate
           terraform apply -auto-approve
           terraform output
-          # Verify critical outputs exist (main_vpc + peering always enabled)
           terraform output -raw main_vpc_id > /dev/null
           terraform output -raw peering_connection_id > /dev/null
-          # Verify critical resources in state
           terraform state list | grep -q "module.main_vpc.aws_vpc.this"
           terraform state list | grep -q "module.vpc_peering.aws_vpc_peering_connection.this"
           terraform destroy -auto-approve

@@ -1,0 +1,14 @@
+# Checkov config for AWS CI (hard fail). Lab emulator roots may use skip comments where needed.
+framework:
+  - terraform
+
+quiet: true
+compact: true
+
+external-checks-dir:
+  - policies/checkov
+
+skip-check:
+  # Lab-only: static test credentials and emulator endpoints (not used in live/aws)
+  - CKV_AWS_41
+  - CKV_AWS_42

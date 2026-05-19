@@ -9,17 +9,17 @@ output "sns_topic_arn" {
 
 output "sqs_queue_arn" {
   description = "Team B SQS queue ARN"
-  value       = aws_sqs_queue.events.arn
+  value       = module.team_b_queues.queue_arn
 }
 
 output "sqs_queue_url" {
   description = "Team B SQS queue URL"
-  value       = aws_sqs_queue.events.id
+  value       = module.team_b_queues.queue_url
 }
 
 output "sqs_dlq_arn" {
   description = "Dead Letter Queue ARN"
-  value       = aws_sqs_queue.dlq.arn
+  value       = module.team_b_queues.dlq_arn
 }
 
 output "sns_subscription_arn" {
@@ -29,15 +29,15 @@ output "sns_subscription_arn" {
 
 output "irsa_role_arn" {
   description = "IRSA role ARN for EKS consumer pods"
-  value       = aws_iam_role.sqs_consumer.arn
+  value       = module.sqs_consumer_irsa.role_arn
 }
 
 output "irsa_role_name" {
   description = "IRSA role name"
-  value       = aws_iam_role.sqs_consumer.name
+  value       = module.sqs_consumer_irsa.role_name
 }
 
 output "eks_service_account_annotation" {
   description = "Annotation to add to Kubernetes ServiceAccount"
-  value       = "eks.amazonaws.com/role-arn: ${aws_iam_role.sqs_consumer.arn}"
+  value       = "eks.amazonaws.com/role-arn: ${module.sqs_consumer_irsa.role_arn}"
 }

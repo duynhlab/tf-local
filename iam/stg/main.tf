@@ -73,45 +73,6 @@ data "aws_iam_policy_document" "sns_topic_policy" {
 # 2. TEAM B RESOURCES (SQS — ap-southeast-1)
 # ===========================================================================
 
-# --- 2a. Dead Letter Queue ---
-resource "aws_sqs_queue" "dlq" {
-  name                      = var.sqs_dlq_name
-  message_retention_seconds = 1209600 # 14 days
-  sqs_managed_sse_enabled   = true
-
-  tags = merge(local.tags, {
-    Name = var.sqs_dlq_name
-    Team = "team-b"
-    Role = "dead-letter-queue"
-  })
-}
-
-# --- 2b. Main SQS Queue ---
-resource "aws_sqs_queue" "events" {
-  name                       = var.sqs_queue_name
-  visibility_timeout_seconds = 300
-  message_retention_seconds  = 345600 # 4 days
-  receive_wait_time_seconds  = 20     # long polling
-  sqs_managed_sse_enabled    = true
-
-  redrive_policy = jsonencode({
-    deadLetterTargetArn = aws_sqs_queue.dlq.arn
-    maxReceiveCount     = var.dlq_max_receive_count
-  })
-
-  tags = merge(local.tags, {
-    Name = var.sqs_queue_name
-    Team = "team-b"
-    Role = "event-consumer"
-  })
-}
-
-# --- 2c. SQS Queue Policy — Allow SNS topic to send messages ---
-resource "aws_sqs_queue_policy" "allow_sns_send" {
-  queue_url = aws_sqs_queue.events.id
-  policy    = data.aws_iam_policy_document.sqs_queue_policy.json
-}
-
 data "aws_iam_policy_document" "sqs_queue_policy" {
   statement {
     sid    = "AllowSNSSendMessage"
@@ -123,7 +84,7 @@ data "aws_iam_policy_document" "sqs_queue_policy" {
     }
 
     actions   = ["sqs:SendMessage"]
-    resources = [aws_sqs_queue.events.arn]
+    resources = [module.team_b_queues.queue_arn]
 
     condition {
       test     = "ArnEquals"
@@ -133,12 +94,27 @@ data "aws_iam_policy_document" "sqs_queue_policy" {
   }
 }
 
+module "team_b_queues" {
+  source = "../../modules/iam/sqs_with_dlq"
+
+  queue_name            = var.sqs_queue_name
+  dlq_name              = var.sqs_dlq_name
+  dlq_max_receive_count = var.dlq_max_receive_count
+  queue_tags            = { Team = "team-b" }
+  tags                  = local.tags
+}
+
+resource "aws_sqs_queue_policy" "allow_sns_send" {
+  queue_url = module.team_b_queues.queue_url
+  policy    = data.aws_iam_policy_document.sqs_queue_policy.json
+}
+
 # --- 2d. SNS Subscription (SQS subscribes to SNS topic) ---
 resource "aws_sns_topic_subscription" "sqs" {
   provider             = aws.team_a
   topic_arn            = aws_sns_topic.events.arn
   protocol             = "sqs"
-  endpoint             = aws_sqs_queue.events.arn
+  endpoint             = module.team_b_queues.queue_arn
   raw_message_delivery = true
 }
 
@@ -154,17 +130,6 @@ resource "aws_iam_openid_connect_provider" "eks" {
 
   tags = merge(local.tags, {
     Name = "eks-oidc-stg"
-    Team = "team-b"
-  })
-}
-
-# --- 3b. IAM Role with OIDC trust (IRSA) ---
-resource "aws_iam_role" "sqs_consumer" {
-  name               = "sqs-consumer-${var.environment}-role"
-  assume_role_policy = data.aws_iam_policy_document.irsa_trust.json
-
-  tags = merge(local.tags, {
-    Name = "sqs-consumer-${var.environment}-role"
     Team = "team-b"
   })
 }
@@ -194,17 +159,6 @@ data "aws_iam_policy_document" "irsa_trust" {
   }
 }
 
-# --- 3c. IAM Policy — SQS consumer permissions ---
-resource "aws_iam_policy" "sqs_consumer" {
-  name   = "sqs-consumer-${var.environment}-policy"
-  policy = data.aws_iam_policy_document.sqs_consumer_permissions.json
-
-  tags = merge(local.tags, {
-    Name = "sqs-consumer-${var.environment}-policy"
-    Team = "team-b"
-  })
-}
-
 data "aws_iam_policy_document" "sqs_consumer_permissions" {
   statement {
     sid    = "SQSReadDelete"
@@ -216,7 +170,7 @@ data "aws_iam_policy_document" "sqs_consumer_permissions" {
       "sqs:GetQueueUrl",
       "sqs:ChangeMessageVisibility",
     ]
-    resources = [aws_sqs_queue.events.arn]
+    resources = [module.team_b_queues.queue_arn]
   }
 
   statement {
@@ -226,12 +180,16 @@ data "aws_iam_policy_document" "sqs_consumer_permissions" {
       "sqs:GetQueueAttributes",
       "sqs:GetQueueUrl",
     ]
-    resources = [aws_sqs_queue.dlq.arn]
+    resources = [module.team_b_queues.dlq_arn]
   }
 }
 
-# --- 3d. Attach policy to role ---
-resource "aws_iam_role_policy_attachment" "sqs_consumer" {
-  role       = aws_iam_role.sqs_consumer.name
-  policy_arn = aws_iam_policy.sqs_consumer.arn
+module "sqs_consumer_irsa" {
+  source = "../../modules/iam/irsa_role"
+
+  role_name          = "sqs-consumer-${var.environment}-role"
+  assume_role_policy = data.aws_iam_policy_document.irsa_trust.json
+  policy_json        = data.aws_iam_policy_document.sqs_consumer_permissions.json
+  role_tags          = { Team = "team-b" }
+  tags               = local.tags
 }

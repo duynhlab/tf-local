@@ -44,13 +44,22 @@ API-level details: **[docs/support.md](docs/support.md)** (authoritative matrix,
 
 ```text
 docker-compose.yml             # floci :4566 + ministack :4567 + ./volume/{floci,ministack}
+bootstrap/                     # One-time S3 state bucket (real AWS, local backend)
+config/
+  accounts.yaml.example        # Multi-account map (copy → accounts.yaml, gitignored)
 docs/
-  report.md
   subnet.csv                   # CIDR source of truth
   support.md                   # Combined floci + ministack support matrix
-environments/
-  dev/                         # ap-southeast-1, hybrid endpoints
-  prod/                        # multi-region, hybrid endpoints
+  landing-zone.md              # Track B account / state layout
+  compliance.md                # Checkov / Trivy policy gates
+  terragrunt-decision.md       # Why plain Terraform roots (no Terragrunt)
+  module-versioning.md         # In-repo module pins and lock files
+live/
+  lab/dev/networking/          # Emulator dev VPC (hybrid endpoints)
+  lab/prod/networking/         # Emulator prod (peering, TGW, PL toggles)
+  aws/dev/ap-southeast-1/networking/   # Real AWS dev VPC
+  aws/prod/ap-southeast-1/networking/ # Real AWS prod (assume_role)
+environments/                  # Deprecated → use live/lab/* (see environments/README.md)
 iam/
   alb-controller/              # IRSA + Pod Identity for AWS Load Balancer Controller
   cluster-access/              # EKS access entries (optional toggle)
@@ -66,19 +75,24 @@ iam/
   stg/                         # Staging cross-account SNS→SQS
   storage-drivers/             # EBS / EFS CSI driver IAM
 modules/
-  vpc-base/
-  vpc-peering/
-  privatelink/
-  transit-gateway/
-  waf-v2/
+  lab-provider/                # Shared emulator endpoint maps
+  networking/vpc/              # 3-tier VPC (successor to vpc-base)
+  iam/irsa_role/, iam/sqs_with_dlq/
+  vpc-peering/, privatelink/, transit-gateway/, waf-v2/
+policies/checkov/              # Custom Checkov rules (AWS CI hard fail)
+tests/                         # terraform test (plan-only module smoke)
+examples/networking/minimal/
 scripts/
   setup.sh                     # podman/docker compose up floci + ministack
   teardown.sh                  # down -v (+ optional terraform destroy)
   test-all.sh                  # dev + prod full apply/destroy cycle
   validate-ministack-apis.sh   # API probe against ministack (:4567)
+.github/workflows/
+  ci.yml                       # Lab emulator CI
+  aws-ci.yml                   # Real AWS validate / plan / Checkov / drift schedule
 ```
 
-Each `environments/*` and `iam/*` directory is a **standalone** Terraform root module.
+Each `live/*`, `iam/*`, and `bootstrap/` directory is a **standalone** Terraform root module.
 
 ---
 
@@ -139,6 +153,8 @@ Each `environments/*` and `iam/*` directory is a **standalone** Terraform root m
 
 ## Provider rules
 
+- Shared emulator endpoint maps live in [`modules/lab-provider/common.tf`](modules/lab-provider/common.tf); each root symlinks `lab_provider_common.tf` and references `local.lab_hybrid_endpoints` or `local.lab_ministack_endpoints_*` in `providers.tf`.
+
 - Keep the **hybrid `endpoints { … }`** block:
 
   | Endpoint | URL |
@@ -193,7 +209,7 @@ Use `apply` / `destroy` only for **local emulator** validation and document inte
 
 ## Module selection
 
-1. `modules/vpc-base/` for VPC / subnet / route / IGW / NAT / VPC endpoint patterns.
+1. `modules/networking/vpc/` (formerly `vpc-base`) for VPC / subnet / route / IGW / NAT / VPC endpoint patterns.
 2. Other `modules/*` when they fit.
 3. Plain `resource` blocks only if no module fits.
 4. External registry modules only when explicitly requested.
@@ -214,7 +230,7 @@ Do not add new providers or external modules without a clear request.
 
 - **Prod VPC names in tfvars**: peering and PrivateLink VPC **Name** tags come from `peering_*_vpc_name` and `pl_*_vpc_name` in `environments/prod`. TGW hub **Name** tags use `tgw_name_tag_region_*`; spoke VPC names remain **map keys** in `tgw_spokes_region_*`. Inventory table: [docs/README.md](docs/README.md) **§1.3**.
 - **Naming and diagrams**: use [docs/README.md](docs/README.md) **§1.2 *Network conventions*** for landing zone vs spoke, VPC naming table, and Gateway vs Interface endpoint diagrams.
-- **Endpoints in code**: `modules/vpc-base` exposes optional flags: **S3 Gateway** (app + data route tables), **KMS / STS Interface** (app subnets, dedicated SG for TCP 443 from the VPC CIDR, `private_dns_enabled = true`). Endpoints live in ministack `:4567` like the rest of VPC primitives.
+- **Endpoints in code**: `modules/networking/vpc` exposes optional flags: **S3 Gateway** (app + data route tables), **KMS / STS Interface** (app subnets, dedicated SG for TCP 443 from the VPC CIDR, `private_dns_enabled = true`). Endpoints live in ministack `:4567` like the rest of VPC primitives.
 - **Tagging**: new endpoint and SG resources must use `merge(local.default_tags, { Name = ... })` like other `vpc-base` resources.
 - **Conventions drift**: when you introduce new lab-wide naming rules, update **this file** and the long-form README §1.2 together.
 

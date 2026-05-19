@@ -3,6 +3,7 @@
 *.tfstate
 *.tfstate.backup
 *.tfplan
+*.pre-floci.bak
 
 # MiniStack / LocalStack
 volume/
@@ -10,6 +11,10 @@ aws
 
 # Environment
 .env
+terraform.tfvars
+*.auto.tfvars
+backend.hcl
+config/accounts.yaml
 
 # OS
 .DS_Store

@@ -1,9 +1,4 @@
-# ---------------------------------------------------------------------------
-# Providers — Cross-Region S3 Replication + EKS Multi-Region Access
-# Account 999999999999, ap-southeast-1 (primary) + us-west-2 (replica)
-#
-# Floci emulates all regions on localhost:4567
-# ---------------------------------------------------------------------------
+# Cross-region S3 replication + EKS identity — ministack :4567.
 
 terraform {
   required_version = ">= 1.3"
@@ -16,37 +11,35 @@ terraform {
   }
 }
 
-# Primary region — EKS cluster + source S3 bucket
 provider "aws" {
   region                      = "ap-southeast-1"
   access_key                  = "999999999999"
-  secret_key                  = "test"
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
   s3_use_path_style           = true
 
   endpoints {
-    iam = "http://localhost:4567"
-    s3  = "http://localhost:4567"
-    sts = "http://localhost:4567"
+    iam = local.lab_ministack_endpoints_iam_s3_sts.iam
+    s3  = local.lab_ministack_endpoints_iam_s3_sts.s3
+    sts = local.lab_ministack_endpoints_iam_s3_sts.sts
   }
 }
 
-# Replica region — DR S3 bucket + failover EKS read
 provider "aws" {
   alias                       = "replica"
   region                      = "us-west-2"
   access_key                  = "999999999999"
-  secret_key                  = "test"
+  secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
   s3_use_path_style           = true
 
   endpoints {
-    iam = "http://localhost:4567"
-    s3  = "http://localhost:4567"
-    sts = "http://localhost:4567"
+    iam = local.lab_ministack_endpoints_iam_s3_sts.iam
+    s3  = local.lab_ministack_endpoints_iam_s3_sts.s3
+    sts = local.lab_ministack_endpoints_iam_s3_sts.sts
   }
 }
