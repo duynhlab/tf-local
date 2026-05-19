@@ -13,7 +13,7 @@ terraform {
 
 provider "aws" {
   region                      = "ap-southeast-1"
-  access_key                  = "141414141414"
+  access_key                  = var.shared_services_account_id
   secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
@@ -29,7 +29,7 @@ provider "aws" {
 provider "aws" {
   alias                       = "shared_services"
   region                      = "us-east-1"
-  access_key                  = "141414141414"
+  access_key                  = var.shared_services_account_id
   secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true

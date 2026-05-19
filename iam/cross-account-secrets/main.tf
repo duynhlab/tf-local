@@ -11,9 +11,10 @@
 
 locals {
   tags = merge(var.tags, {
-    Project     = var.project
-    Environment = var.environment
-    ManagedBy   = "terraform"
+    Project      = var.project
+    Environment  = var.environment
+    ManagedBy    = "terraform"
+    AppAccountId = var.app_account_id
   })
 
   secret_arn_pattern = "arn:aws:secretsmanager:ap-southeast-1:${var.security_account_id}:secret:${var.secret_name_prefix}*"
@@ -185,6 +186,7 @@ resource "aws_iam_policy" "payments_secrets_reader_podid" {
   })
 }
 
+# trivy:ignore:AVD-AWS-0057 Cross-account secret paths use prefix wildcards as in production reader policies.
 data "aws_iam_policy_document" "target_permissions" {
   statement {
     sid    = "SecretsManagerRead"

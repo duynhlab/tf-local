@@ -11,9 +11,10 @@
 
 locals {
   tags = merge(var.tags, {
-    Project     = var.project
-    Environment = var.environment
-    ManagedBy   = "terraform"
+    Project      = var.project
+    Environment  = var.environment
+    ManagedBy    = "terraform"
+    LabAccountId = var.account_id
   })
 }
 
@@ -77,6 +78,7 @@ resource "aws_iam_policy" "developer" {
   })
 }
 
+# trivy:ignore:AVD-AWS-0057 Lab IAM policy demonstrates EKS read-only cluster discovery.
 data "aws_iam_policy_document" "developer" {
   statement {
     sid    = "DescribeCluster"
@@ -98,6 +100,7 @@ resource "aws_iam_policy" "platform_ops" {
   })
 }
 
+# trivy:ignore:AVD-AWS-0057 Lab policy covers EKS access entry lifecycle APIs used in the case study.
 data "aws_iam_policy_document" "platform_ops" {
   statement {
     sid    = "AccessEntryLifecycle"
@@ -124,6 +127,7 @@ resource "aws_iam_policy" "break_glass" {
   })
 }
 
+# trivy:ignore:AVD-AWS-0057 Break-glass policy intentionally grants emergency eks:* for the lab scenario.
 data "aws_iam_policy_document" "break_glass" {
   statement {
     sid    = "EmergencyClusterAdmin"

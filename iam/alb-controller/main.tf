@@ -12,9 +12,10 @@
 
 locals {
   tags = merge(var.tags, {
-    Project     = var.project
-    Environment = var.environment
-    ManagedBy   = "terraform"
+    Project      = var.project
+    Environment  = var.environment
+    ManagedBy    = "terraform"
+    LabAccountId = var.account_id
   })
 }
 
@@ -33,6 +34,7 @@ resource "aws_vpc" "ingress" {
   })
 }
 
+# trivy:ignore:AVD-AWS-0164 Public subnets are required for the internet-facing ALB lab topology.
 resource "aws_subnet" "public" {
   count = length(var.public_subnet_cidrs)
 
@@ -57,6 +59,8 @@ resource "aws_internet_gateway" "ingress" {
   })
 }
 
+# trivy:ignore:AVD-AWS-0107 Public HTTP ingress is intentional for the ALB controller demo.
+# trivy:ignore:AVD-AWS-0104 Egress to the internet is required for health checks in this lab.
 resource "aws_security_group" "alb" {
   name        = "alb-controller-demo-sg-${var.environment}"
   description = "Representative ALB security group"
@@ -84,12 +88,14 @@ resource "aws_security_group" "alb" {
   })
 }
 
+# trivy:ignore:AVD-AWS-0053 Lab demo uses an internet-facing ALB for controller exercises.
 resource "aws_lb" "demo" {
-  name               = var.load_balancer_name
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb.id]
-  subnets            = aws_subnet.public[*].id
+  name                       = var.load_balancer_name
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.alb.id]
+  subnets                    = aws_subnet.public[*].id
+  drop_invalid_header_fields = true
 
   tags = merge(local.tags, {
     Name = var.load_balancer_name
@@ -115,6 +121,7 @@ resource "aws_lb_target_group" "demo" {
   })
 }
 
+# trivy:ignore:AVD-AWS-0054 HTTP listener is a minimal lab stand-in; production would terminate TLS on the ALB.
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.demo.arn
   port              = 80
@@ -243,6 +250,7 @@ resource "aws_iam_role_policy_attachment" "alb_controller_pod_identity" {
   policy_arn = aws_iam_policy.alb_controller_pod_identity.arn
 }
 
+# trivy:ignore:AVD-AWS-0057 AWS Load Balancer Controller policy requires broad ELB/EC2 permissions.
 data "aws_iam_policy_document" "controller_permissions" {
   statement {
     sid    = "AllowAlbLifecycle"

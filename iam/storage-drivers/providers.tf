@@ -13,7 +13,7 @@ terraform {
 
 provider "aws" {
   region                      = "ap-southeast-1"
-  access_key                  = "151515151515"
+  access_key                  = var.account_id
   secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true

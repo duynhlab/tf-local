@@ -8,9 +8,11 @@
 
 locals {
   tags = merge(var.tags, {
-    Project     = var.project
-    Environment = var.environment
-    ManagedBy   = "terraform"
+    Project                 = var.project
+    Environment             = var.environment
+    ManagedBy               = "terraform"
+    AppAccountId            = var.app_account_id
+    SharedServicesAccountId = var.shared_services_account_id
   })
 }
 

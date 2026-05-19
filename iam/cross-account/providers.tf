@@ -13,7 +13,7 @@ terraform {
 
 provider "aws" {
   region                      = "ap-southeast-1"
-  access_key                  = "666666666666"
+  access_key                  = var.account_a_id
   secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true
@@ -30,7 +30,7 @@ provider "aws" {
 provider "aws" {
   alias                       = "data_account"
   region                      = "ap-southeast-1"
-  access_key                  = "777777777777"
+  access_key                  = var.account_b_id
   secret_key                  = local.lab_secret_key_test
   skip_credentials_validation = true
   skip_metadata_api_check     = true

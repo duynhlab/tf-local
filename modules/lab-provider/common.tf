@@ -1,3 +1,4 @@
+# tflint-ignore-file: terraform_unused_declarations
 # Shared lab emulator settings (symlink as lab_provider_common.tf in each root).
 # Hybrid: floci :4566 (iam, sts, s3, kms) + ministack :4567 (ec2, elbv2, wafv2).
 # IAM stacks: ministack :4567 for all declared services — see docs/support.md.
