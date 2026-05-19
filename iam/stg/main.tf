@@ -97,6 +97,10 @@ data "aws_iam_policy_document" "sqs_queue_policy" {
 module "team_b_queues" {
   source = "../../modules/iam/sqs_with_dlq"
 
+  providers = {
+    aws = aws
+  }
+
   queue_name            = var.sqs_queue_name
   dlq_name              = var.sqs_dlq_name
   dlq_max_receive_count = var.dlq_max_receive_count
@@ -186,6 +190,10 @@ data "aws_iam_policy_document" "sqs_consumer_permissions" {
 
 module "sqs_consumer_irsa" {
   source = "../../modules/iam/irsa_role"
+
+  providers = {
+    aws = aws
+  }
 
   role_name          = "sqs-consumer-${var.environment}-role"
   assume_role_policy = data.aws_iam_policy_document.irsa_trust.json
