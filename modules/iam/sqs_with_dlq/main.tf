@@ -3,9 +3,8 @@ terraform {
 
   required_providers {
     aws = {
-      source                = "hashicorp/aws"
-      version               = ">= 6.0"
-      configuration_aliases = [aws]
+      source  = "hashicorp/aws"
+      version = ">= 6.0"
     }
   }
 }
@@ -16,7 +15,6 @@ locals {
 }
 
 resource "aws_sqs_queue" "dlq" {
-  provider                  = aws
   name                      = var.dlq_name
   message_retention_seconds = var.dlq_message_retention_seconds
   sqs_managed_sse_enabled   = true
@@ -25,7 +23,6 @@ resource "aws_sqs_queue" "dlq" {
 }
 
 resource "aws_sqs_queue" "main" {
-  provider                   = aws
   name                       = var.queue_name
   visibility_timeout_seconds = var.visibility_timeout_seconds
   message_retention_seconds  = var.message_retention_seconds
@@ -41,9 +38,7 @@ resource "aws_sqs_queue" "main" {
 }
 
 resource "aws_sqs_queue_policy" "main" {
-  count    = var.queue_policy_json != null ? 1 : 0
-  provider = aws
-
+  count     = var.queue_policy_json != null ? 1 : 0
   queue_url = aws_sqs_queue.main.id
   policy    = var.queue_policy_json
 }
