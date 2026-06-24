@@ -1,0 +1,5 @@
+project      = "dnl"
+repositories = ["backend", "frontend"]
+tags = {
+  Owner = "duynhlab"
+}
