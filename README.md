@@ -1,103 +1,58 @@
-# Terraform AWS Networking Lab
+# tf-local — Terraform + AWS learning lab (floci)
 
-Terraform lab demonstrating enterprise-style AWS patterns against two complementary local emulators:
+Lab học Terraform + AWS theo hướng **production-shaped**: multi-account, module tree 3 lớp, networking + IAM + compute + data — chạy hoàn toàn trên emulator **[floci](https://floci.io)** (không cần AWS thật).
 
-| Emulator | Host port | Role |
+## Emulator
+
+| Service | Port | Vai trò |
 |---|---|---|
-| **[floci](https://floci.io)** | `:4566` | Compute / identity / data plane — IAM, STS, S3, SNS, SQS, KMS, **EKS (real k3s)**, Lambda, ECS, ECR, RDS, ElastiCache, MSK, OpenSearch, Athena |
-| **[MiniStack](https://github.com/ministackorg/ministack)** | `:4567` | Enterprise networking + edge — advanced EC2/VPC (NAT GW, VPC Endpoints, NACL, Flow Logs, Peering, Egress-only IGW), ELBv2, **WAF v2** |
+| **floci** | `:4566` | 64 AWS services: IAM/STS, S3, KMS, SSM, ECR, ECS, EKS, EC2/VPC, ELBv2, WAFv2, SNS/SQS, Lambda… |
+| **floci-ui** | `:4500` | Web console (Cloud Explorer) |
 
-The Terraform providers split their `endpoints {}` block across the two emulators per service — see [`environments/dev/providers.tf`](environments/dev/providers.tf) and [`environments/prod/providers.tf`](environments/prod/providers.tf). The full per-service matrix is in [`docs/support.md`](docs/support.md).
+Multi-account: `AWS_ACCESS_KEY_ID` = 12 chữ số → floci coi là account id (resource cô lập). Lab dùng `shared 100000000000 / dev 111111111111 / uat 222222222222 / prod 333333333333`.
 
 ## Prerequisites
+- Podman (ưu tiên) hoặc Docker + Compose
+- Terraform >= 1.9
+- AWS CLI v2
 
-- [Podman](https://podman.io/getting-started/installation) (preferred) or Docker, with Compose
-- [Terraform](https://developer.hashicorp.com/terraform/install) >= 1.3
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) v2
-
-## Quick Start
-
+## Quick start
 ```bash
-# 1. Start floci + ministack
-./scripts/setup.sh
-
-# 2. Run full validation workflow (dev + prod)
-./scripts/test-all.sh
-
-# 3. Teardown when done
-./scripts/teardown.sh
+./scripts/setup.sh        # up floci + floci-ui, đợi healthy
+# UI: http://localhost:4500
+./scripts/probe-floci.sh  # kiểm tra độ phủ floci (GAPS matrix)
+./scripts/test-all.sh     # fmt + validate mọi env + apply/destroy dev
+./scripts/teardown.sh     # dừng (CONFIRM_DESTROY=1 để destroy roots trước)
 ```
 
-## Environment Overview
-
-### dev environment
-- **Purpose:** quick single-VPC validation
-- **Topology:** one VPC, 3-tier subnets (Public/App/Data), 3 AZs
-- **Endpoints:** `ec2 / elbv2 / wafv2 → :4567`, `iam / sts / s3 / kms → :4566`
-
-### prod environment
-- **Purpose:** enterprise networking patterns + edge security
-- **Topology:** multi-region 3-tier with peering, PrivateLink, TGW, WAF v2 (toggles in `environments/prod/terraform.tfvars`)
-- **Endpoints:** same hybrid split, three regional provider aliases (`default`, `ap_southeast_1`, `us_east_1`)
-
-### iam/* case studies
-Each subdirectory under `iam/` is a standalone Terraform root demonstrating a real-world IAM scenario (cross-account SNS→SQS, IRSA + Pod Identity for the AWS Load Balancer Controller, S3 events fan-out, etc.). They target **ministack `:4567`** because the patterns require `aws_iam_openid_connect_provider`, `aws_ebs_snapshot`, and full ELBv2 attributes that floci does not implement.
-
-## Project Structure
+## Cấu trúc
 
 ```
-.
-├── docker-compose.yml              # Hybrid stack: floci + ministack
-├── modules/
-│   ├── vpc-base/                   # VPC, subnets, route tables, IGW, NAT, optional VPC endpoints
-│   ├── vpc-peering/                # Cross-region VPC peering
-│   ├── privatelink/                # NLB + VPC Endpoint Service + Endpoint
-│   ├── transit-gateway/            # Multi-region TGW hub-and-spoke
-│   └── waf-v2/                     # WebACL, IPSet, association
-├── environments/
-│   ├── dev/                        # Singapore, 3 AZs
-│   └── prod/                       # Multi-region (SG, US-East)
-├── iam/                            # IAM-focused case studies (13 roots)
-├── scripts/
-│   ├── setup.sh                    # Bring up floci + ministack (podman compose)
-│   ├── teardown.sh                 # Down + optional terraform destroy
-│   ├── test-all.sh                 # Full dev + prod validation
-│   └── validate-ministack-apis.sh  # Probes ministack APIs (now on :4567)
-├── docs/
-│   ├── README.md                   # Architecture analysis
-│   ├── support.md                  # Per-service support matrix (floci + ministack)
-│   ├── subnet.csv                  # CIDR source of truth
-│   └── report.md                   # Findings
-└── AGENTS.md                       # AI agent rules
+modules/                       # reusable (snake_case HCL, kebab-case folder)
+  networking/  {vpc, vpc-peering, transit-gateway, privatelink}
+  security/    {wafv2, ...}     # + iam-role, pod-identity (Phase 2-4)
+  data/        {s3-bucket, s3-logs, kms-key, ssm-parameter}   (Phase 2)
+  compute/     {ecs-service, eks, ecr}                        (Phase 2-4)
+  messaging/   {sqs-with-dlq}
+  _legacy/     {irsa-role}      # tham khảo; chuẩn mới = Pod Identity
+  lab-provider/                 # floci endpoints + account map (symlink vào mỗi root)
+live/
+  shared-services/ap-southeast-1/{ecr,s3-logs,kms,ssm}/       # account shared
+  envs/{dev,uat,prod}/ap-southeast-1/{networking,...}/        # workload accounts
+examples/
+  networking/minimal/
+  iam/                          # case-study IAM (cross-account, IRSA legacy, ...)
+docs/  policies/  tests/  scripts/  bootstrap/
 ```
 
-## Networking Modules
+3 lớp: `live/*` (root mỏng) → `modules/<group>/*` (primitive/wrapper) → resource. Module style: **tự viết** VPC/IAM/WAFv2/S3/SG/ECS/Pod Identity; **bọc** community chỉ cho EKS; bỏ RDS.
 
-| Module | Purpose | Backed by |
-|---|---|---|
-| **vpc-base** | Foundation networking + optional S3/KMS/STS VPC endpoints | ministack `:4567` |
-| **vpc-peering** | Cross-region peering | ministack `:4567` |
-| **privatelink** | NLB + VPC Endpoint Service (gated, see support matrix) | ministack `:4567` |
-| **transit-gateway** | TGW hub-and-spoke (gated, see support matrix) | ministack `:4567` |
-| **waf-v2** | WebACL, IP sets | ministack `:4567` |
+## Tài liệu
+- [docs/REFACTOR-PLAN.md](docs/REFACTOR-PLAN.md) — kế hoạch & tiến độ refactor (phases)
+- [docs/naming-conventions.md](docs/naming-conventions.md) — chuẩn đặt tên
+- [docs/floci-unsupported.md](docs/floci-unsupported.md) — feature floci chưa hỗ trợ + cách re-check
+- [docs/enterprise-roadmap.md](docs/enterprise-roadmap.md) — mở rộng enterprise
+- [AGENTS.md](AGENTS.md) — hướng dẫn cho AI agent + runbook
 
-## Health checks
-
-```bash
-curl -s http://localhost:4566/_localstack/health  | python3 -m json.tool   # floci
-curl -s http://localhost:4567/_ministack/health   | python3 -m json.tool   # ministack
-```
-
-## Troubleshooting
-
-- **Compose engine:** scripts auto-detect `podman-compose` → `podman compose` → `docker compose`.
-- **Containers not starting:** `podman compose logs floci ministack`.
-- **Docker socket:** floci EKS/Lambda/EC2/ECS require `/var/run/docker.sock`. The compose file already mounts it.
-- **CIDR drift:** always consult `docs/subnet.csv` before adding new CIDR blocks.
-
-## Documentation
-
-- [`AGENTS.md`](AGENTS.md) — AI agent rules and runbook
-- [`docs/support.md`](docs/support.md) — per-service emulator support matrix
-- [`docs/README.md`](docs/README.md) — architecture analysis
-- [`docs/subnet.csv`](docs/subnet.csv) — CIDR allocation
+## floci chưa hỗ trợ (tính tới floci 1.5.27)
+Egress-only IGW (IPv6), VPC Flow Logs, VPC Peering, Transit Gateway → module vẫn viết để học nhưng `validate`/`plan`-only (toggle off). Chi tiết + quy trình re-check: [docs/floci-unsupported.md](docs/floci-unsupported.md).

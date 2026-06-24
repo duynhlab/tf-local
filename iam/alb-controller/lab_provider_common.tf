@@ -1,1 +1,0 @@
-../../modules/lab-provider/common.tf

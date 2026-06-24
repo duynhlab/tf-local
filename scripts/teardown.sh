@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Tear down the hybrid emulator stack.
+# Tear down the floci emulator stack.
 # Set CONFIRM_DESTROY=1 to also run `terraform destroy` against every root first.
 set -euo pipefail
 
@@ -20,7 +20,7 @@ fi
 echo "=== Local AWS Lab – Teardown ==="
 
 if [ "${CONFIRM_DESTROY:-0}" = "1" ]; then
-  for root in live/lab/dev/networking live/lab/prod/networking environments/dev environments/prod iam/*/; do
+  for root in live/envs/*/*/* live/shared-services/*/* examples/iam/*/; do
     if [ -d "$PROJECT_DIR/$root/.terraform" ]; then
       echo "[*] Destroying $root ..."
       (cd "$PROJECT_DIR/$root" && terraform destroy -auto-approve) || true

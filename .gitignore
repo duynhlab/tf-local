@@ -5,7 +5,7 @@
 *.tfplan
 *.pre-floci.bak
 
-# MiniStack / LocalStack
+# floci / LocalStack
 volume/
 aws
 
