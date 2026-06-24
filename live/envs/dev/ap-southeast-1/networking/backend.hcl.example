@@ -1,0 +1,7 @@
+# Real AWS backend — copy to backend.hcl and fill your state bucket.
+# Create the bucket first (see live/envs/dev/ap-southeast-1/README.md, or
+# scripts/bootstrap-state-bucket.sh). State locking is S3-native (use_lockfile),
+# no DynamoDB.
+bucket = "dnl-tfstate-CHANGE-ME-ACCOUNT-ID"
+key    = "dev/ap-southeast-1/networking/terraform.tfstate"
+region = "ap-southeast-1"

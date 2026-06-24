@@ -12,6 +12,19 @@
 | `CreateVpcPeeringConnection` | `aws_vpc_peering_connection*` | **Chưa cần / disable** | module `networking/vpc-peering` → chỉ `validate`/`plan`, không apply |
 | `CreateTransitGateway` | `aws_ec2_transit_gateway*` | **Disable** | `enable_transit_gateway = false` (module `networking/transit-gateway`) |
 | AWS-managed IAM policies (e.g. `arn:aws:iam::aws:policy/...`) | `AttachRolePolicy` → `NoSuchEntity` | floci does not preload managed policies. Modules use **inline equivalents** (e.g. `ecs-service` execution role). On real AWS attach managed ARNs via the module's `*_managed_policy_arns` var. |
+| `aws_vpc_endpoint` Gateway (S3) | `CreateVpcEndpoint` → response not parseable by AWS provider (`deserialization failed ... routeTableId`) | Raw CLI passes, but the TF provider can't decode floci's XML. Set `enable_s3_gateway_endpoint = false` on floci (works on real AWS). |
+| `ReplaceRoute` (in-place route update) | `UnsupportedOperation` | floci supports `CreateRoute` (fresh apply) but not replacing a route. A re-apply over **partial state** can hit this — for the lab, restart floci for a clean slate rather than re-applying a half-failed run. |
+| ECS service delete | drains slowly / may not complete | `terraform destroy` of an ECS service can hang on floci. Restart floci to reset emulator state. |
+
+### Behaviour confirmed WORKING on floci (good news)
+
+| Capability | Status | Notes |
+|---|---|---|
+| **S3 native state locking** (`use_lockfile = true`, no DynamoDB, TF ≥ 1.11) | ✅ **enforced** | floci honors S3 conditional writes (`If-None-Match`). A held `.tflock` correctly blocks a second op with "Error acquiring the state lock". |
+| **S3 backend** for state (versioning + AES256 + public-access-block) | ✅ | `aws s3api create-bucket` + put-versioning/encryption/public-access-block all work. |
+| ECS Fargate cluster/service/task + ALB + target group + listener | ✅ apply | Full dev stack applies; `target_type = ip`. ECR registry is served on host port **5000** (`<acct>.dkr.ecr.<region>.localhost:5000`). |
+| `terraform_remote_state` (S3) cross-stack reads | ✅ | ecs stack reads the networking stack's outputs from floci S3. |
+| Provider routing via `AWS_ENDPOINT_URL` | ✅ | Real-AWS provider code works against floci with only env vars set (no endpoints in code). |
 
 ## Chưa probe — giả định cần kiểm khi làm
 

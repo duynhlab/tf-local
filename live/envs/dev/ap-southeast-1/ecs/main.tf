@@ -1,52 +1,73 @@
-# Reads the dev networking stack's outputs (local state) — apply networking first.
-data "terraform_remote_state" "networking" {
-  backend = "local"
-  config = {
-    path = "../networking/terraform.tfstate"
-  }
+locals {
+  name_prefix = "${var.project}-${var.environment}"
 }
 
-module "service_sg" {
-  source = "../../../../../modules/networking/security-group"
+# Networking stack outputs (vpc, subnets, SGs) via remote state.
+data "terraform_remote_state" "networking" {
+  backend = "s3"
+  config = merge({
+    bucket = var.state_bucket
+    key    = "dev/ap-southeast-1/networking/terraform.tfstate"
+    region = var.aws_region
+  }, var.remote_state_config)
+}
 
-  name   = "${var.project}-dev-ecs"
-  vpc_id = data.terraform_remote_state.networking.outputs.vpc_id
+# App image registry.
+module "ecr" {
+  source = "../../../../../modules/compute/ecr"
 
-  ingress_rules = {
-    http = {
-      description = "HTTP from within the VPC"
-      from_port   = 80
-      to_port     = 80
-      ip_protocol = "tcp"
-      cidr_ipv4   = data.terraform_remote_state.networking.outputs.vpc_cidr
-    }
-  }
+  name         = "${local.name_prefix}/app"
+  scan_on_push = true
+  tags         = var.tags
+}
+
+# Public ALB -> forwards to the ECS service.
+module "alb" {
+  source = "../../../../../modules/networking/alb"
+
+  name              = "${local.name_prefix}-alb"
+  target_group_name = "${local.name_prefix}-tg"
+  vpc_id            = data.terraform_remote_state.networking.outputs.vpc_id
+  subnet_ids        = data.terraform_remote_state.networking.outputs.public_subnet_ids
+  security_group_ids = [
+    data.terraform_remote_state.networking.outputs.alb_security_group_id,
+  ]
+  target_port       = var.app_port
+  listener_port     = 80
+  health_check_path = var.health_check_path
 
   tags = var.tags
 }
 
+# ECS Fargate service in the private app subnets, registered to the ALB.
 module "ecs" {
   source = "../../../../../modules/compute/ecs-service"
 
-  name               = "${var.project}-dev-app"
-  subnet_ids         = data.terraform_remote_state.networking.outputs.app_subnet_ids
-  security_group_ids = [module.service_sg.security_group_id]
+  name       = "${local.name_prefix}-app"
+  subnet_ids = data.terraform_remote_state.networking.outputs.app_subnet_ids
+  security_group_ids = [
+    data.terraform_remote_state.networking.outputs.ecs_security_group_id,
+  ]
 
-  cpu           = "256"
-  memory        = "512"
-  desired_count = 1
+  cpu           = var.cpu
+  memory        = var.memory
+  desired_count = var.desired_count
+
+  target_group_arn = module.alb.target_group_arn
+  container_name   = "app"
+  container_port   = var.app_port
 
   container_definitions = jsonencode([
     {
       name         = "app"
-      image        = "public.ecr.aws/nginx/nginx:latest"
+      image        = var.container_image
       essential    = true
-      portMappings = [{ containerPort = 80, protocol = "tcp" }]
+      portMappings = [{ containerPort = var.app_port, protocol = "tcp" }]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = "/ecs/${var.project}-dev-app"
-          "awslogs-region"        = "ap-southeast-1"
+          "awslogs-group"         = "/ecs/${local.name_prefix}-app"
+          "awslogs-region"        = var.aws_region
           "awslogs-stream-prefix" = "app"
         }
       }

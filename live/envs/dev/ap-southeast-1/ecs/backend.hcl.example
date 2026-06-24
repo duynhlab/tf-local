@@ -1,0 +1,4 @@
+# Real AWS backend — copy to backend.hcl and fill your state bucket.
+bucket = "dnl-tfstate-CHANGE-ME-ACCOUNT-ID"
+key    = "dev/ap-southeast-1/ecs/terraform.tfstate"
+region = "ap-southeast-1"

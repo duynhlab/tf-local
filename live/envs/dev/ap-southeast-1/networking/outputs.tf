@@ -9,26 +9,31 @@ output "vpc_cidr" {
 }
 
 output "public_subnet_ids" {
-  description = "Public subnet IDs"
+  description = "Public subnet IDs (ALB)"
   value       = module.vpc.public_subnet_ids
 }
 
 output "app_subnet_ids" {
-  description = "App subnet IDs"
+  description = "Private app subnet IDs (ECS tasks)"
   value       = module.vpc.app_subnet_ids
 }
 
 output "data_subnet_ids" {
-  description = "Data subnet IDs"
+  description = "Private database subnet IDs (RDS)"
   value       = module.vpc.data_subnet_ids
 }
 
-output "nat_gateway_ids" {
-  description = "NAT Gateway IDs"
-  value       = module.vpc.nat_gateway_ids
+output "alb_security_group_id" {
+  description = "Security group for the ALB"
+  value       = module.alb_sg.security_group_id
 }
 
-output "availability_zones" {
-  description = "AZs used"
-  value       = module.vpc.availability_zones
+output "ecs_security_group_id" {
+  description = "Security group for ECS tasks"
+  value       = module.ecs_sg.security_group_id
+}
+
+output "db_security_group_id" {
+  description = "Security group for the database tier"
+  value       = module.db_sg.security_group_id
 }
