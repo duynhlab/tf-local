@@ -11,6 +11,7 @@
 | `CreateFlowLogs` | `aws_flow_log` (+ log group/role) | **Chưa cần** | `enable_flow_logs = false` (module `networking/vpc`) |
 | `CreateVpcPeeringConnection` | `aws_vpc_peering_connection*` | **Chưa cần / disable** | module `networking/vpc-peering` → chỉ `validate`/`plan`, không apply |
 | `CreateTransitGateway` | `aws_ec2_transit_gateway*` | **Disable** | `enable_transit_gateway = false` (module `networking/transit-gateway`) |
+| AWS-managed IAM policies (e.g. `arn:aws:iam::aws:policy/...`) | `AttachRolePolicy` → `NoSuchEntity` | floci does not preload managed policies. Modules use **inline equivalents** (e.g. `ecs-service` execution role). On real AWS attach managed ARNs via the module's `*_managed_policy_arns` var. |
 
 ## Chưa probe — giả định cần kiểm khi làm
 
