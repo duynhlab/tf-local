@@ -263,4 +263,5 @@ Khác s3-bucket: **bucket policy cho log writer** theo nguồn (S3 access logs�
   5. ✅ `source` paths + symlink fix; `ci.yml` floci-only paths; `aws-ci.yml` xoá; `test-all.sh`/`setup.sh`/`teardown.sh` floci-only; `README.md` rewrite; `AGENTS.md` mục chính.
   6. ✅ Verify: `fmt` sạch; dev/uat/prod + examples `validate` Success.
   - ⏳ Doc polish còn lại (non-breaking): AGENTS bảng limitations/compat, `docs/support.md`, `docs/README.md`, README các example/module, `bootstrap/README.md`, `docs/{landing-zone,module-versioning}.md`.
-- ⏳ **Phase 2 → 5** (§8): build core modules (iam-role, s3-bucket, kms, ssm, ecr) + shared-services roots → networking/security per env → compute (ecs/eks/pod-identity).
+- ✅ **Phase 2 — core modules + shared-services (DONE)**: modules `security/iam-role`, `data/{s3-bucket,s3-logs,kms-key,ssm-parameter}`, `compute/ecr` (hand-written, context7-researched). Roots `live/shared-services/ap-southeast-1/{kms,s3-logs,ssm,ecr}` (account 100000000000, cross-account grants to dev/uat/prod). Verified: all apply+destroy on floci; ARNs carry account 100000000000.
+- ⏳ **Phase 3 → 5** (§8): networking/security per env (enhance vpc, security-group, wafv2 + wire dev/uat/prod) → compute (ecs-service, eks wrapper, pod-identity, ecr per env).
