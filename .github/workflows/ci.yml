@@ -14,7 +14,7 @@ jobs:
     name: Terraform Format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: "~> 1.11"
@@ -52,7 +52,7 @@ jobs:
           - examples/iam/s3-go-compute-matrix
           - examples/iam/storage-drivers
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: "~> 1.11"
@@ -93,7 +93,7 @@ jobs:
           - envs/dev/ap-southeast-1/ecs
           - envs/prod/ap-southeast-1/networking
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: terraform-linters/setup-tflint@v6
         with:
           tflint_version: latest
@@ -109,7 +109,7 @@ jobs:
     name: Trivy (Terraform Security)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Run Trivy scanner
         uses: aquasecurity/trivy-action@master
         with:
@@ -123,7 +123,7 @@ jobs:
     name: Checkov
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Run Checkov
         uses: bridgecrewio/checkov-action@v12
         with:
@@ -136,7 +136,7 @@ jobs:
     name: Terraform Test (module smoke)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: "~> 1.11"
@@ -154,7 +154,7 @@ jobs:
     if: github.event_name == 'push'
     needs: [terraform-fmt, terraform-validate, tflint]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: "~> 1.11"
