@@ -45,29 +45,44 @@ Module lớn tách `main.tf` theo nhóm logic: `vpc.tf`, `subnets.tf`, `endpoint
 
 ## 2. Tên resource vật lý trên AWS (Name tag / physical name)
 
+**Cách code thực sự làm** (đừng để doc lệch code): mỗi root có
+`local.name_prefix = "${var.project}-${var.environment}"`, rồi resource = `${name_prefix}-<role>`.
+
 Mẫu chung:
 
 ```
-<project>-<env>-<region_short>-<component>[-<role/suffix>]
+<project>-<env>-<role/suffix>
 ```
 
-- `project` = short slug, mặc định **`dnl`** (duynhlab). Cấu hình qua `var.project`.
-- `env` ∈ `dev | uat | prod` (+ `shared` cho shared-services).
-- `region_short`: `ap-southeast-1 → apse1`, `us-east-1 → use1` (chỉ thêm khi đa region).
-- `component`: `network`, `eks`, `ecs`, `ecr`, `logs`, `kms`, …
-- `role/suffix`: `public`, `app`, `data`, `nat-a`, `task`, `exec`, …
+- `project` = short slug, mặc định **`dnl`** (duynhlab) — `var.project`.
+- `env` ∈ `dev | uat | prod | shared` — `var.environment`.
+- `role/suffix`: `alb`, `ecs`, `app`, `tg`, `db`, `logs`, …
 
-Ví dụ:
+Ví dụ (đúng như code hiện tại):
 ```
-dnl-dev-apse1-network-vpc        # VPC Name tag
-dnl-dev-apse1-network-public-a   # subnet
-dnl-prod-apse1-eks               # EKS cluster name
-dnl-shared-apse1-ecr-backend     # ECR repo
-dnl-prod-logs                    # s3-logs bucket (S3 global → có thể thêm account/suffix tránh trùng)
-dnl-dev-ecs-task                 # IAM task role
+dnl-dev            # VPC (vpc_name = name_prefix)
+dnl-dev-alb        # ALB security group / ALB
+dnl-dev-ecs        # ECS task security group
+dnl-dev-app        # ECS service / task / log group "/ecs/dnl-dev-app"
+dnl-dev-tg         # ALB target group
+dnl-shared         # KMS alias (shared-services)
+dnl-shared-logs    # s3-logs bucket
+dnl/backend        # ECR repo = "${var.project}/${repo}"
 ```
 
-> Triển khai bằng `local.name = "${var.project}-${var.environment}-${var.component}"` và `var.name_prefix` truyền từ root → module. **Không hardcode** env/region trong module.
+> Mở rộng tuỳ chọn (chưa dùng): thêm `region_short` (`apse1`/`use1`) khi đa region,
+> hoặc `component` segment khi một env có nhiều stack trùng role. Triển khai bằng
+> `local.name_prefix` ở root → truyền xuống module; **không hardcode** env/region trong module.
+
+```mermaid
+flowchart LR
+  p["var.project = dnl"] --> np
+  e["var.environment = dev"] --> np["local.name_prefix = dnl-dev"]
+  np --> n1["…-alb"]
+  np --> n2["…-ecs"]
+  np --> n3["…-app"]
+  np --> n4["…-tg"]
+```
 
 ## 3. Thư mục & module
 
@@ -96,7 +111,14 @@ Mỗi module = **một trách nhiệm**; tên là danh từ kebab-case, không n
 | `TerraformModule` | `basename(path.module)` (merge trong module) | ✅ (module) |
 | `Name` | `merge(local.default_tags, { Name = ... })` per-resource | ✅ |
 
-Không lặp `Project/Environment/ManagedBy` ở từng resource (đã có ở default_tags) trừ khi cần override.
+Không lặp `Project/Environment/ManagedBy` ở từng resource (đã có ở default_tags) trừ khi cần override. `default_tags` đặt ở `providers.tf` của mỗi root (đã set `Component`).
+
+```mermaid
+flowchart LR
+  dt["provider default_tags<br/>Project, Environment, ManagedBy, Component"] -->|inherited| r
+  ml["module: merge(var.tags, TerraformModule)"] --> r
+  nm["per-resource: Name = ..."] -->|merge| r["resource tags"]
+```
 
 ## 5. Account / Environment map (floci multi-account)
 

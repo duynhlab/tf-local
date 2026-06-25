@@ -46,10 +46,12 @@ docs/  policies/  tests/  scripts/
 3 lớp: `envs/*` (root mỏng) → `modules/<group>/*` (primitive/wrapper) → resource. Module style: **tự viết** VPC/IAM/WAFv2/S3/SG/ECS/Pod Identity; **bọc** community chỉ cho EKS; bỏ RDS.
 
 ## Tài liệu
-- [docs/REFACTOR-PLAN.md](docs/REFACTOR-PLAN.md) — kế hoạch & tiến độ refactor (phases)
+- [docs/README.md](docs/README.md) — **architecture overview + diagrams + docs index**
 - [docs/naming-conventions.md](docs/naming-conventions.md) — chuẩn đặt tên
+- [docs/connectivity-patterns.md](docs/connectivity-patterns.md) — peering / PrivateLink / TGW (prod networking)
 - [docs/floci-unsupported.md](docs/floci-unsupported.md) — feature floci chưa hỗ trợ + cách re-check
 - [docs/enterprise-roadmap.md](docs/enterprise-roadmap.md) — mở rộng enterprise
+- [docs/terragrunt-plan.md](docs/terragrunt-plan.md) · [docs/REFACTOR-PLAN.md](docs/REFACTOR-PLAN.md) — Terragrunt plan / decisions & history
 - [AGENTS.md](AGENTS.md) — hướng dẫn cho AI agent + runbook
 
 ## floci chưa hỗ trợ (tính tới floci 1.5.27)

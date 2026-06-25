@@ -3,7 +3,7 @@
 # Phase 0 capability probe for floci (:4566).
 #
 # Exercises the AWS actions that decide floci-only vs hybrid (see
-# docs/REFACTOR-PLAN.md §7 GAPS matrix). Each check is isolated and
+# docs/floci-unsupported.md). Each check is isolated and
 # non-fatal; a PASS/FAIL summary is printed at the end.
 #
 # Usage:

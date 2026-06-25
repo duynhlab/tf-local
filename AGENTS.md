@@ -17,7 +17,7 @@ Pinned `floci/floci:1.5.27` + `floci/floci-ui:0.1.0` in `docker-compose.yml` (Po
 
 **Multi-account**: a 12-digit `AWS_ACCESS_KEY_ID` is treated by floci as the account id (resources isolate per account). Accounts: `shared 100000000000 / dev 111111111111 / uat 222222222222 / prod 333333333333`. Real AWS selects the account via credentials / `assume_role`; for floci set `AWS_ACCESS_KEY_ID=<12-digit>` per root via env.
 
-**Active plan**: this repo is mid-refactor. Read **[docs/REFACTOR-PLAN.md](docs/REFACTOR-PLAN.md)** (target structure, module catalog, phases) and **[docs/naming-conventions.md](docs/naming-conventions.md)** before adding code. Feature gaps: **[docs/floci-unsupported.md](docs/floci-unsupported.md)**.
+**Before adding code**: read **[docs/README.md](docs/README.md)** (architecture + diagrams) and **[docs/naming-conventions.md](docs/naming-conventions.md)**. Feature gaps: **[docs/floci-unsupported.md](docs/floci-unsupported.md)**.
 
 ---
 
@@ -189,11 +189,11 @@ Do not add new providers or external modules without a clear request.
 
 ### VPC naming and AWS VPC endpoints (`networking/vpc`)
 
-- **Prod VPC names in tfvars**: peering and PrivateLink VPC **Name** tags come from `peering_*_vpc_name` and `pl_*_vpc_name` in `envs/prod/.../networking` tfvars. TGW hub **Name** tags use `tgw_name_tag_region_*`; spoke VPC names remain **map keys** in `tgw_spokes_region_*`. Inventory table: [docs/README.md](docs/README.md) **§1.3**.
-- **Naming and diagrams**: use [docs/README.md](docs/README.md) **§1.2 *Network conventions*** for landing zone vs spoke, VPC naming table, and Gateway vs Interface endpoint diagrams.
+- **Prod VPC names in tfvars**: peering and PrivateLink VPC **Name** tags come from `peering_*_vpc_name` and `pl_*_vpc_name` in `envs/prod/.../networking` tfvars. TGW hub **Name** tags use `tgw_name_tag_region_*`; spoke VPC names remain **map keys** in `tgw_spokes_region_*`.
+- **Naming and diagrams**: see [docs/naming-conventions.md](docs/naming-conventions.md) (names/tags) and [docs/connectivity-patterns.md](docs/connectivity-patterns.md) (peering/PrivateLink/TGW topologies).
 - **Endpoints in code**: `modules/networking/vpc` exposes optional flags: **S3 Gateway** (app + data route tables), **KMS / STS Interface** (app subnets, dedicated SG for TCP 443 from the VPC CIDR, `private_dns_enabled = true`). Endpoints live on floci `:4566` like the rest of VPC primitives.
 - **Tagging**: new endpoint and SG resources must use `merge(local.default_tags, { Name = ... })` like other `networking/vpc` resources.
-- **Conventions drift**: when you introduce new lab-wide naming rules, update **this file** and the long-form README §1.2 together.
+- **Conventions drift**: when you introduce new naming rules, update **this file** and [docs/naming-conventions.md](docs/naming-conventions.md) together.
 
 ---
 
@@ -309,5 +309,8 @@ If the target (`dev` vs `prod` vs which `iam/*` root) is unclear, ask one short 
 
 ## Docs
 
-- [docs/README.md](docs/README.md) — includes **§1.1** (tagging), **§1.2** (landing zone vs spoke, endpoints), **§1.3** (prod VPC inventory / tfvars map)
+- [docs/README.md](docs/README.md) — architecture overview + diagrams + docs index
+- [docs/naming-conventions.md](docs/naming-conventions.md) — naming + tags
+- [docs/connectivity-patterns.md](docs/connectivity-patterns.md) — peering / PrivateLink / TGW (prod networking)
 - [docs/floci-unsupported.md](docs/floci-unsupported.md) — floci API gaps + re-check process
+- [docs/enterprise-roadmap.md](docs/enterprise-roadmap.md) · [docs/terragrunt-plan.md](docs/terragrunt-plan.md) · [docs/REFACTOR-PLAN.md](docs/REFACTOR-PLAN.md) (history)

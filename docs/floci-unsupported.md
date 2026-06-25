@@ -43,8 +43,10 @@ VPC core (vpc/subnet/IGW/**NAT GW**/route-table/NACL) · VPC endpoint **Gateway 
 ## Quy trình re-check khi floci ra bản mới
 
 ```bash
-# 1. Bump tag trong docker-compose.yml (floci/floci:<new>) — kiểm Docker Hub trước
-gh release list --repo floci-io/floci --limit 5
+# 1. Find the latest stable tag on Docker Hub (org `floci`), then bump
+#    docker-compose.yml (floci/floci:<new>):
+curl -s "https://hub.docker.com/v2/repositories/floci/floci/tags?page_size=10" \
+  | python3 -c "import sys,json;[print(t['name']) for t in json.load(sys.stdin)['results']]"
 # 2. Up lại + probe
 ./scripts/setup.sh
 ./scripts/probe-floci.sh          # + PROBE_EKS=1 cho EKS
@@ -52,3 +54,15 @@ gh release list --repo floci-io/floci --limit 5
 ```
 
 > Các module của feature chưa hỗ trợ **vẫn được viết đầy đủ để học** (chạy `terraform validate`/`plan`), chỉ không `apply` trên floci. Khi lên AWS thật hoặc floci hỗ trợ → bật toggle là dùng được.
+
+## Quyết định khi 1 action chưa được hỗ trợ
+
+```mermaid
+flowchart TD
+  a["AWS API action"] --> q{"floci hỗ trợ?"}
+  q -->|✅ yes| ap["apply bình thường trên floci"]
+  q -->|"⚠️ một phần / multi-account assume_role"| vp["validate + plan only"]
+  q -->|"❌ no"| off["toggle enable_* = false<br/>(enable_ipv6, enable_flow_logs,<br/>enable_transit_gateway, enable_privatelink,<br/>enable_s3_gateway_endpoint)"]
+  off --> vp
+  vp --> real["apply trên AWS thật / chờ floci"]
+```
