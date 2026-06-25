@@ -11,7 +11,7 @@
 | Mỗi module | Deep-dive feature "hay dùng" qua context7 (đã research, xem §4). |
 | Account model | **Multi-account** mô phỏng trên floci bằng `AWS_ACCESS_KEY_ID` = 12 chữ số: `dev/uat/prod` + 1 account **shared-services**. |
 | Shared services | **CÓ LÀM** — ECR, s3-logs, kms-keys, ssm-parameters đặt ở account shared-services, chia sẻ cross-account. |
-| `live/` | Dùng `live/envs/{dev,uat,prod}` + `live/shared-services`. |
+| Layout | `envs/{dev,uat,prod}` + `shared-services` (đã bỏ wrapper `live/`). |
 | Emulator | **floci only** (+ floci-ui) — **bỏ hẳn ministack**. floci `1.5.27`, floci-ui `0.1.0`, Real Docker Integration (`user: root`), Override images. Feature floci chưa hỗ trợ → toggle-off + document (xem §7). |
 | IRSA vs Pod Identity | **Giữ 1 bản IRSA legacy** (đánh dấu `_legacy`) để tham khảo **+ thêm bản Pod Identity mới**. |
 | Region lab | `ap-southeast-1` (mặc định). |
@@ -26,7 +26,7 @@
 
 ## 1. Vấn đề hiện tại (nguồn gốc "rối")
 
-1. **3–4 layout chồng nhau**: `environments/` (deprecated) + `live/lab/*` + `live/aws/*` + `iam/*` (13 thư mục phẳng ở root).
+1. **3–4 layout chồng nhau**: `environments/` (deprecated) + `envs/*` + `envs/*` + `iam/*` (13 thư mục phẳng ở root).
 2. **`iam/` trộn 2 loại khác bản chất**: `iam/prod`, `iam/stg` (giống env thật) nằm cạnh `iam/cross-account`, `iam/s3-events`… (thực ra là **case-study/bài học**).
 3. **Module trùng**: `modules/vpc-base` vs `modules/networking/vpc`.
 4. **IRSA cũ**: `iam/prod` dùng `aws_iam_openid_connect_provider` (IRSA) — cái bạn muốn bỏ, chuyển sang **Pod Identity**.
@@ -65,12 +65,11 @@ tf-local/
 │   ├── _legacy/
 │   │   └── irsa-role/          # move từ modules/iam/irsa_role (giữ cho examples cũ)
 │   └── lab-provider/           # giữ + mở rộng cho multi-account (access key theo account)
-├── live/
-│   ├── shared-services/<region>/{ecr, s3-logs, kms, ssm}/   # account 100000000000
-│   └── envs/
-│       ├── dev/<region>/{networking, security, ecr, ecs, eks}/   # 111111111111
-│       ├── uat/<region>/{...}/                                   # 222222222222
-│       └── prod/<region>/{...}/                                  # 333333333333
+├── envs/
+│   ├── dev/<region>/{networking, ecs, ...}/   # 111111111111
+│   ├── uat/<region>/{...}/                     # 222222222222
+│   └── prod/<region>/{...}/                    # 333333333333
+├── shared-services/<region>/{ecr, s3-logs, kms, ssm}/   # account 100000000000
 ├── examples/
 │   ├── networking/minimal/     # giữ
 │   └── iam/                     # GOM toàn bộ iam/* case-study vào đây
@@ -151,10 +150,10 @@ Khác s3-bucket: **bucket policy cho log writer** theo nguồn (S3 access logs�
 | Hiện tại | Hành động |
 |---|---|
 | `environments/dev`, `environments/prod` | **DELETE** (đã deprecated) + `git rm --cached` 2 file `terraform.tfvars` |
-| `live/lab/{dev,prod}/networking` | **MOVE** → `live/envs/{dev,prod}/ap-southeast-1/networking` (provider floci) |
-| `live/aws/{dev,prod}/.../networking` | **GỘP** vào `live/envs/*` (giữ block backend s3 + assume_role dạng comment làm tham khảo AWS thật) |
-| `live/envs/uat` | **MỚI** |
-| `live/shared-services/...` | **MỚI** |
+| `envs/{dev,prod}/networking` | **MOVE** → `envs/{dev,prod}/ap-southeast-1/networking` (provider floci) |
+| `envs/{dev,prod}/.../networking` | **GỘP** vào `envs/*` (giữ block backend s3 + assume_role dạng comment làm tham khảo AWS thật) |
+| `envs/uat` | **MỚI** |
+| `shared-services/...` | **MỚI** |
 | `iam/prod`, `iam/stg` | **MOVE+GỘP** → `examples/iam/cross-account-sns-sqs` (giữ bản IRSA `_legacy` + thêm `cross-account-sns-sqs-pod-identity`) |
 | `iam/{alb-controller,cluster-access,cross-account,cross-account-secrets,cross-region-pipeline,cross-region-s3,external-dns-cross-account,s3-eks,s3-events,s3-go-compute-matrix,storage-drivers}` | **MOVE** → `examples/iam/<name>` |
 | `modules/vpc-base` | **DELETE** (trùng `networking/vpc`) |
@@ -217,15 +216,15 @@ Khác s3-bucket: **bucket policy cho log writer** theo nguồn (S3 access logs�
   - `git rm --cached` 2 tfvars; xoá `environments/`, `modules/vpc-base`.
   - Gom `iam/*` → `examples/iam/*`; move modules vào nhóm (`networking/`,`security/`,`messaging/`,`_legacy/`).
   - Sửa path trong `scripts/*`, `.github/workflows/*`, `AGENTS.md`, `README.md`, `docs/*`.
-- **Phase 2 — Core modules + shared-services** → verify: module tests + `live/shared-services` validate.
+- **Phase 2 — Core modules + shared-services** → verify: module tests + `shared-services` validate.
   - Modules: `security/iam-role`, `data/{s3-bucket,kms-key,ssm-parameter}`, `compute/ecr`.
-  - Roots: `live/shared-services/<region>/{kms,s3-logs,ssm,ecr}` (account 100000000000).
+  - Roots: `shared-services/<region>/{kms,s3-logs,ssm,ecr}` (account 100000000000).
 - **Phase 3 — Networking + security per env** → verify: dev/uat/prod networking validate.
   - Modules: nâng cấp `networking/vpc`, `networking/security-group`, `security/wafv2`.
-  - Roots: `live/envs/{dev,uat,prod}/<region>/{networking,security}`.
+  - Roots: `envs/{dev,uat,prod}/<region>/{networking,security}`.
 - **Phase 4 — Compute** → verify: ecs/eks roots validate, pod-identity associations plan OK.
   - Modules: `compute/ecs-service`, `compute/eks` (wrapper), `security/pod-identity`.
-  - Roots: `live/envs/{dev,...}/<region>/{ecr,ecs,eks}` + cross-account pull ECR.
+  - Roots: `envs/{dev,...}/<region>/{ecr,ecs,eks}` + cross-account pull ECR.
 - **Phase 5 — Examples + docs** → verify: examples validate, docs nhất quán.
   - Chuyển case-study IAM sang Pod Identity (hoặc đánh dấu `_legacy`).
   - Cập nhật `docs/` (support matrix, module-versioning), `AGENTS.md`.
@@ -259,9 +258,9 @@ Khác s3-bucket: **bucket policy cho log writer** theo nguồn (S3 access logs�
   1. ✅ `modules/lab-provider/common.tf` floci-only + `local.lab_accounts` (giữ tên map cũ → providers.tf không cần sửa).
   2. ✅ `iam/*` → `examples/iam/*` (kèm drawio/debug assets); `iam/prod`→`cross-account-sns-sqs`, `iam/stg`→`cross-account-sns-sqs-stg`.
   3. ✅ Module gom nhóm + đổi tên (waf-v2→security/wafv2, vpc-peering/transit-gateway/privatelink→networking/, sqs_with_dlq→messaging/, irsa_role→_legacy/).
-  4. ✅ `live/lab`→`live/envs/{dev,uat,prod}/ap-southeast-1/networking` (multi-account access_key); `live/aws` xoá; `uat` mới; `live/shared-services` skeleton.
+  4. ✅ `live/lab`→`envs/{dev,uat,prod}/ap-southeast-1/networking` (multi-account access_key); `live/aws` xoá; `uat` mới; `shared-services` skeleton.
   5. ✅ `source` paths + symlink fix; `ci.yml` floci-only paths; `aws-ci.yml` xoá; `test-all.sh`/`setup.sh`/`teardown.sh` floci-only; `README.md` rewrite; `AGENTS.md` mục chính.
   6. ✅ Verify: `fmt` sạch; dev/uat/prod + examples `validate` Success.
   - ⏳ Doc polish còn lại (non-breaking): AGENTS bảng limitations/compat, `docs/support.md`, `docs/README.md`, README các example/module, `bootstrap/README.md`, `docs/{landing-zone,module-versioning}.md`.
-- ✅ **Phase 2 — core modules + shared-services (DONE)**: modules `security/iam-role`, `data/{s3-bucket,s3-logs,kms-key,ssm-parameter}`, `compute/ecr` (hand-written, context7-researched). Roots `live/shared-services/ap-southeast-1/{kms,s3-logs,ssm,ecr}` (account 100000000000, cross-account grants to dev/uat/prod). Verified: all apply+destroy on floci; ARNs carry account 100000000000.
-- ✅ **Phase 3-5 (DONE)**: modules `networking/security-group`, `compute/ecs-service`, `compute/eks` (wraps terraform-aws-modules/eks `21.0.6`), `security/pod-identity`. Roots `live/envs/dev/ap-southeast-1/{ecs,eks}` (cross-stack via `terraform_remote_state` of networking). Example `examples/iam/pod-identity-s3` (Pod Identity vs IRSA-legacy contrast). Verified: all validate; **dev networking→ecs apply end-to-end on floci** (cross-stack + SG + ECS). floci gap found: AWS-managed IAM policies not preloaded → modules use inline equivalents (documented).
+- ✅ **Phase 2 — core modules + shared-services (DONE)**: modules `security/iam-role`, `data/{s3-bucket,s3-logs,kms-key,ssm-parameter}`, `compute/ecr` (hand-written, context7-researched). Roots `shared-services/ap-southeast-1/{kms,s3-logs,ssm,ecr}` (account 100000000000, cross-account grants to dev/uat/prod). Verified: all apply+destroy on floci; ARNs carry account 100000000000.
+- ✅ **Phase 3-5 (DONE)**: modules `networking/security-group`, `compute/ecs-service`, `compute/eks` (wraps terraform-aws-modules/eks `21.0.6`), `security/pod-identity`. Roots `envs/dev/ap-southeast-1/{ecs,eks}` (cross-stack via `terraform_remote_state` of networking). Example `examples/iam/pod-identity-s3` (Pod Identity vs IRSA-legacy contrast). Verified: all validate; **dev networking→ecs apply end-to-end on floci** (cross-stack + SG + ECS). floci gap found: AWS-managed IAM policies not preloaded → modules use inline equivalents (documented).

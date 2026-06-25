@@ -10,7 +10,7 @@ ecs/          ECR + ALB + ECS Fargate service (reads networking via remote_state
 
 Design follows the Harley "Spring on ECS Fargate" flow: public ALB → private ECS
 tasks → database tier, with a strict SG chain `internet → ALB → ECS → DB`.
-CIDRs come from [`docs/subnet.csv`](../../../../docs/subnet.csv).
+CIDRs come from [`docs/subnet.csv`](../../../docs/subnet.csv).
 
 ## Apply order (real AWS)
 
@@ -19,7 +19,7 @@ CIDRs come from [`docs/subnet.csv`](../../../../docs/subnet.csv).
 ./scripts/bootstrap-state-bucket.sh dnl-tfstate-<account-id> ap-southeast-1
 
 # 1) networking
-cd live/envs/dev/ap-southeast-1/networking
+cd envs/dev/ap-southeast-1/networking
 cp backend.hcl.example backend.hcl   # edit bucket name
 terraform init -backend-config=backend.hcl
 terraform apply
@@ -46,7 +46,7 @@ export AWS_ENDPOINT_URL=http://localhost:4566 AWS_ACCESS_KEY_ID=111111111111 \
 
 ./scripts/bootstrap-state-bucket.sh dnl-tfstate-floci ap-southeast-1
 
-cd live/envs/dev/ap-southeast-1/networking
+cd envs/dev/ap-southeast-1/networking
 terraform init -reconfigure -backend-config=backend.floci.hcl
 terraform apply -var enable_s3_gateway_endpoint=false        # floci gap, see below
 
@@ -68,7 +68,7 @@ and **S3 native locking is enforced**.
 - Don't re-apply over a half-failed floci run (`ReplaceRoute` unsupported) — restart
   floci for a clean slate.
 
-Full list + status: [`docs/floci-unsupported.md`](../../../../docs/floci-unsupported.md).
+Full list + status: [`docs/floci-unsupported.md`](../../../docs/floci-unsupported.md).
 
 ## Notes
 - ALB listener is HTTP-only for the lab; add an HTTPS listener + ACM cert + HTTP→HTTPS

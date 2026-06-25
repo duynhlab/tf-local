@@ -8,4 +8,4 @@ terraform plan -var='state_bucket_name=YOUR-UNIQUE-terraform-state'
 terraform apply -var='state_bucket_name=YOUR-UNIQUE-terraform-state'
 ```
 
-Use the bucket in `live/aws/*/backend.tf` partial configuration.
+Use the bucket in `envs/*/backend.tf` partial configuration.

@@ -10,7 +10,7 @@ moved {
 }
 
 module "main_vpc" {
-  source = "../../../../../modules/networking/vpc"
+  source = "../../../../modules/networking/vpc"
 
   providers = {
     aws = aws.ap_southeast_1
@@ -32,7 +32,7 @@ module "main_vpc" {
 # ─── VPC Peering (Cross-Region, 3-Tier) ──────────────────────────────────────
 
 module "vpc_peering" {
-  source = "../../../../../modules/networking/vpc-peering"
+  source = "../../../../modules/networking/vpc-peering"
 
   providers = {
     aws.requester = aws.ap_southeast_1
@@ -57,7 +57,7 @@ module "vpc_peering" {
 # PrivateLink is regional, so we deploy both provider and consumer in Region A
 
 module "privatelink" {
-  source = "../../../../../modules/networking/privatelink"
+  source = "../../../../modules/networking/privatelink"
   count  = var.enable_privatelink ? 1 : 0
 
   providers = {
@@ -83,7 +83,7 @@ module "privatelink" {
 # ─── Transit Gateway (Hub-and-Spoke Cross-Region, 3-Tier) ────────────────────
 
 module "transit_gateway" {
-  source = "../../../../../modules/networking/transit-gateway"
+  source = "../../../../modules/networking/transit-gateway"
   count  = var.enable_transit_gateway ? 1 : 0
 
   providers = {
@@ -105,7 +105,7 @@ module "transit_gateway" {
 # ─── WAF v2 (Optional) ───────────────────────────────────────────────────────
 
 module "waf_v2" {
-  source                 = "../../../../../modules/security/wafv2"
+  source                 = "../../../../modules/security/wafv2"
   count                  = var.enable_waf ? 1 : 0
   web_acl_name           = "prod-main-waf"
   scope                  = "REGIONAL"

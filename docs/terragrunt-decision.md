@@ -4,7 +4,7 @@
 
 ## Context
 
-Track B adds `live/aws/<env>/<region>/<component>/` roots with S3 backends and optional `assume_role`. A wrapper could DRY backend and provider config.
+Track B adds `envs/<env>/<region>/<component>/` roots with S3 backends and optional `assume_role`. A wrapper could DRY backend and provider config.
 
 ## Options considered
 
@@ -16,13 +16,13 @@ Track B adds `live/aws/<env>/<region>/<component>/` roots with S3 backends and o
 ## Rationale
 
 1. Only **two** AWS networking roots exist today; duplication is small.
-2. Lab track (`live/lab/`) must stay **zero-dependency** for emulator workflows.
+2. Lab track (`envs/`) must stay **zero-dependency** for emulator workflows.
 3. CI already matrix-validates each root; Terragrunt would add `terragrunt hcl fmt` and cache paths.
-4. If roots grow past ~10, revisit with a single `live/aws/root.hcl` **without** changing lab paths.
+4. If roots grow past ~10, revisit with a single `envs/root.hcl` **without** changing lab paths.
 
 ## Revisit when
 
-- More than three regions or ten live/aws stacks
+- More than three regions or ten envs stacks
 - Organization mandates central backend generation
 - Team standardizes on Terragrunt elsewhere
 

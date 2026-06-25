@@ -55,9 +55,8 @@ modules/                       # group/<module> ; snake_case HCL, kebab-case fol
   compute/     {...}           # ecs-service, eks, ecr (Phase 2-4)
   messaging/   {sqs-with-dlq}
   _legacy/     {irsa-role}     # reference only; new standard = Pod Identity
-live/
-  shared-services/ap-southeast-1/{ecr,s3-logs,kms,ssm}/      # account 100000000000
-  envs/{dev,uat,prod}/ap-southeast-1/{networking,...}/       # workload accounts
+envs/{dev,uat,prod}/ap-southeast-1/{networking,ecs,...}/   # workload accounts
+shared-services/ap-southeast-1/{ecr,s3-logs,kms,ssm}/      # shared account 100000000000
 examples/
   networking/minimal/
   iam/<scenario>/              # IAM case studies (cross-account, IRSA legacy, ...)
@@ -71,7 +70,7 @@ scripts/
 .github/workflows/ci.yml       # fmt/validate/tflint/trivy/checkov/test + floci integration
 ```
 
-Each directory under `live/*` and `examples/*` (and `bootstrap/`) is a **standalone** Terraform root module.
+Each directory under `envs/*` / `shared-services/*` and `examples/*` (and `bootstrap/`) is a **standalone** Terraform root module.
 
 ---
 
@@ -96,7 +95,7 @@ Each directory under `live/*` and `examples/*` (and `bootstrap/`) is a **standal
 3. **Validate a networking root** (dev / uat / prod)
 
    ```bash
-   ROOT=live/envs/dev/ap-southeast-1/networking
+   ROOT=envs/dev/ap-southeast-1/networking
    terraform -chdir=$ROOT fmt -check
    terraform -chdir=$ROOT init -input=false
    terraform -chdir=$ROOT validate
@@ -192,7 +191,7 @@ Do not add new providers or external modules without a clear request.
 
 ### VPC naming and AWS VPC endpoints (`networking/vpc`)
 
-- **Prod VPC names in tfvars**: peering and PrivateLink VPC **Name** tags come from `peering_*_vpc_name` and `pl_*_vpc_name` in `live/envs/prod/.../networking` tfvars. TGW hub **Name** tags use `tgw_name_tag_region_*`; spoke VPC names remain **map keys** in `tgw_spokes_region_*`. Inventory table: [docs/README.md](docs/README.md) **§1.3**.
+- **Prod VPC names in tfvars**: peering and PrivateLink VPC **Name** tags come from `peering_*_vpc_name` and `pl_*_vpc_name` in `envs/prod/.../networking` tfvars. TGW hub **Name** tags use `tgw_name_tag_region_*`; spoke VPC names remain **map keys** in `tgw_spokes_region_*`. Inventory table: [docs/README.md](docs/README.md) **§1.3**.
 - **Naming and diagrams**: use [docs/README.md](docs/README.md) **§1.2 *Network conventions*** for landing zone vs spoke, VPC naming table, and Gateway vs Interface endpoint diagrams.
 - **Endpoints in code**: `modules/networking/vpc` exposes optional flags: **S3 Gateway** (app + data route tables), **KMS / STS Interface** (app subnets, dedicated SG for TCP 443 from the VPC CIDR, `private_dns_enabled = true`). Endpoints live on floci `:4566` like the rest of VPC primitives.
 - **Tagging**: new endpoint and SG resources must use `merge(local.default_tags, { Name = ... })` like other `networking/vpc` resources.
@@ -248,7 +247,7 @@ Run before every `git push`:
 ```bash
 terraform fmt -check -recursive
 trivy config --severity HIGH,CRITICAL examples/
-trivy config --severity HIGH,CRITICAL live/
+trivy config --severity HIGH,CRITICAL envs/ shared-services/
 ```
 
 All commands must pass with 0 findings.
@@ -286,7 +285,7 @@ floci bind-mounts `/var/run/docker.sock` and runs as `root` (Real Docker Integra
 
 ## Linting (tflint)
 
-Run **after any Terraform change** (modules or `live/*` / `examples/*`) and before pushing; CI uses the same rules via `.tflint.hcl`.
+Run **after any Terraform change** (modules or `envs/*` / `shared-services/*` / `examples/*`) and before pushing; CI uses the same rules via `.tflint.hcl`.
 
 ```bash
 which tflint || echo "tflint not installed"

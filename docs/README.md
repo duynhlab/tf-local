@@ -15,7 +15,7 @@ Tagging follows the same *merge-and-identify* idea as common Terraform adapted t
 
 | Tag | Where set | Purpose |
 |-----|-----------|---------|
-| `Project`, `Environment`, `ManagedBy` | `default_tags` in `live/envs/*/providers.tf` | Lab-wide identity and ownership |
+| `Project`, `Environment`, `ManagedBy` | `default_tags` in `envs/*/providers.tf` | Lab-wide identity and ownership |
 | `TerraformModule` | `local.default_tags` in each module | Which Terraform module created the resource |
 | `Name` | Per-resource `merge(local.default_tags, { Name = ... })` | Human-readable resource name |
 
@@ -117,13 +117,13 @@ flowchart LR
 | KMS | Interface | **App** subnets; SG ingress 443 from VPC CIDR |
 | STS | Interface | **App** subnets; SG ingress 443 from VPC CIDR |
 
-**MVP scope:** Optional flags on `modules/vpc-base` are enabled for **`module.main_vpc`** (prod **`prod-main-vpc`**) in `live/envs/prod/terraform.tfvars`. Other prod VPCs (peering, PrivateLink, TGW spokes) and `live/envs/dev` keep endpoints **off** by default unless you set the same variables.
+**MVP scope:** Optional flags on `modules/vpc-base` are enabled for **`module.main_vpc`** (prod **`prod-main-vpc`**) in `envs/prod/terraform.tfvars`. Other prod VPCs (peering, PrivateLink, TGW spokes) and `envs/dev` keep endpoints **off** by default unless you set the same variables.
 
 ### 1.3 Prod VPC inventory (names in `terraform.tfvars`)
 
 Every prod VPC has a **Name** tag you can set from the root module. **`main_vpc_name`** and **`tgw_spokes_*` map keys** were already visible in tfvars; **peering** and **PrivateLink** VPC names are now **`peering_*_vpc_name`** and **`pl_*_vpc_name`**. **Transit Gateway** resources (not spokes) use **`tgw_name_tag_region_a`** / **`tgw_name_tag_region_b`**. CIDRs stay under `*_cidr` / subnet lists / spoke maps — see [`subnet.csv`](./subnet.csv).
 
-| VPC / resource | Region | Terraform module | Variable(s) in `live/envs/prod` | Role |
+| VPC / resource | Region | Terraform module | Variable(s) in `envs/prod` | Role |
 |----------------|--------|------------------|-----------------------------------|------|
 | `prod-main-vpc` | ap-southeast-1 | `main_vpc` (`vpc-base`) | `main_vpc_name`, `main_*` subnets | Ingress 3-tier; optional S3/KMS/STS VPC endpoints |
 | `prod-peering-requester` | ap-southeast-1 | `vpc_peering` | `peering_requester_vpc_name`, `peering_requester_*` | Peering demo — requester side |
@@ -134,7 +134,7 @@ Every prod VPC has a **Name** tag you can set from the root module. **`main_vpc_
 | `prod-tgw-spoke-dr` | us-east-1 | `transit_gateway` | Keys inside `tgw_spokes_region_b` | TGW spoke (region B) |
 | TGW (hub) | ap-southeast-1 / us-east-1 | `transit_gateway` | `tgw_name_tag_region_a`, `tgw_name_tag_region_b` | Transit Gateway **objects** (not VPCs) |
 
-**Module defaults:** If you call `modules/vpc-peering` or `modules/privatelink` without setting VPC names, older **lab-default** strings (e.g. `vpc-peering-requester`, `privatelink-provider`) still apply. **`live/envs/prod`** sets the **`prod-*`** names above so the console matches [`subnet.csv`](./subnet.csv) and this table.
+**Module defaults:** If you call `modules/vpc-peering` or `modules/privatelink` without setting VPC names, older **lab-default** strings (e.g. `vpc-peering-requester`, `privatelink-provider`) still apply. **`envs/prod`** sets the **`prod-*`** names above so the console matches [`subnet.csv`](./subnet.csv) and this table.
 
 ---
 
@@ -146,7 +146,7 @@ Deployed across `ap-southeast-1` (Singapore) and `us-east-1` (N. Virginia) on fl
 
 **Terraform mapping:** Which **`terraform.tfvars`** variable controls each VPC **Name** tag is in **§1.3** (inventory table).
 
-**Naming:** Terraform uses **`module.main_vpc`** and variables `main_*` (see `live/envs/prod/terraform.tfvars`). The VPC **Name** tag is **`prod-main-vpc`**. In AWS networking, **edge** still means **network edge** (where internet traffic enters); this repo’s **main** VPC is that ingress 3-tier for `ap-southeast-1`. The diagram below shows **internet ingress into `prod-main-vpc`** so it does not look orphaned among the other patterns.
+**Naming:** Terraform uses **`module.main_vpc`** and variables `main_*` (see `envs/prod/terraform.tfvars`). The VPC **Name** tag is **`prod-main-vpc`**. In AWS networking, **edge** still means **network edge** (where internet traffic enters); this repo’s **main** VPC is that ingress 3-tier for `ap-southeast-1`. The diagram below shows **internet ingress into `prod-main-vpc`** so it does not look orphaned among the other patterns.
 
 **VPC Summary:**
 | VPC | CIDR | Region | Pattern |
@@ -561,7 +561,7 @@ This project includes comprehensive test scripts that validate the Terraform imp
 
 | Script | Tests | Validation Points |
 |---|---|---|
-| `test-all.sh` | Dev + Prod integration | Init/apply/output/destroy for `live/envs/dev` and `live/envs/prod` |
+| `test-all.sh` | Dev + Prod integration | Init/apply/output/destroy for `envs/dev` and `envs/prod` |
 
 ### What Tests Validate
 
@@ -655,9 +655,9 @@ graph TD
 ```
 
 ### 8.2 Verification Steps
-- Run `terraform -chdir=live/envs/dev apply -auto-approve`
-- Run `terraform -chdir=live/envs/prod apply -auto-approve`
-- Run `terraform -chdir=live/envs/dev destroy -auto-approve` and `terraform -chdir=live/envs/prod destroy -auto-approve`
+- Run `terraform -chdir=envs/dev apply -auto-approve`
+- Run `terraform -chdir=envs/prod apply -auto-approve`
+- Run `terraform -chdir=envs/dev destroy -auto-approve` and `terraform -chdir=envs/prod destroy -auto-approve`
 
 ---
 
@@ -692,12 +692,12 @@ modules/
 ### Environment Configurations
 
 ```text
-live/envs/
+envs/
 ├── dev/                  # floci Dev (Singapore, 3 AZs)
 └── prod/                 # floci Prod (Multi-region: SG, US-East)
 ```
 
-Note: architecture sections still describe VPC Peering, PrivateLink, and Transit Gateway patterns; these are now composed through `live/envs/prod` rather than standalone environment roots.
+Note: architecture sections still describe VPC Peering, PrivateLink, and Transit Gateway patterns; these are now composed through `envs/prod` rather than standalone environment roots.
 
 Each environment includes:
 - `main.tf`: Root module with provider configurations
@@ -757,10 +757,10 @@ resource "aws_vpc_peering_connection_accepter" "this" {
 
 | Solution | Complexity | Cost | Scalability | Security | Applied To |
 |---|---|---|---|---|---|
-| Module `vpc-base` | Low | Low | Low (standalone) | 3-tier standard | `live/envs/dev` |
-| VPC Peering | Low | Low | Poor (O(n²)) | Coarse | `live/envs/prod` (Cross-Region App) |
-| PrivateLink | Medium | Medium | Excellent | Fine-grained | `live/envs/prod` (Service endpoint) |
-| Transit Gateway | High | High | Excellent (O(n)) | Centralized | `live/envs/prod` (Cross-region spokes) |
+| Module `vpc-base` | Low | Low | Low (standalone) | 3-tier standard | `envs/dev` |
+| VPC Peering | Low | Low | Poor (O(n²)) | Coarse | `envs/prod` (Cross-Region App) |
+| PrivateLink | Medium | Medium | Excellent | Fine-grained | `envs/prod` (Service endpoint) |
+| Transit Gateway | High | High | Excellent (O(n)) | Centralized | `envs/prod` (Cross-region spokes) |
 
 ---
 

@@ -14,7 +14,7 @@ data "terraform_remote_state" "networking" {
 
 # App image registry.
 module "ecr" {
-  source = "../../../../../modules/compute/ecr"
+  source = "../../../../modules/compute/ecr"
 
   name         = "${local.name_prefix}/app"
   scan_on_push = true
@@ -23,7 +23,7 @@ module "ecr" {
 
 # Public ALB -> forwards to the ECS service.
 module "alb" {
-  source = "../../../../../modules/networking/alb"
+  source = "../../../../modules/networking/alb"
 
   name              = "${local.name_prefix}-alb"
   target_group_name = "${local.name_prefix}-tg"
@@ -41,7 +41,7 @@ module "alb" {
 
 # ECS Fargate service in the private app subnets, registered to the ALB.
 module "ecs" {
-  source = "../../../../../modules/compute/ecs-service"
+  source = "../../../../modules/compute/ecs-service"
 
   name       = "${local.name_prefix}-app"
   subnet_ids = data.terraform_remote_state.networking.outputs.app_subnet_ids

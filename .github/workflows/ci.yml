@@ -28,14 +28,14 @@ jobs:
       fail-fast: false
       matrix:
         root:
-          - live/envs/dev/ap-southeast-1/networking
-          - live/envs/dev/ap-southeast-1/ecs
-          - live/envs/uat/ap-southeast-1/networking
-          - live/envs/prod/ap-southeast-1/networking
-          - live/shared-services/ap-southeast-1/kms
-          - live/shared-services/ap-southeast-1/s3-logs
-          - live/shared-services/ap-southeast-1/ssm
-          - live/shared-services/ap-southeast-1/ecr
+          - envs/dev/ap-southeast-1/networking
+          - envs/dev/ap-southeast-1/ecs
+          - envs/uat/ap-southeast-1/networking
+          - envs/prod/ap-southeast-1/networking
+          - shared-services/ap-southeast-1/kms
+          - shared-services/ap-southeast-1/s3-logs
+          - shared-services/ap-southeast-1/ssm
+          - shared-services/ap-southeast-1/ecr
           - examples/iam/pod-identity-s3
           - examples/networking/minimal
           - examples/iam/alb-controller
@@ -89,9 +89,9 @@ jobs:
           - modules/messaging/sqs-with-dlq
           - modules/_legacy/irsa-role
           - modules/lab-provider
-          - live/envs/dev/ap-southeast-1/networking
-          - live/envs/dev/ap-southeast-1/ecs
-          - live/envs/prod/ap-southeast-1/networking
+          - envs/dev/ap-southeast-1/networking
+          - envs/dev/ap-southeast-1/ecs
+          - envs/prod/ap-southeast-1/networking
     steps:
       - uses: actions/checkout@v6
       - uses: terraform-linters/setup-tflint@v6
@@ -179,8 +179,8 @@ jobs:
         run: |
           set -e
           ./scripts/bootstrap-state-bucket.sh dnl-tfstate-floci ap-southeast-1
-          NET=live/envs/dev/ap-southeast-1/networking
-          ECS=live/envs/dev/ap-southeast-1/ecs
+          NET=envs/dev/ap-southeast-1/networking
+          ECS=envs/dev/ap-southeast-1/ecs
           terraform -chdir=$NET init -input=false -backend-config=backend.floci.hcl
           terraform -chdir=$NET apply -auto-approve -var enable_s3_gateway_endpoint=false
           terraform -chdir=$ECS init -input=false -backend-config=backend.floci.hcl

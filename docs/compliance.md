@@ -22,15 +22,15 @@ checkov -d . --config-file .checkov.yml
 
 ## Lab vs AWS
 
-- **`live/lab/*`**: emulator endpoints; some AWS checks are skipped or N/A.
-- **`live/aws/*`**, **`bootstrap/`**: must pass Checkov in AWS CI without suppressions unless documented in code with `# checkov:skip=CKV_...` and a one-line reason.
+- **`envs/*`**: emulator endpoints; some AWS checks are skipped or N/A.
+- **`envs/*`**, **`bootstrap/`**: must pass Checkov in AWS CI without suppressions unless documented in code with `# checkov:skip=CKV_...` and a one-line reason.
 
 ## Pre-push
 
 ```bash
 terraform fmt -check -recursive
 checkov -d . --config-file .checkov.yml
-trivy config --severity HIGH,CRITICAL live/aws/ bootstrap/
+trivy config --severity HIGH,CRITICAL envs/ bootstrap/
 ```
 
 Optional: [Conftest](https://www.conftest.dev/) can be added later for Rego policies on `terraform plan -json` output; not required for the current pipeline.

@@ -1,6 +1,6 @@
 # Landing zone (Track B)
 
-Multi-account layout for **real AWS** stacks under `live/aws/`. Emulator lab work stays in `live/lab/`.
+Multi-account layout for **real AWS** stacks under `envs/`. Emulator lab work stays in `envs/`.
 
 ## Account model
 
@@ -11,8 +11,8 @@ Copy `config/accounts.yaml.example` → `config/accounts.yaml` (gitignored) and 
 | Management | `management_account_id` | Org / SCPs (out of repo) |
 | Security — log archive | `log_archive_account_id` | Central logs |
 | Security — audit | `audit_account_id` | Security tooling |
-| Infrastructure — network prod | `network_prod_account_id` | `live/aws/prod/...` via `assume_role` |
-| Infrastructure — network dev | `network_dev_account_id` | `live/aws/dev/...` direct or role |
+| Infrastructure — network prod | `network_prod_account_id` | `envs/prod/...` via `assume_role` |
+| Infrastructure — network dev | `network_dev_account_id` | `envs/dev/...` direct or role |
 | Workloads — app prod / dev | `app_prod_account_id`, `app_dev_account_id` | Future app stacks |
 
 ## State
@@ -25,8 +25,8 @@ Copy `config/accounts.yaml.example` → `config/accounts.yaml` (gitignored) and 
 
 | Stack | Path | Auth |
 |-------|------|------|
-| Dev VPC | `live/aws/dev/ap-southeast-1/networking/` | Default OIDC role in dev account |
-| Prod VPC | `live/aws/prod/ap-southeast-1/networking/` | `assume_role_arn` → network prod account |
+| Dev VPC | `envs/dev/ap-southeast-1/networking/` | Default OIDC role in dev account |
+| Prod VPC | `envs/prod/ap-southeast-1/networking/` | `assume_role_arn` → network prod account |
 
 CIDRs: **`docs/subnet.csv`** only.
 

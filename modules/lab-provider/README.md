@@ -7,7 +7,7 @@ Shared **locals** for floci emulator Terraform roots (not a provider module — 
 Symlink into each root module (relative target depends on depth):
 
 ```bash
-# live/envs/<env>/<region>/<component>  (5 levels deep)
+# envs/<env>/<region>/<component>  (5 levels deep)
 ln -sf ../../../../../modules/lab-provider/common.tf lab_provider_common.tf
 # examples/iam/<scenario>  (3 levels deep)
 ln -sf ../../../modules/lab-provider/common.tf lab_provider_common.tf

@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "../../../../../modules/networking/vpc"
+  source = "../../../../modules/networking/vpc"
 
   vpc_name          = var.vpc_name
   vpc_cidr          = var.vpc_cidr
@@ -11,7 +11,7 @@ module "vpc" {
 }
 
 module "waf_v2" {
-  source = "../../../../../modules/security/wafv2"
+  source = "../../../../modules/security/wafv2"
 
   count = var.enable_waf ? 1 : 0
 

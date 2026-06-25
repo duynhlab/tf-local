@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # floci-only smoke test:
-#   - fmt + init(-backend=false) + validate for every live/envs networking root
+#   - fmt + init(-backend=false) + validate for every envs networking root
 #   - full apply/destroy for dev networking (proves it really works on floci)
 set -uo pipefail
 
@@ -33,13 +33,13 @@ validate_root() {
 }
 
 for env in dev uat prod; do
-  validate_root "live/envs/$env/ap-southeast-1/networking"
+  validate_root "envs/$env/ap-southeast-1/networking"
 done
 
 echo "----------------------------------------------"
 echo "apply/destroy dev networking on floci"
 echo "----------------------------------------------"
-DEV="$PROJECT_DIR/live/envs/dev/ap-southeast-1/networking"
+DEV="$PROJECT_DIR/envs/dev/ap-southeast-1/networking"
 if terraform -chdir="$DEV" init -input=false &&
    terraform -chdir="$DEV" apply -auto-approve &&
    terraform -chdir="$DEV" output; then
