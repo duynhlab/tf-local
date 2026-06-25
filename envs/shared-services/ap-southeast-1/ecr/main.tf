@@ -1,6 +1,6 @@
 # Shared ECR repos; workload accounts (dev/uat/prod) get cross-account pull.
 module "ecr" {
-  source   = "../../../modules/compute/ecr"
+  source   = "../../../../modules/compute/ecr"
   for_each = toset(var.repositories)
 
   name = "${var.project}/${each.key}"

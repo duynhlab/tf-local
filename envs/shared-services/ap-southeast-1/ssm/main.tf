@@ -1,7 +1,7 @@
 # Shared config parameters (cross-account readers assume a role granting
 # ssm:GetParameter* + kms:Decrypt — see docs/enterprise-roadmap.md).
 module "shared_config" {
-  source = "../../../modules/data/ssm-parameter"
+  source = "../../../../modules/data/ssm-parameter"
 
   parameters = {
     "/shared/config/region" = {

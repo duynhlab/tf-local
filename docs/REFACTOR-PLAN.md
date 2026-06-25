@@ -11,7 +11,7 @@
 | Mỗi module | Deep-dive feature "hay dùng" qua context7 (đã research, xem §4). |
 | Account model | **Multi-account** mô phỏng trên floci bằng `AWS_ACCESS_KEY_ID` = 12 chữ số: `dev/uat/prod` + 1 account **shared-services**. |
 | Shared services | **CÓ LÀM** — ECR, s3-logs, kms-keys, ssm-parameters đặt ở account shared-services, chia sẻ cross-account. |
-| Layout | `envs/{dev,uat,prod}` + `shared-services` (đã bỏ wrapper `live/`). |
+| Layout | `envs/{dev,uat,prod,shared-services}` (account-roots cùng cấp; đã bỏ wrapper `live/`). |
 | Emulator | **floci only** (+ floci-ui) — **bỏ hẳn ministack**. floci `1.5.27`, floci-ui `0.1.0`, Real Docker Integration (`user: root`), Override images. Feature floci chưa hỗ trợ → toggle-off + document (xem §7). |
 | IRSA vs Pod Identity | **Giữ 1 bản IRSA legacy** (đánh dấu `_legacy`) để tham khảo **+ thêm bản Pod Identity mới**. |
 | Region lab | `ap-southeast-1` (mặc định). |
@@ -68,7 +68,7 @@ tf-local/
 │   ├── dev/<region>/{networking, ecs, ...}/   # 111111111111
 │   ├── uat/<region>/{...}/                     # 222222222222
 │   └── prod/<region>/{...}/                    # 333333333333
-├── shared-services/<region>/{ecr, s3-logs, kms, ssm}/   # account 100000000000
+├── envs/shared-services/<region>/{ecr, s3-logs, kms, ssm}/   # account 100000000000
 ├── examples/
 │   ├── networking/minimal/     # giữ
 │   └── iam/                     # GOM toàn bộ iam/* case-study vào đây
@@ -217,7 +217,7 @@ Khác s3-bucket: **bucket policy cho log writer** theo nguồn (S3 access logs�
   - Sửa path trong `scripts/*`, `.github/workflows/*`, `AGENTS.md`, `README.md`, `docs/*`.
 - **Phase 2 — Core modules + shared-services** → verify: module tests + `shared-services` validate.
   - Modules: `security/iam-role`, `data/{s3-bucket,kms-key,ssm-parameter}`, `compute/ecr`.
-  - Roots: `shared-services/<region>/{kms,s3-logs,ssm,ecr}` (account 100000000000).
+  - Roots: `envs/shared-services/<region>/{kms,s3-logs,ssm,ecr}` (account 100000000000).
 - **Phase 3 — Networking + security per env** → verify: dev/uat/prod networking validate.
   - Modules: nâng cấp `networking/vpc`, `networking/security-group`, `security/wafv2`.
   - Roots: `envs/{dev,uat,prod}/<region>/{networking,security}`.
@@ -261,5 +261,5 @@ Khác s3-bucket: **bucket policy cho log writer** theo nguồn (S3 access logs�
   5. ✅ `source` paths + symlink fix; `ci.yml` floci-only paths; `aws-ci.yml` xoá; `test-all.sh`/`setup.sh`/`teardown.sh` floci-only; `README.md` rewrite; `AGENTS.md` mục chính.
   6. ✅ Verify: `fmt` sạch; dev/uat/prod + examples `validate` Success.
   - ✅ Doc polish + dọn cấu trúc: xoá `config/`, `bootstrap/`, và các docs cũ (`landing-zone`, `module-versioning`, `terragrunt-decision`, `compliance`).
-- ✅ **Phase 2 — core modules + shared-services (DONE)**: modules `security/iam-role`, `data/{s3-bucket,s3-logs,kms-key,ssm-parameter}`, `compute/ecr` (hand-written, context7-researched). Roots `shared-services/ap-southeast-1/{kms,s3-logs,ssm,ecr}` (account 100000000000, cross-account grants to dev/uat/prod). Verified: all apply+destroy on floci; ARNs carry account 100000000000.
+- ✅ **Phase 2 — core modules + shared-services (DONE)**: modules `security/iam-role`, `data/{s3-bucket,s3-logs,kms-key,ssm-parameter}`, `compute/ecr` (hand-written, context7-researched). Roots `envs/shared-services/ap-southeast-1/{kms,s3-logs,ssm,ecr}` (account 100000000000, cross-account grants to dev/uat/prod). Verified: all apply+destroy on floci; ARNs carry account 100000000000.
 - ✅ **Phase 3-5 (DONE)**: modules `networking/security-group`, `compute/ecs-service`, `compute/eks` (wraps terraform-aws-modules/eks `21.0.6`), `security/pod-identity`. Roots `envs/dev/ap-southeast-1/{ecs,eks}` (cross-stack via `terraform_remote_state` of networking). Example `examples/iam/pod-identity-s3` (Pod Identity vs IRSA-legacy contrast). Verified: all validate; **dev networking→ecs apply end-to-end on floci** (cross-stack + SG + ECS). floci gap found: AWS-managed IAM policies not preloaded → modules use inline equivalents (documented).

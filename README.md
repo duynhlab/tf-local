@@ -37,14 +37,14 @@ modules/                       # reusable (snake_case HCL, kebab-case folder)
   _legacy/     {irsa-role}      # tham khảo; chuẩn mới = Pod Identity
   lab-provider/                 # floci endpoints + account map (symlink vào mỗi root)
 envs/{dev,uat,prod}/ap-southeast-1/{networking,ecs,...}/    # workload accounts
-shared-services/ap-southeast-1/{ecr,s3-logs,kms,ssm}/       # shared account
+envs/shared-services/ap-southeast-1/{ecr,s3-logs,kms,ssm}/       # shared account
 examples/
   networking/minimal/
   iam/                          # case-study IAM (cross-account, IRSA legacy, ...)
 docs/  policies/  tests/  scripts/
 ```
 
-3 lớp: `envs/*` / `shared-services/*` (root mỏng) → `modules/<group>/*` (primitive/wrapper) → resource. Module style: **tự viết** VPC/IAM/WAFv2/S3/SG/ECS/Pod Identity; **bọc** community chỉ cho EKS; bỏ RDS.
+3 lớp: `envs/*` (root mỏng) → `modules/<group>/*` (primitive/wrapper) → resource. Module style: **tự viết** VPC/IAM/WAFv2/S3/SG/ECS/Pod Identity; **bọc** community chỉ cho EKS; bỏ RDS.
 
 ## Tài liệu
 - [docs/REFACTOR-PLAN.md](docs/REFACTOR-PLAN.md) — kế hoạch & tiến độ refactor (phases)
