@@ -84,6 +84,21 @@ across all envs/components.
 `terragrunt.stack.hcl` declares reusable groups of units — good for "spin up a full
 env" as one unit-of-deployment. Evaluate once stable.
 
+```mermaid
+flowchart TB
+  root["root.hcl<br/>remote_state + generate provider"]
+  acc["account.hcl / region.hcl / env.hcl"]
+  unit["envs/.../component/terragrunt.hcl<br/>include + source + inputs"]
+  acc -->|find_in_parent_folders| unit
+  root -->|include| unit
+  unit -->|generate at runtime| gen["backend.tf + provider.tf"]
+  dep["dependency block"] -.->|replaces terraform_remote_state| unit
+```
+
+> Note: the actual state bucket name comes from
+> [`../scripts/bootstrap-state-bucket.sh`](../scripts/bootstrap-state-bucket.sh);
+> the `bucket = …` above is illustrative.
+
 ## 3. How it maps onto THIS repo
 
 | Today (plain TF) | With Terragrunt |

@@ -12,6 +12,22 @@ Cột floci: ✅ apply được · ⚠️ một phần · ❌ chưa hỗ trợ (
 | Account vending (Terraform tạo account) | ☁️ | ★ | `aws_organizations_account` |
 | **Cross-account assume-role** chuẩn (thay access-key-per-account của lab) | ⚠️ | ★★★ | Lab mô phỏng bằng access key; AWS thật dùng `assume_role` + external_id |
 
+Mô hình landing zone hướng tới (☁️ AWS thật):
+
+```mermaid
+flowchart TB
+  mgmt["management (Organizations, SCP)"]
+  mgmt --> log["log-archive"]
+  mgmt --> audit["security / audit"]
+  mgmt --> shared["shared-services (ECR/KMS/SSM/DNS)"]
+  mgmt --> dev["dev"]
+  mgmt --> uat["uat"]
+  mgmt --> prod["prod"]
+```
+
+> Hiện tại repo có sẵn `shared-services` + `dev/uat/prod`; các account
+> management/log-archive/audit + SCP là phần mở rộng tương lai.
+
 ## 2. Networking nâng cao
 | Chủ đề | floci | Ưu tiên | Ghi chú |
 |---|---|---|---|
