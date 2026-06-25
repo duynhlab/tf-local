@@ -14,7 +14,9 @@ aws
 terraform.tfvars
 *.auto.tfvars
 backend.hcl
-config/accounts.yaml
+
+# Tooling (local)
+.crush/
 
 # OS
 .DS_Store

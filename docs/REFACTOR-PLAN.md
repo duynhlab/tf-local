@@ -38,8 +38,7 @@
 
 ```
 tf-local/
-├── docker-compose.yml          # floci (pin) + floci-ui + ministack(optional profile)
-├── bootstrap/                  # tạo S3 state bucket (giữ nguyên vai trò)
+├── docker-compose.yml          # floci + floci-ui
 ├── modules/                    # reusable, KHÔNG dính env
 │   ├── networking/
 │   │   ├── vpc/                # tự viết (nâng cấp từ networking/vpc hiện có)
@@ -227,7 +226,7 @@ Khác s3-bucket: **bucket policy cho log writer** theo nguồn (S3 access logs�
   - Roots: `envs/{dev,...}/<region>/{ecr,ecs,eks}` + cross-account pull ECR.
 - **Phase 5 — Examples + docs** → verify: examples validate, docs nhất quán.
   - Chuyển case-study IAM sang Pod Identity (hoặc đánh dấu `_legacy`).
-  - Cập nhật `docs/` (support matrix, module-versioning), `AGENTS.md`.
+  - Cập nhật `docs/` + `AGENTS.md`.
 
 ---
 
@@ -261,6 +260,6 @@ Khác s3-bucket: **bucket policy cho log writer** theo nguồn (S3 access logs�
   4. ✅ `live/lab`→`envs/{dev,uat,prod}/ap-southeast-1/networking` (multi-account access_key); `live/aws` xoá; `uat` mới; `shared-services` skeleton.
   5. ✅ `source` paths + symlink fix; `ci.yml` floci-only paths; `aws-ci.yml` xoá; `test-all.sh`/`setup.sh`/`teardown.sh` floci-only; `README.md` rewrite; `AGENTS.md` mục chính.
   6. ✅ Verify: `fmt` sạch; dev/uat/prod + examples `validate` Success.
-  - ⏳ Doc polish còn lại (non-breaking): AGENTS bảng limitations/compat, `docs/support.md`, `docs/README.md`, README các example/module, `bootstrap/README.md`, `docs/{landing-zone,module-versioning}.md`.
+  - ✅ Doc polish + dọn cấu trúc: xoá `config/`, `bootstrap/`, và các docs cũ (`landing-zone`, `module-versioning`, `terragrunt-decision`, `compliance`).
 - ✅ **Phase 2 — core modules + shared-services (DONE)**: modules `security/iam-role`, `data/{s3-bucket,s3-logs,kms-key,ssm-parameter}`, `compute/ecr` (hand-written, context7-researched). Roots `shared-services/ap-southeast-1/{kms,s3-logs,ssm,ecr}` (account 100000000000, cross-account grants to dev/uat/prod). Verified: all apply+destroy on floci; ARNs carry account 100000000000.
 - ✅ **Phase 3-5 (DONE)**: modules `networking/security-group`, `compute/ecs-service`, `compute/eks` (wraps terraform-aws-modules/eks `21.0.6`), `security/pod-identity`. Roots `envs/dev/ap-southeast-1/{ecs,eks}` (cross-stack via `terraform_remote_state` of networking). Example `examples/iam/pod-identity-s3` (Pod Identity vs IRSA-legacy contrast). Verified: all validate; **dev networking→ecs apply end-to-end on floci** (cross-stack + SG + ECS). floci gap found: AWS-managed IAM policies not preloaded → modules use inline equivalents (documented).

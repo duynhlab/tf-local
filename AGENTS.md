@@ -40,7 +40,6 @@ Emulator capability gaps: **[docs/floci-unsupported.md](docs/floci-unsupported.m
 
 ```text
 docker-compose.yml             # floci :4566 + floci-ui :4500
-bootstrap/                     # One-time S3 state bucket (local backend)
 docs/
   REFACTOR-PLAN.md             # Target structure, module catalog, phases (read first)
   naming-conventions.md        # Naming standard (HCL snake_case, folders kebab-case)
@@ -70,7 +69,7 @@ scripts/
 .github/workflows/ci.yml       # fmt/validate/tflint/trivy/checkov/test + floci integration
 ```
 
-Each directory under `envs/*` / `shared-services/*` and `examples/*` (and `bootstrap/`) is a **standalone** Terraform root module.
+Each directory under `envs/*` / `shared-services/*` and `examples/*` is a **standalone** Terraform root module.
 
 ---
 

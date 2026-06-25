@@ -36,7 +36,7 @@ Cột floci: ✅ apply được · ⚠️ một phần · ❌ chưa hỗ trợ (
 | Remote backend per-account (S3 + lock) | ⚠️ | ★★★ | floci S3 ✅; lock dùng S3 native lockfile (TF 1.10+) hoặc DynamoDB |
 | **OIDC GitHub Actions → AWS** (không long-lived key) | ☁️ | ★★★ | `aws_iam_openid_connect_provider` cho token.actions.githubusercontent.com |
 | Plan/apply tách biệt + artifact + approval | n/a | ★★★ | CI matrix theo account/env/component |
-| Terragrunt **hoặc** TF Stacks (khi >10 root) | n/a | ★★ | Xem `docs/terragrunt-decision.md` |
+| Terragrunt **hoặc** TF Stacks (khi >10 root) | n/a | ★★ | Hiện dùng plain Terraform roots (chưa cần Terragrunt) |
 | Drift detection (scheduled plan) | n/a | ★★ | |
 
 ## 5. Security & compliance
