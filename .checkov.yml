@@ -9,6 +9,6 @@ external-checks-dir:
   - policies/checkov
 
 skip-check:
-  # Lab-only: static test credentials and emulator endpoints (not used in live/aws)
+  # Lab-only: static test credentials and floci emulator endpoints (not real AWS)
   - CKV_AWS_41
   - CKV_AWS_42

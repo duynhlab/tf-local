@@ -2,7 +2,7 @@
 
 ## 1. Introduction
 
-This report analyzes three primary AWS VPC connectivity solutions for enterprise use, focusing on cross-region and multi-account scenarios. Lab Terraform is validated on a **hybrid local emulator stack**: **floci** (`:4566`, identity/data/compute) and **ministack** (`:4567`, advanced VPC/ELB/WAF). See [AGENTS.md](../AGENTS.md) and [support.md](./support.md).
+This report analyzes three primary AWS VPC connectivity solutions for enterprise use, focusing on cross-region and multi-account scenarios. Lab Terraform is validated on the **floci** emulator (`:4566`). See [AGENTS.md](../AGENTS.md) and [floci-unsupported.md](./floci-unsupported.md).
 
 **Current context**: Single AWS Account, multi-region deployment. Planning for future multi-account migration.
 
@@ -15,7 +15,7 @@ Tagging follows the same *merge-and-identify* idea as common Terraform adapted t
 
 | Tag | Where set | Purpose |
 |-----|-----------|---------|
-| `Project`, `Environment`, `ManagedBy` | `default_tags` in `environments/*/providers.tf` | Lab-wide identity and ownership |
+| `Project`, `Environment`, `ManagedBy` | `default_tags` in `envs/*/providers.tf` | Lab-wide identity and ownership |
 | `TerraformModule` | `local.default_tags` in each module | Which Terraform module created the resource |
 | `Name` | Per-resource `merge(local.default_tags, { Name = ... })` | Human-readable resource name |
 
@@ -117,13 +117,13 @@ flowchart LR
 | KMS | Interface | **App** subnets; SG ingress 443 from VPC CIDR |
 | STS | Interface | **App** subnets; SG ingress 443 from VPC CIDR |
 
-**MVP scope:** Optional flags on `modules/vpc-base` are enabled for **`module.main_vpc`** (prod **`prod-main-vpc`**) in `environments/prod/terraform.tfvars`. Other prod VPCs (peering, PrivateLink, TGW spokes) and `environments/dev` keep endpoints **off** by default unless you set the same variables.
+**MVP scope:** Optional flags on `modules/vpc-base` are enabled for **`module.main_vpc`** (prod **`prod-main-vpc`**) in `envs/prod/terraform.tfvars`. Other prod VPCs (peering, PrivateLink, TGW spokes) and `envs/dev` keep endpoints **off** by default unless you set the same variables.
 
 ### 1.3 Prod VPC inventory (names in `terraform.tfvars`)
 
 Every prod VPC has a **Name** tag you can set from the root module. **`main_vpc_name`** and **`tgw_spokes_*` map keys** were already visible in tfvars; **peering** and **PrivateLink** VPC names are now **`peering_*_vpc_name`** and **`pl_*_vpc_name`**. **Transit Gateway** resources (not spokes) use **`tgw_name_tag_region_a`** / **`tgw_name_tag_region_b`**. CIDRs stay under `*_cidr` / subnet lists / spoke maps — see [`subnet.csv`](./subnet.csv).
 
-| VPC / resource | Region | Terraform module | Variable(s) in `environments/prod` | Role |
+| VPC / resource | Region | Terraform module | Variable(s) in `envs/prod` | Role |
 |----------------|--------|------------------|-----------------------------------|------|
 | `prod-main-vpc` | ap-southeast-1 | `main_vpc` (`vpc-base`) | `main_vpc_name`, `main_*` subnets | Ingress 3-tier; optional S3/KMS/STS VPC endpoints |
 | `prod-peering-requester` | ap-southeast-1 | `vpc_peering` | `peering_requester_vpc_name`, `peering_requester_*` | Peering demo — requester side |
@@ -134,7 +134,7 @@ Every prod VPC has a **Name** tag you can set from the root module. **`main_vpc_
 | `prod-tgw-spoke-dr` | us-east-1 | `transit_gateway` | Keys inside `tgw_spokes_region_b` | TGW spoke (region B) |
 | TGW (hub) | ap-southeast-1 / us-east-1 | `transit_gateway` | `tgw_name_tag_region_a`, `tgw_name_tag_region_b` | Transit Gateway **objects** (not VPCs) |
 
-**Module defaults:** If you call `modules/vpc-peering` or `modules/privatelink` without setting VPC names, older **lab-default** strings (e.g. `vpc-peering-requester`, `privatelink-provider`) still apply. **`environments/prod`** sets the **`prod-*`** names above so the console matches [`subnet.csv`](./subnet.csv) and this table.
+**Module defaults:** If you call `modules/vpc-peering` or `modules/privatelink` without setting VPC names, older **lab-default** strings (e.g. `vpc-peering-requester`, `privatelink-provider`) still apply. **`envs/prod`** sets the **`prod-*`** names above so the console matches [`subnet.csv`](./subnet.csv) and this table.
 
 ---
 
@@ -142,11 +142,11 @@ Every prod VPC has a **Name** tag you can set from the root module. **`main_vpc_
 
 ### 2.1 Prod Environment Overview (Multi-Region, 3-Tier Production-Ready)
 
-Deployed across `ap-southeast-1` (Singapore) and `us-east-1` (N. Virginia) on MiniStack, combining all 3 connectivity patterns with full 3-tier architecture (public/app/data) for each VPC.
+Deployed across `ap-southeast-1` (Singapore) and `us-east-1` (N. Virginia) on floci, combining all 3 connectivity patterns with full 3-tier architecture (public/app/data) for each VPC.
 
 **Terraform mapping:** Which **`terraform.tfvars`** variable controls each VPC **Name** tag is in **§1.3** (inventory table).
 
-**Naming:** Terraform uses **`module.main_vpc`** and variables `main_*` (see `environments/prod/terraform.tfvars`). The VPC **Name** tag is **`prod-main-vpc`**. In AWS networking, **edge** still means **network edge** (where internet traffic enters); this repo’s **main** VPC is that ingress 3-tier for `ap-southeast-1`. The diagram below shows **internet ingress into `prod-main-vpc`** so it does not look orphaned among the other patterns.
+**Naming:** Terraform uses **`module.main_vpc`** and variables `main_*` (see `envs/prod/terraform.tfvars`). The VPC **Name** tag is **`prod-main-vpc`**. In AWS networking, **edge** still means **network edge** (where internet traffic enters); this repo’s **main** VPC is that ingress 3-tier for `ap-southeast-1`. The diagram below shows **internet ingress into `prod-main-vpc`** so it does not look orphaned among the other patterns.
 
 **VPC Summary:**
 | VPC | CIDR | Region | Pattern |
@@ -553,15 +553,15 @@ Phase 3:     Multi-account with TGW shared via RAM
 
 ---
 
-## 7. MiniStack Testing & Validation
+## 7. floci Testing & Validation
 
-This project includes comprehensive test scripts that validate the Terraform implementations on MiniStack. The tests verify both resource creation and configuration correctness.
+This project includes comprehensive test scripts that validate the Terraform implementations on floci. The tests verify both resource creation and configuration correctness.
 
 ### Test Scripts Overview
 
 | Script | Tests | Validation Points |
 |---|---|---|
-| `test-all.sh` | Dev + Prod integration | Init/apply/output/destroy for `environments/dev` and `environments/prod` |
+| `test-all.sh` | Dev + Prod integration | Init/apply/output/destroy for `envs/dev` and `envs/prod` |
 
 ### What Tests Validate
 
@@ -583,7 +583,7 @@ This project includes comprehensive test scripts that validate the Terraform imp
 - Provider aliases work correctly for multi-region deployments
 - Resource dependencies are properly modeled
 
-### MiniStack Features Used
+### floci Features Used
 
 - **EC2 Service**: Full VPC, subnet, route table, security group, peering support
 - **ELBv2**: Network Load Balancer for PrivateLink
@@ -593,10 +593,10 @@ This project includes comprehensive test scripts that validate the Terraform imp
 ### Limitations & Notes
 
 - **Control Plane Only**: Tests validate AWS API responses, not actual network packet flow
-- **Instant State Changes**: MiniStack may return resources as "available" immediately vs. real AWS timing
+- **Instant State Changes**: floci may return resources as "available" immediately vs. real AWS timing
 - **No Data Plane Traffic**: Cannot test actual ICMP/TCP connectivity between VPCs
 - **Simulated Cross-Region**: All regions run in one container for testing convenience
-- **Transit Gateway Limitations**: Transit Gateway APIs may be incomplete in current MiniStack release
+- **Transit Gateway Limitations**: Transit Gateway APIs may be incomplete in current floci release
 - **PrivateLink Limitation**: `aws_vpc_endpoint_service` APIs may be partial; validate before relying on provider-side flows
 
 > **Note:** For a fully detailed matrix of supported services, emulator nuances, and recovery procedures for known issues (like the TGW cross-region peering hang), please refer to [API Support & Limitations](./support.md).
@@ -608,13 +608,13 @@ This project includes comprehensive test scripts that validate the Terraform imp
 ./scripts/test-all.sh
 ```
 
-Tests use AWS CLI with MiniStack endpoints and dummy credentials for API validation.
+Tests use AWS CLI with floci endpoints and dummy credentials for API validation.
 
 ---
 
-## 8. Enterprise MiniStack Emulation 
+## 8. Enterprise floci Emulation 
 
-Instead of deploying directly onto Real AWS, this entire project is targeting **MiniStack enterprise emulation**, incorporating realistic settings for learning and training purposes.
+Instead of deploying directly onto Real AWS, this entire project is targeting **floci enterprise emulation**, incorporating realistic settings for learning and training purposes.
 
 ### IP / Subnet Design
 We apply a strict separation model for IP blocks across 8 different VPCs in 2 Regions to avoid IP overlap. Each prod VPC follows the 3-tier architecture (public/app/data).
@@ -630,7 +630,7 @@ The Development environment contains 1 VPC located in `ap-southeast-1` (Singapor
 
 ```mermaid
 graph TD
-    subgraph "ap-southeast-1 (MiniStack)"
+    subgraph "ap-southeast-1 (floci)"
         IGW[Internet Gateway]
         ALB[ALB (public)]
         WAF[WAF v2 Web ACL]
@@ -655,9 +655,9 @@ graph TD
 ```
 
 ### 8.2 Verification Steps
-- Run `terraform -chdir=environments/dev apply -auto-approve`
-- Run `terraform -chdir=environments/prod apply -auto-approve`
-- Run `terraform -chdir=environments/dev destroy -auto-approve` and `terraform -chdir=environments/prod destroy -auto-approve`
+- Run `terraform -chdir=envs/dev apply -auto-approve`
+- Run `terraform -chdir=envs/prod apply -auto-approve`
+- Run `terraform -chdir=envs/dev destroy -auto-approve` and `terraform -chdir=envs/prod destroy -auto-approve`
 
 ---
 
@@ -692,12 +692,12 @@ modules/
 ### Environment Configurations
 
 ```text
-environments/
-├── dev/                  # MiniStack Dev (Singapore, 3 AZs)
-└── prod/                 # MiniStack Prod (Multi-region: SG, US-East)
+envs/
+├── dev/                  # floci Dev (Singapore, 3 AZs)
+└── prod/                 # floci Prod (Multi-region: SG, US-East)
 ```
 
-Note: architecture sections still describe VPC Peering, PrivateLink, and Transit Gateway patterns; these are now composed through `environments/prod` rather than standalone environment roots.
+Note: architecture sections still describe VPC Peering, PrivateLink, and Transit Gateway patterns; these are now composed through `envs/prod` rather than standalone environment roots.
 
 Each environment includes:
 - `main.tf`: Root module with provider configurations
@@ -747,7 +747,7 @@ resource "aws_vpc_peering_connection_accepter" "this" {
 
 ### Cost Optimization
 
-- **MiniStack Testing**: Zero AWS costs for development/testing
+- **floci Testing**: Zero AWS costs for development/testing
 - **Resource Tagging**: Consistent tagging for cost allocation
 - **Modular Design**: Reusable modules across environments
 
@@ -757,11 +757,11 @@ resource "aws_vpc_peering_connection_accepter" "this" {
 
 | Solution | Complexity | Cost | Scalability | Security | Applied To |
 |---|---|---|---|---|---|
-| Module `vpc-base` | Low | Low | Low (standalone) | 3-tier standard | `environments/dev` |
-| VPC Peering | Low | Low | Poor (O(n²)) | Coarse | `environments/prod` (Cross-Region App) |
-| PrivateLink | Medium | Medium | Excellent | Fine-grained | `environments/prod` (Service endpoint) |
-| Transit Gateway | High | High | Excellent (O(n)) | Centralized | `environments/prod` (Cross-region spokes) |
+| Module `vpc-base` | Low | Low | Low (standalone) | 3-tier standard | `envs/dev` |
+| VPC Peering | Low | Low | Poor (O(n²)) | Coarse | `envs/prod` (Cross-Region App) |
+| PrivateLink | Medium | Medium | Excellent | Fine-grained | `envs/prod` (Service endpoint) |
+| Transit Gateway | High | High | Excellent (O(n)) | Centralized | `envs/prod` (Cross-region spokes) |
 
 ---
 
-*Report generated as part of VPC Connectivity Lab – terraform-aws-ministack*
+*Report generated as part of tf-local — floci lab*

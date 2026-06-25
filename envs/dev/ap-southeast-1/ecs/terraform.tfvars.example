@@ -1,0 +1,12 @@
+# Point this at the same state bucket used by the networking stack.
+state_bucket = "dnl-tfstate-CHANGE-ME-ACCOUNT-ID"
+
+project         = "dnl"
+environment     = "dev"
+aws_region      = "ap-southeast-1"
+app_port        = 8080
+container_image = "public.ecr.aws/nginx/nginx:latest" # replace with your ECR image
+desired_count   = 1
+tags = {
+  Owner = "duynhlab"
+}

@@ -15,11 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: "~1.9"
-
+          terraform_version: "~> 1.11"
       - name: Check formatting
         run: terraform fmt -check -recursive -diff
 
@@ -30,32 +28,37 @@ jobs:
       fail-fast: false
       matrix:
         root:
-          - live/lab/dev/networking
-          - live/lab/prod/networking
-          - iam/alb-controller
-          - iam/cluster-access
-          - iam/cross-account
-          - iam/cross-account-secrets
-          - iam/cross-region-pipeline
-          - iam/cross-region-s3
-          - iam/external-dns-cross-account
-          - iam/prod
-          - iam/s3-eks
-          - iam/s3-events
-          - iam/s3-go-compute-matrix
-          - iam/stg
-          - iam/storage-drivers
+          - envs/dev/ap-southeast-1/networking
+          - envs/dev/ap-southeast-1/ecs
+          - envs/uat/ap-southeast-1/networking
+          - envs/prod/ap-southeast-1/networking
+          - shared-services/ap-southeast-1/kms
+          - shared-services/ap-southeast-1/s3-logs
+          - shared-services/ap-southeast-1/ssm
+          - shared-services/ap-southeast-1/ecr
+          - examples/iam/pod-identity-s3
+          - examples/networking/minimal
+          - examples/iam/alb-controller
+          - examples/iam/cluster-access
+          - examples/iam/cross-account
+          - examples/iam/cross-account-secrets
+          - examples/iam/cross-account-sns-sqs
+          - examples/iam/cross-account-sns-sqs-stg
+          - examples/iam/cross-region-pipeline
+          - examples/iam/cross-region-s3
+          - examples/iam/external-dns-cross-account
+          - examples/iam/s3-eks
+          - examples/iam/s3-events
+          - examples/iam/s3-go-compute-matrix
+          - examples/iam/storage-drivers
     steps:
       - uses: actions/checkout@v6
-
       - uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: "~1.9"
-
+          terraform_version: "~> 1.11"
       - name: Init
         working-directory: ${{ matrix.root }}
         run: terraform init -backend=false -input=false
-
       - name: Validate
         working-directory: ${{ matrix.root }}
         run: terraform validate
@@ -68,55 +71,51 @@ jobs:
       matrix:
         directory:
           - modules/networking/vpc
+          - modules/networking/security-group
+          - modules/networking/alb
+          - modules/networking/vpc-peering
+          - modules/networking/transit-gateway
+          - modules/networking/privatelink
+          - modules/security/wafv2
+          - modules/security/iam-role
+          - modules/security/pod-identity
+          - modules/data/s3-bucket
+          - modules/data/s3-logs
+          - modules/data/kms-key
+          - modules/data/ssm-parameter
+          - modules/compute/ecr
+          - modules/compute/ecs-service
+          - modules/compute/eks
+          - modules/messaging/sqs-with-dlq
+          - modules/_legacy/irsa-role
           - modules/lab-provider
-          - modules/iam/irsa_role
-          - modules/iam/sqs_with_dlq
-          - modules/vpc-peering
-          - modules/privatelink
-          - modules/transit-gateway
-          - modules/waf-v2
-          - live/lab/dev/networking
-          - live/lab/prod/networking
-          - iam/alb-controller
-          - iam/cluster-access
-          - iam/cross-account
-          - iam/cross-account-secrets
-          - iam/cross-region-pipeline
-          - iam/cross-region-s3
-          - iam/external-dns-cross-account
-          - iam/prod
-          - iam/s3-eks
-          - iam/s3-events
-          - iam/s3-go-compute-matrix
-          - iam/stg
-          - iam/storage-drivers
+          - envs/dev/ap-southeast-1/networking
+          - envs/dev/ap-southeast-1/ecs
+          - envs/prod/ap-southeast-1/networking
     steps:
       - uses: actions/checkout@v6
-
       - uses: terraform-linters/setup-tflint@v6
         with:
           tflint_version: latest
-
       - name: Init TFLint plugins
         run: tflint --init
         env:
           GITHUB_TOKEN: ${{ github.token }}
-
       - name: Run TFLint
         working-directory: ${{ matrix.directory }}
         run: tflint --format compact
 
-  tfsec:
+  trivy:
     name: Trivy (Terraform Security)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - name: Run Trivy scanner
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: config
           scan-ref: .
+          trivy-config: trivy.yaml
           exit-code: 1
           severity: HIGH,CRITICAL
 
@@ -125,7 +124,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - name: Run Checkov
         uses: bridgecrewio/checkov-action@v12
         with:
@@ -134,92 +132,59 @@ jobs:
           quiet: true
           soft_fail: true
 
+  terraform-test:
+    name: Terraform Test (module smoke)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "~> 1.11"
+      - name: Run module tests
+        run: |
+          terraform -chdir=tests init -backend=false -input=false
+          terraform -chdir=tests test
+
   # --------------------------------------------------------------------------
-  # Hybrid emulator integration (floci :4566 + ministack :4567)
-  # - environments/* use hybrid endpoints
-  # - iam/* use ministack :4567 for all declared services
+  # floci emulator integration (floci :4566 only) — applies a real root.
   # --------------------------------------------------------------------------
-  hybrid-integration:
-    name: Hybrid Emulator Integration
+  floci-integration:
+    name: floci Emulator Integration
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     needs: [terraform-fmt, terraform-validate, tflint]
     steps:
       - uses: actions/checkout@v6
-
       - uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: "~1.9"
-
-      - name: Start floci and ministack
+          terraform_version: "~> 1.11"
+      - name: Start floci
         run: |
-          docker compose up -d
-          echo "Waiting for floci (:4566) and ministack (:4567)..."
+          docker compose up -d floci
+          echo "Waiting for floci (:4566)..."
           for i in $(seq 1 30); do
-            floci_ok=0
-            mini_ok=0
-            curl -sf http://localhost:4566/_localstack/health > /dev/null 2>&1 && floci_ok=1
-            curl -sf http://localhost:4567/_ministack/health > /dev/null 2>&1 && mini_ok=1
-            if [ "$floci_ok" = "1" ] && [ "$mini_ok" = "1" ]; then
-              echo "Both emulators ready."
-              break
+            if curl -sf http://localhost:4566/_localstack/health > /dev/null 2>&1; then
+              echo "floci ready."; break
             fi
-            echo "  Attempt $i/30 (floci=$floci_ok ministack=$mini_ok)..."
-            sleep 3
+            echo "  attempt $i/30..."; sleep 3
           done
-          echo "Floci health:"
           curl -s http://localhost:4566/_localstack/health | python3 -m json.tool || true
-          echo "Ministack health:"
-          curl -s http://localhost:4567/_ministack/health | python3 -m json.tool || true
-
-      - name: Test Dev Environment
+      - name: Apply dev ECS env on floci (S3 backend + native lock)
+        env:
+          AWS_ENDPOINT_URL: http://localhost:4566
+          AWS_ACCESS_KEY_ID: "111111111111"
+          AWS_SECRET_ACCESS_KEY: test
+          AWS_REGION: ap-southeast-1
+          AWS_S3_ADDRESSING_STYLE: path
+          AWS_PAGER: ""
         run: |
-          cd live/lab/dev/networking
-          echo "=== Hybrid: Dev Environment ==="
-          terraform fmt -check
-          terraform init -input=false
-          terraform validate
-          terraform apply -auto-approve
-          terraform output
-          terraform destroy -auto-approve
-
-      - name: Test IAM Staging
-        run: |
-          cd iam/stg
-          echo "=== Ministack: IAM Staging ==="
-          terraform fmt -check
-          terraform init -input=false
-          terraform validate
-          terraform apply -auto-approve
-          terraform output
-          terraform destroy -auto-approve
-
-      - name: Test IAM Production
-        run: |
-          cd iam/prod
-          echo "=== Ministack: IAM Production ==="
-          terraform fmt -check
-          terraform init -input=false
-          terraform validate
-          terraform apply -auto-approve
-          terraform output
-          terraform destroy -auto-approve
-
-      - name: Test Prod Environment
-        run: |
-          cd live/lab/prod/networking
-          echo "=== Hybrid: Prod Environment ==="
-          terraform fmt -check
-          terraform init -input=false
-          terraform validate
-          terraform apply -auto-approve
-          terraform output
-          terraform output -raw main_vpc_id > /dev/null
-          terraform output -raw peering_connection_id > /dev/null
-          terraform state list | grep -q "module.main_vpc.aws_vpc.this"
-          terraform state list | grep -q "module.vpc_peering.aws_vpc_peering_connection.this"
-          terraform destroy -auto-approve
-
-      - name: Cleanup
-        if: always()
-        run: docker compose down -v 2>/dev/null || true
+          set -e
+          ./scripts/bootstrap-state-bucket.sh dnl-tfstate-floci ap-southeast-1
+          NET=envs/dev/ap-southeast-1/networking
+          ECS=envs/dev/ap-southeast-1/ecs
+          terraform -chdir=$NET init -input=false -backend-config=backend.floci.hcl
+          terraform -chdir=$NET apply -auto-approve -var enable_s3_gateway_endpoint=false
+          terraform -chdir=$ECS init -input=false -backend-config=backend.floci.hcl
+          terraform -chdir=$ECS apply -auto-approve -var state_bucket=dnl-tfstate-floci \
+            -var 'remote_state_config={access_key="111111111111",secret_key="test",use_path_style=true,skip_credentials_validation=true,skip_requesting_account_id=true,skip_metadata_api_check=true,endpoints={s3="http://localhost:4566"}}'
+          terraform -chdir=$ECS output

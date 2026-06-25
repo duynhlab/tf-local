@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Bring up the hybrid emulator stack:
-#   floci      → :4566 (compute / IAM / data plane)
-#   ministack  → :4567 (advanced networking + WAF)
+# Bring up the floci-only emulator stack:
+#   floci      → :4566 (all AWS services)
+#   floci-ui   → :4500 (web console)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -19,13 +19,13 @@ else
   exit 1
 fi
 
-echo "=== Local AWS Lab – Setup ==="
+echo "=== Local AWS Lab (floci) – Setup ==="
 echo "Using compose command: $DC"
 
 cd "$PROJECT_DIR"
 
-echo "[1/3] Starting emulators (floci + ministack)..."
-$DC up -d floci ministack
+echo "[1/3] Starting floci + floci-ui..."
+$DC up -d
 
 wait_ready() {
   local name=$1 url=$2 max=${3:-40}
@@ -42,11 +42,10 @@ wait_ready() {
 }
 
 echo "[2/3] Waiting for readiness..."
-wait_ready "floci"      "http://localhost:4566/_localstack/health"
-wait_ready "ministack"  "http://localhost:4567/_ministack/health"
+wait_ready "floci"    "http://localhost:4566/_localstack/health"
+wait_ready "floci-ui" "http://localhost:4500"
 
 echo "[3/3] Health snapshot:"
 echo "--- floci (:4566) ---"
 curl -s http://localhost:4566/_localstack/health | python3 -m json.tool 2>/dev/null || true
-echo "--- ministack (:4567) ---"
-curl -s http://localhost:4567/_ministack/health | python3 -m json.tool 2>/dev/null || true
+echo "--- floci-ui ---  http://localhost:4500"

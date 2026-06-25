@@ -1,21 +1,25 @@
 ###############################################################################
-# Hybrid local AWS emulator stack
+# Local AWS emulator stack — floci only
 #
-# floci      :4566 → compute / identity / data plane
-#                   (IAM, STS, S3, SNS, SQS, KMS, EKS real k3s, ECR, ECS,
-#                    Lambda, ElastiCache, RDS, MSK, OpenSearch, Athena, …)
+# floci      :4566 → emulator (64 AWS services): IAM, STS, S3, SNS, SQS, KMS,
+#                   SSM, ECR, ECS, EKS, EC2/VPC, ELBv2, WAFv2, CloudFront,
+#                   Lambda, RDS, ElastiCache, MSK, OpenSearch, Athena, …
+# floci-ui   :4500 → web console for floci (Cloud Explorer)
 #
-# ministack  :4567 → enterprise networking + edge security
-#                   (advanced EC2/VPC: NAT GW, VPC Endpoints, NACL,
-#                    Flow Logs, Peering, Egress-only IGW, WAF v2, ELBv2)
-#
-# Terraform providers split their `endpoints {}` block across the two
-# emulators per service. See environments/*/providers.tf.
+# Multi-account: account isolation is driven by Terraform, NOT compose — a
+# 12-digit AWS_ACCESS_KEY_ID becomes the account id in floci
+# (shared-services 100000000000 / dev 111111111111 / uat 222222222222 / prod 333333333333).
 ###############################################################################
 services:
   floci:
-    image: docker.io/floci/floci:latest
+    # Pinned to the latest stable release (verified on Docker Hub 2026-06-24).
+    # `1.5.27-compat` is the LocalStack-parity variant if stricter wire-compat is needed.
+    image: docker.io/floci/floci:1.5.27
     container_name: tf-lab-floci
+    # Real Docker Integration: floci launches REAL containers for stateful
+    # services (Lambda, RDS, ElastiCache, MSK, ECS, EC2, EKS, OpenSearch,
+    # CodeBuild). Requires the Docker socket mount below AND running as root.
+    user: "root"
     ports:
       - "4566:4566"
       - "9169:9169"
@@ -24,11 +28,20 @@ services:
       FLOCI_BASE_URL: http://floci:4566
       LOCALSTACK_PARITY: "true"
       QUARKUS_LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # --- Overriding default images (uncomment to pin Docker-backed runtimes) ---
+      # FLOCI_SERVICES_RDS_DEFAULT_POSTGRES_IMAGE: postgres:16-alpine
+      # FLOCI_SERVICES_RDS_DEFAULT_MYSQL_IMAGE: mysql:8.0
+      # FLOCI_SERVICES_ELASTICACHE_DEFAULT_IMAGE: valkey/valkey:8
+      # FLOCI_SERVICES_MSK_DEFAULT_IMAGE: redpandadata/redpanda:latest
+      # FLOCI_SERVICES_NEPTUNE_DEFAULT_IMAGE: tinkerpop/gremlin-server:3.7.3
+      # FLOCI_ECR_BASE_URI: public.ecr.aws
+      # --- Optional: enable IAM policy enforcement to practice least-privilege ---
+      # FLOCI_SERVICES_IAM_ENFORCEMENT_ENABLED: "true"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - floci_data:/app/data
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:4566/_localstack/health || exit 1"]
+      test: ["CMD-SHELL", "curl -sf http://localhost:4566/_localstack/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 15
@@ -37,28 +50,24 @@ services:
         aliases:
           - localhost.floci.io
 
-  ministack:
-    image: docker.io/ministackorg/ministack:latest
-    container_name: tf-lab-ministack
+  floci-ui:
+    image: docker.io/floci/floci-ui:0.1.0
+    container_name: tf-lab-floci-ui
     ports:
-      - "4567:4566"
+      - "4500:4500"
     environment:
-      GATEWAY_PORT: 4566
-      LOG_LEVEL: ${LOG_LEVEL:-INFO}
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ministack_data:/app/data
-    healthcheck:
-      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:4566/_ministack/health')\" || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 15
+      FLOCI_ENDPOINT: http://floci:4566
+      AWS_REGION: ap-southeast-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+    depends_on:
+      floci:
+        condition: service_healthy
     networks:
       lab: {}
 
 volumes:
   floci_data:
-  ministack_data:
 
 networks:
   lab:

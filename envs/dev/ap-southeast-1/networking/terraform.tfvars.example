@@ -1,0 +1,10 @@
+# All variables have sensible dev defaults (see variables.tf / docs/subnet.csv).
+# Override here if needed.
+project           = "dnl"
+environment       = "dev"
+aws_region        = "ap-southeast-1"
+nat_gateway_count = 1 # set to 3 for HA in prod
+app_port          = 8080
+tags = {
+  Owner = "duynhlab"
+}

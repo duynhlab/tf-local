@@ -1,0 +1,39 @@
+terraform {
+  required_version = ">= 1.3"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 6.0"
+    }
+  }
+}
+
+# floci :4566 — see modules/lab-provider/common.tf
+provider "aws" {
+  region                      = "ap-southeast-1"
+  access_key                  = local.lab_accounts.uat
+  secret_key                  = local.lab_secret_key_test
+  skip_credentials_validation = true
+  skip_metadata_api_check     = true
+  skip_requesting_account_id  = true
+  s3_use_path_style           = true
+
+  endpoints {
+    ec2   = local.lab_hybrid_endpoints.ec2
+    elbv2 = local.lab_hybrid_endpoints.elbv2
+    wafv2 = local.lab_hybrid_endpoints.wafv2
+    iam   = local.lab_hybrid_endpoints.iam
+    sts   = local.lab_hybrid_endpoints.sts
+    s3    = local.lab_hybrid_endpoints.s3
+    kms   = local.lab_hybrid_endpoints.kms
+  }
+
+  default_tags {
+    tags = {
+      Project     = "vpc-connectivity-lab"
+      Environment = "uat"
+      ManagedBy   = "terraform"
+    }
+  }
+}

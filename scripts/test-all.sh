@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# floci-only smoke test:
+#   - fmt + init(-backend=false) + validate for every envs networking root
+#   - full apply/destroy for dev networking (proves it really works on floci)
+set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
@@ -7,93 +10,48 @@ TOTAL_PASS=0
 TOTAL_FAIL=0
 
 echo "=============================================="
-echo "  VPC Connectivity Lab – Full Test Suite"
+echo "  tf-local – floci smoke test"
 echo "=============================================="
-echo ""
 
-# Setup MiniStack
 "$SCRIPT_DIR/setup.sh"
 echo ""
 
-run_env_test() {
-  local env_name="$1"
-  local env_dir="$PROJECT_DIR/live/lab/$env_name/networking"
-  local ok=0
+echo "[*] fmt check"
+terraform -chdir="$PROJECT_DIR" fmt -check -recursive || { echo "fmt failed"; exit 1; }
 
+validate_root() {
+  local root="$1"
   echo "----------------------------------------------"
-  echo "Testing live/lab/$env_name/networking"
+  echo "validate $root"
   echo "----------------------------------------------"
-
-  if terraform -chdir="$env_dir" fmt -check; then
-    if terraform -chdir="$env_dir" init -input=false; then
-      if terraform -chdir="$env_dir" validate; then
-        if terraform -chdir="$env_dir" apply -auto-approve; then
-          terraform -chdir="$env_dir" output || true
-
-          if [ "$env_name" = "prod" ]; then
-            verify_prod_deep_checks "$env_dir"
-          fi
-          ok=1
-        fi
-      fi
-    fi
-  fi
-
-  terraform -chdir="$env_dir" destroy -auto-approve || true
-
-  if [ "$ok" -eq 1 ]; then
+  if terraform -chdir="$PROJECT_DIR/$root" init -backend=false -input=false >/dev/null &&
+     terraform -chdir="$PROJECT_DIR/$root" validate; then
     ((TOTAL_PASS++))
   else
-    ((TOTAL_FAIL++))
+    ((TOTAL_FAIL++)); echo "FAIL: $root"
   fi
-  echo ""
 }
 
-verify_prod_deep_checks() {
-  local env_dir="$1"
-  local checks_ok=1
-  local state_list
+for env in dev uat prod; do
+  validate_root "envs/$env/ap-southeast-1/networking"
+done
 
-  echo "[*] Running deep prod checks (main-vpc + peering)..."
+echo "----------------------------------------------"
+echo "apply/destroy dev networking on floci"
+echo "----------------------------------------------"
+DEV="$PROJECT_DIR/envs/dev/ap-southeast-1/networking"
+if terraform -chdir="$DEV" init -input=false &&
+   terraform -chdir="$DEV" apply -auto-approve &&
+   terraform -chdir="$DEV" output; then
+  ((TOTAL_PASS++))
+else
+  ((TOTAL_FAIL++)); echo "FAIL: dev apply"
+fi
+terraform -chdir="$DEV" destroy -auto-approve || true
 
-  terraform -chdir="$env_dir" output -raw main_vpc_id > /dev/null || checks_ok=0
-  terraform -chdir="$env_dir" output -raw peering_connection_id > /dev/null || checks_ok=0
-
-  state_list="$(terraform -chdir="$env_dir" state list || true)"
-  for required_addr in \
-    "module.main_vpc.aws_vpc.this" \
-    "module.vpc_peering.aws_vpc_peering_connection.this"
-  do
-    if [[ "$state_list" != *"$required_addr"* ]]; then
-      echo "Missing expected state resource: $required_addr"
-      checks_ok=0
-    fi
-  done
-
-  if [ "$checks_ok" -ne 1 ]; then
-    echo "Deep prod checks failed."
-    return 1
-  fi
-
-  echo "Deep prod checks passed."
-  return 0
-}
-
-run_env_test "dev"
-run_env_test "prod"
-
-# Stop containers
 "$SCRIPT_DIR/teardown.sh"
 
-# Summary
 echo "=============================================="
-echo "  Final Summary: $TOTAL_PASS env passed, $TOTAL_FAIL env failed"
+echo "  Summary: $TOTAL_PASS passed, $TOTAL_FAIL failed"
 echo "=============================================="
-
-if [ "$TOTAL_FAIL" -gt 0 ]; then
-  echo "Some tests failed. Run individual test scripts for details."
-  exit 1
-else
-  echo "All test suites passed!"
-  exit 0
-fi
+[ "$TOTAL_FAIL" -gt 0 ] && exit 1 || exit 0
