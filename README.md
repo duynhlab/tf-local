@@ -35,7 +35,6 @@ modules/                       # reusable (snake_case HCL, kebab-case folder)
   compute/     {ecs-service, eks, ecr}                        (Phase 2-4)
   messaging/   {sqs-with-dlq}
   _legacy/     {irsa-role}      # tham khảo; chuẩn mới = Pod Identity
-  lab-provider/                 # floci endpoints + account map (symlink vào mỗi root)
 envs/{dev,uat,prod}/ap-southeast-1/{networking,ecs,...}/    # workload accounts
 envs/shared-services/ap-southeast-1/{ecr,s3-logs,kms,ssm}/       # shared account
 examples/

@@ -1,3 +1,9 @@
+variable "aws_region" {
+  description = "Region for the default AWS provider"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
 variable "project" {
   description = "Project short slug used as resource name prefix"
   type        = string

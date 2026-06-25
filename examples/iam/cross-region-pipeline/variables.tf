@@ -2,6 +2,17 @@
 # Variables — Cross-Region SNS→SQS Pipeline + EKS
 # ---------------------------------------------------------------------------
 
+variable "aws_region" {
+  description = "Default AWS region"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "dr_role_arn" {
+  description = "Role ARN to assume for the dr provider alias"
+  type        = string
+}
+
 variable "account_id" {
   description = "AWS Account ID"
   type        = string

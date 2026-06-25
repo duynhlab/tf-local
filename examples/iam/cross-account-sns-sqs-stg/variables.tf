@@ -2,6 +2,23 @@
 # Variables — Staging
 # ---------------------------------------------------------------------------
 
+variable "aws_region" {
+  description = "Default AWS region"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "team_a_region" {
+  description = "Region for the team_a provider alias"
+  type        = string
+  default     = "us-west-2"
+}
+
+variable "team_a_role_arn" {
+  description = "Role ARN to assume for the team_a provider alias"
+  type        = string
+}
+
 variable "team_a_account_id" {
   description = "Team A AWS Account ID (SNS owner)"
   type        = string

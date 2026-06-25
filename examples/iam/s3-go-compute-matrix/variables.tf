@@ -2,6 +2,34 @@
 # Variables — Go BE → S3 Compute Matrix
 # ---------------------------------------------------------------------------
 
+variable "aws_region" {
+  description = "AWS region for the default provider"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "secondary_region" {
+  description = "Region for the secondary (cross-region) provider"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "secondary_role_arn" {
+  description = "IAM role ARN to assume for the secondary provider"
+  type        = string
+}
+
+variable "data_account_region" {
+  description = "Region for the data_account (cross-account) provider"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "data_account_role_arn" {
+  description = "IAM role ARN to assume for the data_account provider"
+  type        = string
+}
+
 variable "app_account_id" {
   description = "Account A (Go application workloads)"
   type        = string

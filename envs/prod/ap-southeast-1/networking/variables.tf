@@ -1,3 +1,21 @@
+variable "project" {
+  description = "Project short slug used as resource name prefix"
+  type        = string
+  default     = "dnl"
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+  default     = "prod"
+}
+
+variable "aws_region" {
+  description = "Primary AWS region"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
 variable "tags" {
   description = "Common tags"
   type        = map(string)

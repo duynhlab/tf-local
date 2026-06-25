@@ -2,6 +2,12 @@
 # Variables — S3 Event → SNS → SQS Fan-out
 # ---------------------------------------------------------------------------
 
+variable "aws_region" {
+  description = "AWS region for the default provider"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
 variable "account_id" {
   description = "AWS Account ID"
   type        = string

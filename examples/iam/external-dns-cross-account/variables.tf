@@ -2,6 +2,23 @@
 # Variables — ExternalDNS Cross-Account Route53
 # ---------------------------------------------------------------------------
 
+variable "aws_region" {
+  description = "Region for the default AWS provider"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "shared_services_region" {
+  description = "Region for the shared_services AWS provider"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "shared_services_role_arn" {
+  description = "Role ARN to assume in the shared services account"
+  type        = string
+}
+
 variable "app_account_id" {
   description = "Application platform account ID"
   type        = string

@@ -2,6 +2,17 @@
 # Variables — Cross-Region S3 Replication + EKS Multi-Region
 # ---------------------------------------------------------------------------
 
+variable "aws_region" {
+  description = "Default AWS region"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "replica_role_arn" {
+  description = "Role ARN to assume for the replica provider alias"
+  type        = string
+}
+
 variable "account_id" {
   description = "AWS Account ID"
   type        = string

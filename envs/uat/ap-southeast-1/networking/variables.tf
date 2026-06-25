@@ -1,7 +1,25 @@
+variable "project" {
+  description = "Project short slug used as resource name prefix"
+  type        = string
+  default     = "dnl"
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+  default     = "uat"
+}
+
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
 variable "vpc_name" {
   description = "Name prefix for VPC resources"
   type        = string
-  default     = "dev-vpc"
+  default     = "uat-vpc"
 }
 
 variable "vpc_cidr" {

@@ -2,6 +2,12 @@
 # Variables — EKS Pod → S3 (Same Account)
 # ---------------------------------------------------------------------------
 
+variable "aws_region" {
+  description = "Region for the default AWS provider"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
 variable "account_id" {
   description = "AWS Account ID"
   type        = string

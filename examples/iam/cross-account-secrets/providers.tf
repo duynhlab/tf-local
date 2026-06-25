@@ -1,41 +1,21 @@
-# Cross-account secrets/parameters — floci :4566 (iam, sts).
-
 terraform {
   required_version = ">= 1.3"
-
   required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 6.0"
-    }
+    aws = { source = "hashicorp/aws", version = ">= 6.0" }
   }
 }
 
+# Real AWS. Cross-account uses assume_role per account.
+# floci note: floci isolates accounts by access key, not assume_role, so
+# multi-account examples are validate/plan-only on floci.
 provider "aws" {
-  region                      = "ap-southeast-1"
-  access_key                  = var.app_account_id
-  secret_key                  = local.lab_secret_key_test
-  skip_credentials_validation = true
-  skip_metadata_api_check     = true
-  skip_requesting_account_id  = true
-
-  endpoints {
-    iam = local.lab_ministack_endpoints_iam_sts.iam
-    sts = local.lab_ministack_endpoints_iam_sts.sts
-  }
+  region = var.aws_region
+  default_tags { tags = { Project = "dnl", ManagedBy = "terraform" } }
 }
 
 provider "aws" {
-  alias                       = "security_account"
-  region                      = "ap-southeast-1"
-  access_key                  = var.security_account_id
-  secret_key                  = local.lab_secret_key_test
-  skip_credentials_validation = true
-  skip_metadata_api_check     = true
-  skip_requesting_account_id  = true
-
-  endpoints {
-    iam = local.lab_ministack_endpoints_iam_sts.iam
-    sts = local.lab_ministack_endpoints_iam_sts.sts
-  }
+  alias  = "security_account"
+  region = var.security_account_region
+  assume_role { role_arn = var.security_account_role_arn }
+  default_tags { tags = { Project = "dnl", ManagedBy = "terraform" } }
 }
