@@ -23,6 +23,11 @@ output "listener_arn" {
   value       = aws_lb_listener.http.arn
 }
 
+output "https_listener_arn" {
+  description = "ARN of the HTTPS listener (null when no certificate_arn)."
+  value       = try(aws_lb_listener.https[0].arn, null)
+}
+
 output "security_group_ids" {
   description = "Security group IDs associated with the load balancer (echo of input)."
   value       = var.security_group_ids

@@ -1,0 +1,6 @@
+# Trivy config — scan only this repo's Terraform, not third-party modules that
+# Trivy auto-resolves (e.g. terraform-aws-modules/eks). Their defaults are the
+# vendor's concern; we harden via our wrapper inputs, not by editing their code.
+misconfiguration:
+  terraform:
+    exclude-downloaded-modules: true

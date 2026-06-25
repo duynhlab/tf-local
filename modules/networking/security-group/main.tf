@@ -16,6 +16,7 @@ resource "aws_security_group" "this" {
   }
 }
 
+# trivy:ignore:AVD-AWS-0107 Public ingress (0.0.0.0/0) is intentional for internet-facing tiers (ALB); callers scope ingress_rules per tier.
 resource "aws_vpc_security_group_ingress_rule" "this" {
   for_each = var.ingress_rules
 
@@ -33,6 +34,7 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   tags = local.default_tags
 }
 
+# trivy:ignore:AVD-AWS-0104 Default egress is allow-all (the AWS default); callers can restrict via var.egress_rules.
 resource "aws_vpc_security_group_egress_rule" "this" {
   for_each = var.egress_rules
 

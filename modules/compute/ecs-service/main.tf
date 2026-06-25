@@ -57,6 +57,7 @@ resource "aws_iam_role" "execution" {
 # AWS-managed policies (AttachRolePolicy -> NoSuchEntity), and this is valid on
 # real AWS too. For real AWS you may instead attach the managed policy via
 # var.execution_managed_policy_arns.
+# trivy:ignore:AVD-AWS-0057 Mirrors AWS-managed AmazonECSTaskExecutionRolePolicy; ecr:GetAuthorizationToken can't be resource-scoped.
 data "aws_iam_policy_document" "execution" {
   statement {
     effect = "Allow"

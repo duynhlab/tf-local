@@ -71,6 +71,18 @@ variable "enable_deletion_protection" {
   default     = false
 }
 
+variable "certificate_arn" {
+  type        = string
+  description = "ACM certificate ARN. When set, an HTTPS:443 listener is created and HTTP redirects to it. Leave null for the HTTP-only lab path."
+  default     = null
+}
+
+variable "ssl_policy" {
+  type        = string
+  description = "SSL policy for the HTTPS listener (used only when certificate_arn is set)."
+  default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+}
+
 variable "tags" {
   type        = map(string)
   description = "Additional tags to apply to all resources created by this module."
