@@ -76,7 +76,7 @@ modules/<group>/<module-name>/     # kebab-case
   ví dụ: modules/networking/vpc, modules/security/pod-identity, modules/data/s3-bucket
 envs/<env>/<region>/<component>/
   ví dụ: envs/dev/ap-southeast-1/networking
-shared-services/<region>/<component>/
+envs/shared-services/<region>/<component>/
 examples/<domain>/<scenario>/
   ví dụ: examples/iam/cross-account-sns-sqs
 ```

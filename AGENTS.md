@@ -55,7 +55,7 @@ modules/                       # group/<module> ; snake_case HCL, kebab-case fol
   messaging/   {sqs-with-dlq}
   _legacy/     {irsa-role}     # reference only; new standard = Pod Identity
 envs/{dev,uat,prod}/ap-southeast-1/{networking,ecs,...}/   # workload accounts
-shared-services/ap-southeast-1/{ecr,s3-logs,kms,ssm}/      # shared account 100000000000
+envs/shared-services/ap-southeast-1/{ecr,s3-logs,kms,ssm}/      # shared account 100000000000
 examples/
   networking/minimal/
   iam/<scenario>/              # IAM case studies (cross-account, IRSA legacy, ...)
@@ -69,7 +69,7 @@ scripts/
 .github/workflows/ci.yml       # fmt/validate/tflint/trivy/checkov/test + floci integration
 ```
 
-Each directory under `envs/*` / `shared-services/*` and `examples/*` is a **standalone** Terraform root module.
+Each directory under `envs/*` and `examples/*` is a **standalone** Terraform root module.
 
 ---
 
@@ -246,7 +246,7 @@ Run before every `git push`:
 ```bash
 terraform fmt -check -recursive
 trivy config --severity HIGH,CRITICAL examples/
-trivy config --severity HIGH,CRITICAL envs/ shared-services/
+trivy config --severity HIGH,CRITICAL envs/
 ```
 
 All commands must pass with 0 findings.
@@ -284,7 +284,7 @@ floci bind-mounts `/var/run/docker.sock` and runs as `root` (Real Docker Integra
 
 ## Linting (tflint)
 
-Run **after any Terraform change** (modules or `envs/*` / `shared-services/*` / `examples/*`) and before pushing; CI uses the same rules via `.tflint.hcl`.
+Run **after any Terraform change** (modules or `envs/*` / `examples/*`) and before pushing; CI uses the same rules via `.tflint.hcl`.
 
 ```bash
 which tflint || echo "tflint not installed"

@@ -32,10 +32,10 @@ jobs:
           - envs/dev/ap-southeast-1/ecs
           - envs/uat/ap-southeast-1/networking
           - envs/prod/ap-southeast-1/networking
-          - shared-services/ap-southeast-1/kms
-          - shared-services/ap-southeast-1/s3-logs
-          - shared-services/ap-southeast-1/ssm
-          - shared-services/ap-southeast-1/ecr
+          - envs/shared-services/ap-southeast-1/kms
+          - envs/shared-services/ap-southeast-1/s3-logs
+          - envs/shared-services/ap-southeast-1/ssm
+          - envs/shared-services/ap-southeast-1/ecr
           - examples/iam/pod-identity-s3
           - examples/networking/minimal
           - examples/iam/alb-controller
