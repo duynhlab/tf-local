@@ -15,6 +15,7 @@
 | `aws_vpc_endpoint` Gateway (S3) | `CreateVpcEndpoint` → response not parseable by AWS provider (`deserialization failed ... routeTableId`) | Raw CLI passes, but the TF provider can't decode floci's XML. Set `enable_s3_gateway_endpoint = false` on floci (works on real AWS). |
 | `ReplaceRoute` (in-place route update) | `UnsupportedOperation` | floci supports `CreateRoute` (fresh apply) but not replacing a route. A re-apply over **partial state** can hit this — for the lab, restart floci for a clean slate rather than re-applying a half-failed run. |
 | ECS service delete | drains slowly / may not complete | `terraform destroy` of an ECS service can hang on floci. Restart floci to reset emulator state. |
+| `assume_role` account switching | not isolated | floci isolates accounts by **access key** (12-digit `AWS_ACCESS_KEY_ID`), not by `sts:AssumeRole`. Roots that use real provider **aliases with `assume_role`** for cross-account (the `examples/iam/*` demos) are therefore **validate/plan-only** on floci — apply won't land resources in the assumed account until floci supports assume-role account switching. Single-account roots (all `envs/*`) work fully via `AWS_ENDPOINT_URL` + per-root `AWS_ACCESS_KEY_ID`. |
 
 ### Behaviour confirmed WORKING on floci (good news)
 

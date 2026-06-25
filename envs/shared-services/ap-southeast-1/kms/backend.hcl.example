@@ -1,0 +1,3 @@
+bucket = "dnl-tfstate-CHANGE-ME-ACCOUNT-ID"
+key    = "shared-services/ap-southeast-1/kms/terraform.tfstate"
+region = "ap-southeast-1"

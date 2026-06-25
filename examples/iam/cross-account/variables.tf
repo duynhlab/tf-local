@@ -2,6 +2,23 @@
 # Variables — Cross-Account AssumeRole
 # ---------------------------------------------------------------------------
 
+variable "aws_region" {
+  description = "AWS region for the default provider"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "data_account_region" {
+  description = "AWS region for the data_account provider"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "data_account_role_arn" {
+  description = "Role ARN to assume in the data account (required for real use)"
+  type        = string
+}
+
 variable "account_a_id" {
   description = "Account A (DevOps) — source account"
   type        = string

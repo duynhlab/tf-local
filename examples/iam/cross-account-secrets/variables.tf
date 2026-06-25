@@ -2,6 +2,23 @@
 # Variables — Cross-Account Secrets Access from EKS
 # ---------------------------------------------------------------------------
 
+variable "aws_region" {
+  description = "AWS region for the default provider"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "security_account_region" {
+  description = "AWS region for the security_account provider"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "security_account_role_arn" {
+  description = "Role ARN to assume in the security account (required for real use)"
+  type        = string
+}
+
 variable "app_account_id" {
   description = "Application account ID"
   type        = string

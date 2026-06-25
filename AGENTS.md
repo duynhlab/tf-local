@@ -15,7 +15,7 @@ Production-shaped Terraform + AWS learning lab on a **floci-only** local emulato
 
 Pinned `floci/floci:1.5.27` + `floci/floci-ui:0.1.0` in `docker-compose.yml` (Podman or Docker). Real Docker Integration enabled (`user: root` + docker.sock).
 
-**Multi-account**: a 12-digit `AWS_ACCESS_KEY_ID` is treated by floci as the account id (resources isolate per account). Lab accounts: `shared 100000000000 / dev 111111111111 / uat 222222222222 / prod 333333333333` — see `modules/lab-provider/common.tf` (`local.lab_accounts`).
+**Multi-account**: a 12-digit `AWS_ACCESS_KEY_ID` is treated by floci as the account id (resources isolate per account). Accounts: `shared 100000000000 / dev 111111111111 / uat 222222222222 / prod 333333333333`. Real AWS selects the account via credentials / `assume_role`; for floci set `AWS_ACCESS_KEY_ID=<12-digit>` per root via env.
 
 **Active plan**: this repo is mid-refactor. Read **[docs/REFACTOR-PLAN.md](docs/REFACTOR-PLAN.md)** (target structure, module catalog, phases) and **[docs/naming-conventions.md](docs/naming-conventions.md)** before adding code. Feature gaps: **[docs/floci-unsupported.md](docs/floci-unsupported.md)**.
 
@@ -47,8 +47,7 @@ docs/
   enterprise-roadmap.md        # Advanced enterprise expansion backlog
   subnet.csv                   # CIDR source of truth
 modules/                       # group/<module> ; snake_case HCL, kebab-case folders
-  lab-provider/                # floci endpoints + lab_accounts map (symlinked per root)
-  networking/  {vpc, vpc-peering, transit-gateway, privatelink}
+  networking/  {vpc, security-group, alb, vpc-peering, transit-gateway, privatelink}
   security/    {wafv2}         # + iam-role, pod-identity (Phase 2-4)
   data/        {...}           # s3-bucket, s3-logs, kms-key, ssm-parameter (Phase 2)
   compute/     {...}           # ecs-service, eks, ecr (Phase 2-4)
@@ -123,18 +122,18 @@ Each directory under `envs/*` and `examples/*` is a **standalone** Terraform roo
 
 ## Provider rules
 
-- Shared locals live in [`modules/lab-provider/common.tf`](modules/lab-provider/common.tf); each root symlinks `lab_provider_common.tf` and references an endpoint map (`local.lab_hybrid_endpoints` or `local.lab_ministack_endpoints_*` — names kept for compat, **all point to floci `:4566`**) in `providers.tf`.
+Every root is **self-contained and real** — no shared/symlinked provider file, no emulator config in committed code.
 
-- All service endpoints → floci `http://localhost:4566`.
+- `providers.tf`: a real `provider "aws" { region = var.aws_region; default_tags {...} }`. Cross-account/region roots add `provider "aws"` **aliases** with `assume_role { role_arn = ... }`.
+- `backend.tf`: S3 backend with `use_lockfile = true` (Terraform >= 1.11, no DynamoDB). Init with `-backend-config=backend.hcl` (real) or `backend.floci.hcl` (floci).
+- Cross-account references (grants) use **account-id variables** (or `aws_caller_identity` for the current account), not provider tricks.
 
-- Keep on the provider:
-  - `skip_credentials_validation = true`
-  - `skip_metadata_api_check     = true`
-  - `skip_requesting_account_id  = true`
-  - `access_key = local.lab_accounts.<env>` (12-digit account id) / `secret_key = "test"`
-  - `s3_use_path_style = true`
-
-- Never use real AWS credentials or real ARNs in lab code. The 12-digit access keys are floci account ids, not real accounts.
+**Local floci testing uses environment variables only** (the AWS provider routes everything to `AWS_ENDPOINT_URL`):
+```bash
+export AWS_ENDPOINT_URL=http://localhost:4566 AWS_ACCESS_KEY_ID=<12-digit-account> \
+       AWS_SECRET_ACCESS_KEY=test AWS_REGION=ap-southeast-1 AWS_S3_ADDRESSING_STYLE=path
+```
+Never commit real credentials. The 12-digit access keys used for floci are emulator account ids.
 
 ### `hashicorp/aws` version
 
